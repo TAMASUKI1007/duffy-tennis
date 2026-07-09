@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Bebas+Neue&amp;family=Noto+Sans+JP:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; }
+body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+@keyframes duffyMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+:focus-visible { outline: 3px solid #111111; outline-offset: 3px; }
+.hero-burger { display: none; }
+.hero-photo-m { display: none; }
+@media (max-width: 640px) {
+  .hero-nav { display: none !important; }
+  .hero-burger { display: inline-flex !important; }
+  .hero-photo-desktop { display: none !important; }
+  .hero-photo-m { display: block !important; }
+  .hero-vlabel { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</helmet>
+
+<section data-screen-label="Hero" style="position:relative;padding:18px clamp(16px,4vw,56px) 28px;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;">
+  <div aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; left: -24px; top: -7px">
+    <div data-parallax="0.14" style="position:absolute;top:1%;left:-2%;font-family:'Anton',sans-serif;font-size:clamp(110px,26vw,360px);line-height:0.85;color:#FFFFFF;-webkit-text-stroke:2px rgba(17,17,17,0.09);letter-spacing:0;white-space:nowrap;">DUFFY<br>TENNIS</div>
+  </div>
+
+  <header style="position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;">
+    <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:clamp(18px,4vw,24px);letter-spacing:-0.01em;">MatchUp</div>
+    <nav class="hero-nav" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+      <a href="message.html" style="font-weight:700;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#FFFFFF;" style-hover="background:#111111;color:#E9FF00;">ダッフィー先生の想い</a>
+      <a href="apply.html" style="font-weight:900;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#E9FF00;" style-hover="background:#111111;color:#E9FF00;">レッスン申し込み</a>
+      <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener" style="font-weight:700;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#FFFFFF;" style-hover="background:#111111;color:#E9FF00;">@duffy_tennis</a>
+    </nav>
+    <button type="button" class="hero-burger" onClick="{{ toggleMenu }}" aria-label="メニュー" aria-expanded="{{ menuOpen }}" style="width:46px;height:46px;align-items:center;justify-content:center;flex-direction:column;gap:5px;background:#E9FF00;border:3px solid #111111;cursor:pointer;padding:0;">
+      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:#111111;transition:transform 0.2s ease;transform:{{ burgerTop }};"></span>
+      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:#111111;opacity:{{ burgerMidOpacity }};"></span>
+      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:#111111;transition:transform 0.2s ease;transform:{{ burgerBot }};"></span>
+    </button>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;top:calc(100% + 10px);right:0;z-index:40;display:flex;flex-direction:column;gap:0;min-width:220px;background:#FFFFFF;border:3px solid #111111;box-shadow:8px 8px 0 #E9FF00;">
+        <a href="message.html" style="font-weight:900;font-size:15px;text-decoration:none;color:#111111;padding:16px 18px;background:#FFFFFF;border-bottom:2px solid #111111;" style-hover="background:#E9FF00;">ダッフィー先生の想い</a>
+        <a href="apply.html" style="font-weight:900;font-size:15px;text-decoration:none;color:#111111;padding:16px 18px;background:#FFFFFF;" style-hover="background:#E9FF00;">レッスン申し込み →</a>
+      </div>
+    </sc-if>
+  </header><div style="position:relative;z-index:2;flex:1;display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(20px,4vw,48px);padding-top:clamp(16px,3vh,36px);">
+    <div style="flex: 1 1 420px; min-width: min(100%,300px); position: relative">
+      
+      <img src="uploads/S__8847386.jpg" alt="ダッフィー先生" class="hero-photo-m" style="float:right;width:40%;max-width:180px;margin:4px 0 10px 16px;border:3px solid #111111;box-shadow:6px 6px 0 #E9FF00;object-fit:cover;object-position:center 22%;aspect-ratio:3/4;">
+      <div data-appear="-60,30,-3" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(13px,2.6vw,20px);letter-spacing:0.32em;">LOGIC BASED TENNIS COACHING</div><h1 style="margin:6px 0 0;font-family:'Anton',sans-serif;line-height:0.92;font-size:clamp(58px,12vw,160px);text-transform:uppercase;">
+        <span data-appear="-70,60,-3" style="display:block;">DUFFY</span>
+        <span data-appear="70,60,3" data-delay="0.1s" style="display:block;color:#E9FF00;-webkit-text-stroke:3px #111111;">TENNIS</span>
+      </h1>
+      <p data-appear="0,50,2" data-delay="0.18s" style="margin:18px 0 0;font-weight:900;font-size:clamp(20px,5.4vw,40px);line-height:1.4;word-break:auto-phrase;">
+        <span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 4px;">感覚ゼロ、<br>理屈でコーチング。</span>
+      </p>
+      <p data-appear="0,40,0" data-delay="0.26s" style="margin:12px 0 0;font-size:clamp(13px,3.2vw,16px);font-weight:700;line-height:1.9;word-break:auto-phrase;">身体の仕組み × 道具の原理。フィジカル・センスではなく、再現できる理屈で上達する。</p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;align-items:center;">
+        <div data-appear="-50,30,-5" data-delay="0.34s" style="background:#111111;color:#E9FF00;font-weight:900;font-size:clamp(13px,3.1vw,17px);padding:10px 16px;transform:rotate(-2deg);">オンライン動画添削 × 対面レッスン</div>
+        <a href="apply.html" data-appear="50,30,5" data-delay="0.42s" style="background:#E9FF00;color:#111111;border:3px solid #111111;font-weight:900;font-size:clamp(13px,3.1vw,17px);padding:9px 16px;transform:rotate(1.6deg);text-decoration:none;display:inline-block;" style-hover="background:#111111;color:#E9FF00;">申込はこのページから ↓</a>
+      </div>
+
+      <div data-appear="0,40,0" data-delay="0.55s" style="display:flex;align-items:center;gap:10px;margin-top:clamp(20px,4vh,40px);">
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.4em;">SCROLL</span>
+        <span aria-hidden="true" style="display:inline-block;width:56px;height:3px;background:#111111;"></span>
+        <span aria-hidden="true" style="font-weight:900;">↓</span>
+      </div>
+    </div>
+
+    <div style="flex:0 1 auto;position:relative;margin:clamp(4px,1.5vh,16px) auto 0;padding-right:clamp(0px,3vw,40px);align-self:flex-start;" class="hero-photo-desktop">
+      <div data-appear="80,-40,6" data-delay="0.3s" style="transform:rotate(3deg);border:3px solid #111111;background:#FFFFFF;padding:10px;box-shadow:12px 12px 0 #E9FF00;">
+        <img src="uploads/S__8847386.jpg" alt="ダッフィー先生" style="width:min(64vw,292px);height:min(96vw,438px);display:block;object-fit:cover;object-position:center 22%;">
+      </div>
+      <div data-appear="0,30,0" data-delay="0.45s" style="display:flex;align-items:center;gap:10px;margin-top:22px;justify-content:flex-end;">
+        <span aria-hidden="true" style="display:inline-block;width:34px;height:3px;background:#111111;"></span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:0.24em;background:#E9FF00;border:2px solid #111111;padding:3px 12px;transform:rotate(-1.5deg);display:inline-block;">COACH DUFFY</span>
+      </div>
+      <img data-appear="-40,50,-6" data-delay="0.6s" src="assets/bear_1.png" alt="ダッフィーベア" style="position:absolute;left:-56px;bottom:-30px;width:clamp(90px,18vw,130px);transform:rotate(-6deg);pointer-events:none;">
+    </div>
+  </div>
+
+  
+
+  <div data-appear="0,-50,0" data-delay="0.5s" class="hero-vlabel" style="position:absolute;right:clamp(2px,1vw,14px);top:20%;writing-mode:vertical-rl;font-weight:700;font-size:clamp(11px,2.2vw,15px);letter-spacing:0.3em;background:#FFFFFF;padding:12px 5px;border-left:3px solid #E9FF00;z-index:3;">身体の仕組みで、テニスは変わる。</div>
+</section>
+
+<div aria-hidden="true" style="background:#111111;overflow:hidden;padding:10px 0;transform:rotate(-1.2deg) scale(1.03);position:relative;z-index:4;">
+  <div data-marquee="" style="display:flex;width:max-content;animation:duffyMarquee 22s linear infinite;">
+    <span style="font-family:'Bebas Neue',sans-serif;color:#E9FF00;font-size:clamp(20px,4.2vw,34px);letter-spacing:0.08em;white-space:nowrap;padding-right:28px;">ONLINE VIDEO ANALYSIS ✕ IN-PERSON LESSON — LOGIC BASED TENNIS COACHING — APPLY FROM THIS PAGE —&nbsp;</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#E9FF00;font-size:clamp(20px,4.2vw,34px);letter-spacing:0.08em;white-space:nowrap;padding-right:28px;">ONLINE VIDEO ANALYSIS ✕ IN-PERSON LESSON — LOGIC BASED TENNIS COACHING — APPLY FROM THIS PAGE —&nbsp;</span>
+  </div>
+</div>
+
+<section data-screen-label="Problem" style="position:relative;padding:clamp(40px,7vw,80px) clamp(16px,4vw,56px) clamp(36px,5vw,64px);overflow:hidden;">
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;pointer-events:none;">
+    <div data-parallax="0.1" style="font-family:'Anton',sans-serif;font-size:clamp(110px,28vw,360px);line-height:0.8;color:#FFFFFF;-webkit-text-stroke:2px rgba(17,17,17,0.1);white-space:nowrap;">PROBLEM</div>
+  </div>
+  <div style="position:relative;max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(50px,12vw,120px);line-height:0.95;">PROBLEM</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">こんなお悩み、ありませんか?</span>
+    </div>
+    <p data-appear="0,40,0" data-delay="0.16s" style="margin:18px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,22px);"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 4px;">一つでも当てはまったら、それは才能の問題じゃありません。</span></p>
+
+    <div style="display:grid;gap:2px;margin-top:clamp(20px,3.5vw,34px);width:fit-content;max-width:680px;margin-left:auto;margin-right:auto;">
+      <div data-appear="0,24,0" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #EEEEEE;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">「感覚で打って」と言われても、その感覚がつかめない</p>
+      </div>
+      <div data-appear="0,24,0" data-delay="0.06s" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #EEEEEE;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">なぜそう打つのか、理屈から知りたいのに教えてもらえない</p>
+      </div>
+      <div data-appear="0,24,0" data-delay="0.12s" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #EEEEEE;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">基礎は練習しているのに、試合になると使えない</p>
+      </div>
+      <div data-appear="0,24,0" data-delay="0.18s" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #EEEEEE;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">なんとなく練習している感覚から、抜け出したい</p>
+      </div>
+      <div data-appear="0,24,0" data-delay="0.24s" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;border-bottom:2px solid #EEEEEE;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">フィジカルだけではなく、技術でも勝負できるようになりたい</p>
+      </div>
+      <div data-appear="0,24,0" data-delay="0.3s" style="padding:clamp(9px,2vw,13px) 4px;display:flex;gap:12px;align-items:baseline;">
+        <span aria-hidden="true" style="font-size:clamp(15px,3vw,19px);line-height:1;color:#1F9E4D;font-weight:900;flex:none;">✓</span>
+        <p style="margin:0;font-weight:700;font-size:clamp(13.5px,3.3vw,16px);line-height:1.7;text-wrap:pretty;">上手い人と比べて、自分は向いてないのかもと思う</p>
+      </div>
+    </div>
+
+    <div data-appear="0,50,0" data-delay="0.3s" style="margin:clamp(24px,4.5vw,40px) auto 0;max-width:820px;display:flex;flex-wrap:wrap;align-items:center;gap:clamp(16px,3.5vw,32px);justify-content:center;">
+      <div style="flex:none;transform:rotate(-2deg);border:3px solid #111111;background:#FFFFFF;padding:8px;box-shadow:-10px 10px 0 #E9FF00;">
+        <img src="assets/bear_3.png" alt="ガッツポーズするダッフィーベア" style="width:min(48vw,200px);height:min(58vw,240px);display:block;object-fit:contain;">
+      </div>
+      <p style="margin:0;flex:1 1 280px;font-weight:900;font-size:clamp(18px,4.4vw,27px);line-height:1.7;"><span style="background:#111111;color:#E9FF00;padding:6px 14px;display:inline-block;transform:rotate(-1deg);">その「なぜ」に、</span><br><span style="background:#111111;color:#E9FF00;padding:6px 14px;display:inline-block;transform:rotate(-1deg);margin-top:6px;">ちゃんと理由があります。</span></p>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Learnings" style="position:relative;padding:clamp(44px,7vw,80px) clamp(16px,4vw,56px);overflow:hidden;">
+  <div style="max-width:820px;margin:0 auto;position:relative;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-weight:900;font-size:clamp(24px,5.6vw,40px);line-height:1.35;">レッスンから学べること</h2>
+    </div>
+    <p data-appear="0,40,0" data-delay="0.08s" style="margin:14px 0 0;font-weight:900;font-size:clamp(15px,3.8vw,20px);"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 4px;">{{ learningsLead }}</span></p>
+
+    <div style="margin-top:clamp(26px,5vw,40px);display:grid;gap:clamp(14px,2.6vw,18px);">
+      <sc-for list="{{ learnings }}" as="l" hint-placeholder-count="7">
+        <div data-appear="0,34,0" data-delay="{{ l.delay }}" style="display:flex;gap:14px;align-items:flex-start;border:3px solid #111111;background:#FFFFFF;padding:clamp(16px,3.2vw,22px) clamp(16px,3.4vw,26px);">
+          <span aria-hidden="true" style="flex:none;color:#4FAE5C;font-weight:900;font-size:clamp(20px,4.4vw,26px);line-height:1.3;">✓</span>
+          <div>
+            <div style="font-weight:900;font-size:clamp(15px,3.8vw,18px);line-height:1.5;">{{ l.head }}</div>
+            <p style="margin:6px 0 0;font-weight:500;font-size:clamp(13px,3.2vw,15px);line-height:1.85;color:#3D4A43;text-wrap:pretty;word-break:auto-phrase;">{{ l.sub }}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <p data-appear="0,30,0" data-delay="0.2s" style="margin:clamp(18px,3.5vw,26px) 0 0;font-size:clamp(11.5px,2.8vw,13px);font-weight:700;color:#555555;line-height:1.8;">{{ learningsNote }}</p>
+
+    <img src="assets/bear_2.png" alt="" aria-hidden="true" data-appear="60,40,6" data-delay="0.28s" style="position:absolute;right:-6px;bottom:-30px;width:clamp(70px,12vw,104px);transform:rotate(4deg);pointer-events:none;">
+  </div>
+</section>
+
+<section data-screen-label="About" style="position:relative;padding:clamp(44px,8vw,90px) clamp(16px,4vw,56px) clamp(36px,5vw,64px);overflow:hidden;">
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;pointer-events:none;">
+    <div data-parallax="-0.1" style="font-family:'Anton',sans-serif;font-size:clamp(110px,30vw,380px);line-height:0.8;color:#FFFFFF;-webkit-text-stroke:2px rgba(17,17,17,0.12);text-align:right;">ABOUT</div>
+  </div>
+  <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(30px,6vw,64px);align-items:center;max-width:1100px;margin:0 auto;">
+    <div data-appear="-70,30,-5" style="justify-self:center;transform:rotate(-2.5deg);border:3px solid #111111;background:#FFFFFF;padding:10px;box-shadow:-14px 14px 0 #E9FF00;">
+      <img src="assets/about_splash.png" alt="スプラッシュするテニスボール" style="width:min(72vw,350px);height:min(86vw,420px);object-fit:cover;display:block;">
+    </div>
+    <div>
+      <div data-appear="60,30,2" style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,16px);flex-wrap:wrap;">
+        <h2 style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(50px,12vw,120px);line-height:0.95;">ABOUT</h2>
+        <span style="background:#111111;color:#FFFFFF;font-weight:900;font-size:13px;padding:4px 12px;transform:rotate(-2deg);">ダッフィー先生とは</span>
+      </div>
+      <h2 data-appear="60,40,0" data-delay="0.08s" style="margin:14px 0 0;font-weight:900;font-size:clamp(24px,5.6vw,40px);line-height:1.45;">「なんとなく」を<br>言葉にするコーチ。</h2>
+      <ul data-appear="60,40,0" data-delay="0.16s" style="margin:16px 0 0;padding:0;list-style:none;display:grid;gap:10px;">
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>指導実績 1,000名以上</li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>小学生・ジュニア育成からベテランまで対応</li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>東京都ダブルスランキング TOP10</li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>「なぜから教える」解剖学ベースの指導スタイル</li>
+        <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>レッスン後の動画共有で"家でも再現できる"</li>
+      </ul>
+      <div data-appear="60,40,0" data-delay="0.24s" style="margin-top:26px;border-top:3px solid #111111;padding-top:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3vw,32px);align-items:end;">
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.24em;font-size:clamp(11px,2.4vw,14px);">TOTAL FOLLOWERS</div>
+            <div style="display:flex;align-items:baseline;gap:5px;">
+              <span style="font-family:'Anton',sans-serif;font-size:clamp(30px,7vw,58px);line-height:1;">15,000</span>
+              <span style="font-family:'Anton',sans-serif;font-size:clamp(18px,4vw,32px);line-height:1;color:#E9FF00;-webkit-text-stroke:2px #111111;">+</span>
+            </div>
+            <div style="font-weight:900;font-size:clamp(10.5px,2.4vw,12px);margin-top:4px;">SNS総フォロワー 約1.5万人</div>
+          </div>
+          <div style="border-left:3px solid #111111;padding-left:clamp(14px,3vw,28px);">
+            <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.24em;font-size:clamp(11px,2.4vw,14px);">TOTAL VIEWS</div>
+            <div style="display:flex;align-items:baseline;gap:5px;">
+              <span style="font-family:'Anton',sans-serif;font-size:clamp(30px,7vw,58px);line-height:1;">3.5M</span>
+              <span style="font-family:'Anton',sans-serif;font-size:clamp(18px,4vw,32px);line-height:1;color:#E9FF00;-webkit-text-stroke:2px #111111;">+</span>
+            </div>
+            <div style="font-weight:900;font-size:clamp(10.5px,2.4vw,12px);margin-top:4px;">累計再生回数 350万以上</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+          <span style="border:2px solid #111111;font-weight:700;font-size:12px;padding:5px 12px;">Instagram</span>
+          <span style="border:2px solid #111111;font-weight:700;font-size:12px;padding:5px 12px;">TikTok</span>
+          <span style="border:2px solid #111111;font-weight:700;font-size:12px;padding:5px 12px;">YouTube</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Menu" style="position:relative;padding:clamp(40px,6vw,70px) clamp(16px,4vw,56px);overflow:hidden;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">MENU</h2>
+      <span data-appear="40,30,3" data-delay="0.06s" aria-hidden="true" style="width:clamp(20px,4vw,40px);height:clamp(20px,4vw,40px);border-radius:50%;background:#E9FF00;border:3px solid #111111;align-self:center;"></span>
+      <span data-appear="60,30,0" data-delay="0.12s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">レッスン内容</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(22px,4vw,40px);margin-top:clamp(28px,5vw,54px);">
+      <article data-appear="-60,50,-3" style="position:relative;transform:rotate(-1deg);border:3px solid #111111;background:#FFFFFF;box-shadow:10px 10px 0 #E9FF00;padding:clamp(20px,4vw,34px);padding-bottom:clamp(84px,14vw,110px);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,7vw,48px);letter-spacing:0.04em;">ONLINE</span>
+          <span style="background:#111111;color:#E9FF00;font-weight:900;font-size:12px;padding:4px 10px;transform:rotate(2deg);">01</span>
+        </div>
+        <img src="assets/bear_2.png" alt="" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:clamp(70px,12vw,100px);transform:rotate(4deg);pointer-events:none;">
+        <h3 style="margin:10px 0 0;font-weight:900;font-size:clamp(19px,4.4vw,26px);">オンライン動画添削</h3>
+        <p style="margin:12px 0 0;font-size:14px;font-weight:500;line-height:2;text-wrap:pretty;word-break:auto-phrase;line-break:strict;">スイング動画を送ると、身体の仕組みに基づいた添削が返ってくるチケット制メニュー。全国どこからでも、コートに行かずにフォームが変わる。</p>
+        <ul style="margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:13px;font-weight:700;">
+          <li style="border-top:2px solid #111111;padding-top:8px;">1往復 = 1pt 消費</li>
+          <li style="border-top:2px solid #111111;padding-top:8px;">チケット有効期限 5ヶ月</li>
+          <li style="border-top:2px solid #111111;padding-top:8px;">3回 / 5回 / 10回プラン</li>
+        </ul>
+      </article>
+      <article data-appear="60,50,3" data-delay="0.12s" style="position:relative;transform:rotate(1deg);border:3px solid #111111;background:#FFFFFF;box-shadow:10px 10px 0 #E9FF00;padding:clamp(20px,4vw,34px);padding-bottom:clamp(84px,14vw,110px);">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,7vw,48px);letter-spacing:0.04em;">IN-PERSON</span>
+          <span style="background:#111111;color:#E9FF00;font-weight:900;font-size:12px;padding:4px 10px;transform:rotate(-2deg);">02</span>
+        </div>
+        <img src="assets/bear_4.png" alt="" aria-hidden="true" style="position:absolute;right:6px;bottom:6px;width:clamp(70px,12vw,100px);transform:rotate(-4deg);pointer-events:none;">
+        <h3 style="margin:10px 0 0;font-weight:900;font-size:clamp(19px,4.4vw,26px);">対面レッスン</h3>
+        <p style="margin:12px 0 0;font-size:14px;font-weight:500;line-height:2;text-wrap:pretty;word-break:auto-phrase;line-break:strict;">コートで受ける120分のレッスン。マンツーマンでもグループでも料金は一律。その日の課題を、身体の仕組みからその場で直す。</p>
+        <ul style="margin:16px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:13px;font-weight:700;">
+          <li style="border-top:2px solid #111111;padding-top:8px;">120分 / 1回</li>
+          <li style="border-top:2px solid #111111;padding-top:8px;">マンツーマン・グループ共通</li>
+          <li style="border-top:2px solid #111111;padding-top:8px;">レッスン動画は後日無料で共有</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div aria-hidden="true" style="background:#E9FF00;overflow:hidden;padding:10px 0;transform:rotate(1.2deg) scale(1.03);border-top:3px solid #111111;border-bottom:3px solid #111111;">
+  <div data-marquee="" style="display:flex;width:max-content;animation:duffyMarquee 22s linear infinite;">
+    <span style="font-family:'Bebas Neue',sans-serif;color:#111111;font-size:clamp(20px,4.2vw,34px);letter-spacing:0.08em;white-space:nowrap;padding-right:28px;">KANKAKU ZERO — RIKUTSU DE COACHING — TENNIS LESSON BY DUFFY —&nbsp;</span>
+    <span style="font-family:'Bebas Neue',sans-serif;color:#111111;font-size:clamp(20px,4.2vw,34px);letter-spacing:0.08em;white-space:nowrap;padding-right:28px;">KANKAKU ZERO — RIKUTSU DE COACHING — TENNIS LESSON BY DUFFY —&nbsp;</span>
+  </div>
+</div>
+
+<section data-screen-label="Flow" style="position:relative;padding:clamp(40px,6vw,70px) clamp(16px,4vw,56px);overflow:hidden;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">FLOW</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">申込みの流れ</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(20px,4vw,36px);margin-top:clamp(28px,5vw,54px);">
+      <div data-appear="-60,50,-2" style="border:3px solid #111111;background:#FFFFFF;padding:clamp(20px,4vw,30px);transform:rotate(-1deg);">
+        <div style="position:relative;display:inline-block;">
+          <span aria-hidden="true" style="position:absolute;left:-12px;top:8px;width:clamp(36px,7vw,52px);height:clamp(36px,7vw,52px);border-radius:50%;background:#E9FF00;"></span>
+          <span style="position:relative;font-family:'Anton',sans-serif;font-size:clamp(46px,10vw,72px);line-height:1;">01</span>
+        </div>
+        <h3 style="margin:12px 0 0;font-weight:900;font-size:clamp(16px,4vw,20px);">申込フォームを送信</h3>
+        <p style="margin:8px 0 0;font-size:13px;font-weight:500;line-height:1.9;">このページの申込フォームから5ステップで送信。所要約3分。</p>
+      </div>
+      <div data-appear="0,60,1" data-delay="0.12s" style="border:3px solid #111111;background:#FFFFFF;padding:clamp(20px,4vw,30px);transform:rotate(0.8deg);">
+        <div style="position:relative;display:inline-block;">
+          <span aria-hidden="true" style="position:absolute;left:-12px;top:8px;width:clamp(36px,7vw,52px);height:clamp(36px,7vw,52px);border-radius:50%;background:#E9FF00;"></span>
+          <span style="position:relative;font-family:'Anton',sans-serif;font-size:clamp(46px,10vw,72px);line-height:1;">02</span>
+        </div>
+        <h3 style="margin:12px 0 0;font-weight:900;font-size:clamp(16px,4vw,20px);">Instagram DMで確定</h3>
+        <p style="margin:8px 0 0;font-size:13px;font-weight:500;line-height:1.9;">@duffy_tennis から日程・お支払い方法をご案内し、確定します。</p>
+      </div>
+      <div data-appear="60,50,2" data-delay="0.24s" style="position:relative;border:3px solid #111111;background:#FFFFFF;padding:clamp(20px,4vw,30px);transform:rotate(-0.8deg);">
+        <div style="position:relative;display:inline-block;">
+          <span aria-hidden="true" style="position:absolute;left:-12px;top:8px;width:clamp(36px,7vw,52px);height:clamp(36px,7vw,52px);border-radius:50%;background:#E9FF00;"></span>
+          <span style="position:relative;font-family:'Anton',sans-serif;font-size:clamp(46px,10vw,72px);line-height:1;">03</span>
+        </div>
+        <h3 style="margin:12px 0 0;font-weight:900;font-size:clamp(16px,4vw,20px);">レッスンスタート</h3>
+        <p style="margin:8px 0 0;font-size:13px;font-weight:500;line-height:1.9;">対面レッスン当日へ。オンラインは動画を送って添削スタート。</p>
+        <img src="assets/bear_6.png" alt="" aria-hidden="true" style="position:absolute;right:-14px;top:-34px;width:clamp(74px,13vw,104px);transform:rotate(6deg);pointer-events:none;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta" data-screen-label="CTA" style="padding:clamp(32px,5vw,60px) clamp(16px,4vw,56px) clamp(50px,8vw,100px);position:relative;overflow:hidden;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <a href="apply.html" data-appear="0,70,0" style="display:block;background:#E9FF00;border:4px solid #111111;box-shadow:14px 14px 0 #111111;padding:clamp(26px,6vw,60px);text-decoration:none;color:#111111;transform:rotate(-0.8deg);transition:box-shadow 0.15s ease, transform 0.15s ease;" style-hover="box-shadow:5px 5px 0 #111111;transform:rotate(-0.8deg) translate(8px,8px);">
+      <img src="assets/bear_5_solid.png" alt="" aria-hidden="true" style="position:absolute;right:clamp(10px,4vw,50px);top:clamp(-24px,-2vw,-14px);width:clamp(84px,15vw,150px);transform:rotate(5deg);pointer-events:none;background:#FFFFFF;border:3px solid #111111;padding:4px;box-sizing:border-box;">
+      <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:clamp(13px,3vw,18px);">READY TO CHANGE?</div>
+      <div style="font-family:'Anton',sans-serif;font-size:clamp(50px,13vw,150px);line-height:0.95;margin-top:8px;">APPLY NOW →</div>
+      <div style="font-weight:900;font-size:clamp(14px,3.6vw,20px);margin-top:16px;">申込フォームへ(5ステップ・約3分)</div>
+    </a>
+    <p data-appear="0,40,0" data-delay="0.12s" style="margin:20px 4px 0;font-size:12.5px;font-weight:700;">日程・支払いは申込後、Instagram DM(@duffy_tennis)にて確定します。</p>
+  </div>
+</section>
+
+<footer data-screen-label="Footer" style="background:#111111;color:#FFFFFF;padding:clamp(36px,7vw,70px) clamp(16px,4vw,56px) 28px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:clamp(38px,10vw,96px);line-height:0.95;letter-spacing:-0.02em;">MatchUp</div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:20px;">
+      <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener" style="color:#111111;background:#E9FF00;border:2px solid #E9FF00;font-weight:900;font-size:14px;padding:9px 16px;text-decoration:none;" style-hover="background:#111111;color:#E9FF00;">Instagram @duffy_tennis</a>
+      <a href="apply.html" style="color:#FFFFFF;border:2px solid #FFFFFF;font-weight:900;font-size:14px;padding:9px 16px;text-decoration:none;" style-hover="background:#FFFFFF;color:#111111;">申込フォーム</a>
+    </div>
+    <div style="margin-top:28px;font-size:11px;color:rgba(255,255,255,0.6);font-weight:500;">© 2026 MatchUp TENNIS LESSON</div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;motion&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;スクロール演出&quot; },
+  &quot;marqueeSpeed&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 22, &quot;min&quot;: 8, &quot;max&quot;: 60, &quot;step&quot;: 1, &quot;unit&quot;: &quot;s&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;スクロール演出&quot; },
+  &quot;parallax&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 2, &quot;step&quot;: 0.1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;スクロール演出&quot; }
+}">
+class Component extends DCLogic {
+  state = { learnings: [], learningsLead: '', learningsNote: '', menuOpen: false };
+
+  componentDidMount() {
+    this._reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    import('./lib/content.js').then((m) => {
+      this.setState({ learnings: m.learnings || [], learningsLead: m.learningsLead || '', learningsNote: m.learningsNote || '' });
+      if (!this._reduced && this.props.motion !== false) setTimeout(() => this.setupAppear(), 40);
+    });
+    this.applyMarquee();
+    if (this._reduced || this.props.motion === false) {
+      this.revealAll();
+      return;
+    }
+    this.setupAppear();
+    this.setupParallax();
+  }
+
+  setupAppear() {
+    const els = Array.from(document.querySelectorAll('[data-appear]'));
+    const io = new IntersectionObserver((entries) => {
+      this._ioFired = true;
+      for (const en of entries) {
+        if (en.isIntersecting) {
+          en.target.style.opacity = '1';
+          en.target.style.transform = en.target.dataset.tFinal || 'none';
+          io.unobserve(en.target);
+        }
+      }
+    }, { threshold: 0.18 });
+    for (const el of els) {
+      if (el.dataset.appearInit === '1') continue;
+      el.dataset.appearInit = '1';
+      const parts = (el.getAttribute('data-appear') || '0,60,0').split(',').map(Number);
+      const base = el.style.transform || '';
+      el.dataset.tFinal = base || 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translate(' + parts[0] + 'px,' + parts[1] + 'px) rotate(' + parts[2] + 'deg)' + (base ? ' ' + base : '');
+      const d = el.getAttribute('data-delay') || '0s';
+      el.style.transition = 'opacity 0.85s cubic-bezier(0.22,1,0.36,1) ' + d + ', transform 0.85s cubic-bezier(0.22,1,0.36,1) ' + d;
+      io.observe(el);
+    }
+    this._io = io;
+    this._ioFired = false;
+    this._appearTimer = setTimeout(() => {
+      if (!this._ioFired) {
+        io.disconnect();
+        this._io = null;
+        this.revealAll();
+      }
+    }, 1200);
+  }
+
+  setupParallax() {
+    const pEls = Array.from(document.querySelectorAll('[data-parallax]'));
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const mult = this.props.parallax ?? 1;
+        for (const el of pEls) {
+          const sp = (parseFloat(el.getAttribute('data-parallax')) || 0.1) * mult;
+          const host = el.parentElement.parentElement || el.parentElement;
+          const r = host.getBoundingClientRect();
+          const off = (r.top + r.height / 2 - window.innerHeight / 2) * sp;
+          el.style.transform = 'translate3d(0,' + off.toFixed(1) + 'px,0)';
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    this._onScroll = onScroll;
+  }
+
+  revealAll() {
+    document.querySelectorAll('[data-appear]').forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = el.dataset.tFinal || el.style.transform || 'none';
+    });
+  }
+
+  applyMarquee() {
+    const sp = this.props.marqueeSpeed ?? 22;
+    document.querySelectorAll('[data-marquee]').forEach((el) => {
+      el.style.animationDuration = sp + 's';
+    });
+  }
+
+  componentDidUpdate() {
+    this.applyMarquee();
+    if (this.props.motion === false) {
+      if (this._io) { this._io.disconnect(); this._io = null; }
+      if (this._onScroll) { window.removeEventListener('scroll', this._onScroll); this._onScroll = null; }
+      document.querySelectorAll('[data-parallax]').forEach((el) => { el.style.transform = 'none'; });
+      this.revealAll();
+    } else if (this.props.motion !== false && !this._io && !this._reduced) {
+      this.setupAppear();
+      this.setupParallax();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this._appearTimer) clearTimeout(this._appearTimer);
+    if (this._io) this._io.disconnect();
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+  }
+
+  renderVals() {
+    const open = this.state.menuOpen;
+    return {
+      menuOpen: open,
+      toggleMenu: () => this.setState((s) => ({ menuOpen: !s.menuOpen })),
+      burgerTop: open ? 'translateY(8px) rotate(45deg)' : 'none',
+      burgerBot: open ? 'translateY(-8px) rotate(-45deg)' : 'none',
+      burgerMidOpacity: open ? 0 : 1,
+      learningsLead: this.state.learningsLead,
+      learningsNote: this.state.learningsNote,
+      learnings: this.state.learnings.map((l, i) => ({
+        head: l.head, sub: l.sub,
+        delay: (0.07 * i).toFixed(2) + 's'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

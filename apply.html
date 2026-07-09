@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; }
+body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 3px solid #111111; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</helmet>
+
+<div style="min-height:100svh;background:#FFFFFF;color:#111111;" data-screen-label="申込フォーム">
+  <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px clamp(16px,4vw,40px);border-bottom:3px solid #111111;background:#FFFFFF;">
+    <a href="index.html" style="font-weight:900;font-size:13px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;" style-hover="background:#111111;color:#E9FF00;">← MatchUpへ戻る</a>
+    <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:20px;letter-spacing:-0.01em;">MatchUp</div>
+  </header>
+
+  <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+    <nav aria-label="申込ステップ" style="position:sticky;top:0;z-index:40;background:#FFFFFF;border-bottom:3px solid #111111;padding:10px clamp(10px,3vw,40px);">
+      <ol style="list-style:none;margin:0 auto;padding:0;display:flex;gap:clamp(4px,1.5vw,10px);max-width:760px;">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+          <li style="flex:1;">
+            <button type="button" onClick="{{ s.onGo }}" disabled="{{ s.disabled }}" aria-current="{{ s.ariaCurrent }}" style="width:100%;display:grid;justify-items:center;gap:3px;background:none;border:none;padding:0;cursor:{{ s.cursor }};font-family:inherit;color:#111111;opacity:{{ s.opacity }};">
+              <span style="width:34px;height:34px;display:grid;place-items:center;border:3px solid #111111;border-radius:50%;font-family:'Anton',sans-serif;font-size:15px;background:{{ s.bg }};color:{{ s.fg }};">{{ s.n }}</span>
+              <span style="font-weight:900;font-size:10px;">{{ s.label }}</span>
+            </button>
+          </li>
+        </sc-for>
+      </ol>
+    </nav>
+
+    <main style="max-width:760px;margin:0 auto;padding:clamp(24px,5vw,48px) clamp(16px,4vw,24px) 90px;">
+      <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;">
+        <h1 style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(52px,13vw,96px);line-height:0.95;">APPLY</h1>
+        <span style="background:#111111;color:#E9FF00;font-weight:900;font-size:13px;padding:5px 12px;transform:rotate(-2deg);display:inline-block;">レッスン申込フォーム</span>
+      </div>
+      <p style="margin:10px 0 0;font-size:13px;font-weight:700;">全5ステップ・約3分。入力内容はこの端末に自動保存されます。</p>
+
+      <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">1</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">基本情報</h2>
+        </div>
+        <div style="display:grid;gap:20px;">
+          <sc-for list="{{ fields1 }}" as="f" hint-placeholder-count="4">
+            <div>
+              <label for="{{ f.id }}" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">{{ f.label }} <span style="font-weight:900;font-size:11px;background:{{ f.reqBg }};border:2px solid #111111;padding:0 6px;">{{ f.reqText }}</span></label>
+              <input id="{{ f.id }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" autoComplete="{{ f.auto }}" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
+            </div>
+          </sc-for>
+          <div>
+            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">区分 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <sc-for list="{{ categoryOpts }}" as="o" hint-placeholder-count="5">
+                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">2</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">メニュー選択</h2>
+        </div>
+        <div style="display:grid;gap:18px;">
+          <sc-for list="{{ menuCards }}" as="c" hint-placeholder-count="2">
+            <button type="button" onClick="{{ c.onPick }}" aria-pressed="{{ c.pressed }}" style="text-align:left;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ c.bg }};padding:20px;display:grid;gap:6px;box-shadow:{{ c.shadow }};transition:box-shadow 0.15s ease;">
+              <span style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:0.05em;">{{ c.en }}</span>
+                <span style="font-weight:900;font-size:12px;padding:3px 10px;border:2px solid #111111;background:{{ c.markBg }};color:{{ c.markFg }};">{{ c.mark }}</span>
+              </span>
+              <span style="font-weight:900;font-size:18px;">{{ c.title }}</span>
+              <span style="font-size:13px;font-weight:500;line-height:1.8;">{{ c.desc }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">3</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">{{ step3Title }}</h2>
+        </div>
+
+        <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
+          <p style="font-weight:900;font-size:14px;margin:0 0 14px;">チケットプランを選択 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:14px;">
+            <sc-for list="{{ planCards }}" as="p" hint-placeholder-count="3">
+              <button type="button" onClick="{{ p.onPick }}" aria-pressed="{{ p.pressed }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ p.bg }};padding:18px 16px;display:grid;gap:4px;justify-items:start;position:relative;box-shadow:{{ p.shadow }};text-align:left;">
+                <span style="font-weight:900;font-size:11px;background:{{ p.badgeBg }};border:2px solid #111111;padding:0 8px;">{{ p.badge }}</span>
+                <span style="display:flex;align-items:baseline;gap:4px;margin-top:4px;"><span style="font-family:'Anton',sans-serif;font-size:40px;line-height:1;">{{ p.count }}</span><span style="font-weight:900;">回</span></span>
+                <span style="font-family:'Anton',sans-serif;font-size:26px;line-height:1.1;">{{ p.price }}</span>
+                <span style="font-weight:700;font-size:12px;">{{ p.per }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <p style="margin:12px 0 0;font-size:12px;font-weight:700;">※ 1往復 = 1pt 消費/チケット有効期限は5ヶ月です。</p>
+        </sc-if>
+
+        <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:28px;">
+            <div>
+              <p style="font-weight:900;font-size:14px;margin:0 0 10px;">参加人数 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                <sc-for list="{{ peopleOpts }}" as="o" hint-placeholder-count="6">
+                  <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:15px;padding:12px 18px;min-width:64px;min-height:48px;">{{ o.label }}</button>
+                </sc-for>
+              </div>
+              <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ 120分 一律16,500円(マンツーマン・グループ共通)です。</p>
+            </div>
+
+            <div>
+              <p style="font-weight:900;font-size:14px;margin:0 0 10px;">希望日程(1レッスン = 2時間固定)</p>
+              <div style="display:grid;gap:16px;">
+                <sc-for list="{{ pickers }}" as="p" hint-placeholder-count="2">
+                  <div style="border:3px solid #111111;background:#FFFFFF;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:3px solid #111111;">
+                      <span style="font-weight:900;font-size:15px;">{{ p.title }}</span>
+                      <span style="font-weight:900;font-size:11px;background:{{ p.badgeBg }};border:2px solid #111111;padding:0 8px;">{{ p.badge }}</span>
+                      <sc-if value="{{ p.showClear }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ p.onClear }}" style="margin-left:auto;font-family:inherit;cursor:pointer;border:2px solid #111111;background:#FFFFFF;font-weight:900;font-size:11px;padding:4px 10px;">クリア</button>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ p.hasSel }}" hint-placeholder-val="{{ false }}">
+                      <div style="margin:14px 14px 0;border:3px solid #111111;background:#E9FF00;font-weight:900;font-size:14px;padding:12px 14px;line-height:1.7;">{{ p.confirmedLine }}</div>
+                    </sc-if>
+                    <div style="padding:14px;">
+                      <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="width:100%;box-sizing:border-box;font-family:inherit;color:#111111;cursor:pointer;border:3px dashed #111111;background:#FFFFFF;font-weight:900;font-size:15px;padding:14px;text-align:center;min-height:52px;">{{ p.toggleLabel }} {{ p.arrow }}</button>
+                    </div>
+                    <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:0 14px 16px;display:grid;gap:14px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                          <button type="button" onClick="{{ p.onPrev }}" disabled="{{ p.prevDisabled }}" aria-label="前の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;opacity:{{ p.prevOpacity }};">‹</button>
+                          <div style="text-align:center;">
+                            <div style="font-weight:900;font-size:17px;background:linear-gradient(transparent 60%, #E9FF00 60%);display:inline-block;padding:0 4px;">{{ p.monthLabel }}</div>
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.2em;">{{ p.monthEn }}</div>
+                          </div>
+                          <button type="button" onClick="{{ p.onNext }}" aria-label="次の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;">›</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+                          <sc-for list="{{ p.weekdays }}" as="w" hint-placeholder-count="7">
+                            <div style="text-align:center;font-weight:900;font-size:11px;padding:4px 0;color:{{ w.weekend }};">{{ w.w }}</div>
+                          </sc-for>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+                          <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="35">
+                            <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
+                              <div aria-hidden="true"></div>
+                            </sc-if>
+                            <sc-if value="{{ c.isDay }}" hint-placeholder-val="{{ true }}">
+                              <button type="button" onClick="{{ c.onPick }}" disabled="{{ c.disabled }}" aria-pressed="{{ c.pressed }}" aria-label="{{ c.aria }}" style="font-family:inherit;cursor:pointer;border:2px solid #111111;background:{{ c.bg }};color:{{ c.fg }};padding:5px 2px;display:grid;gap:1px;justify-items:center;min-height:52px;">
+                                <span style="font-family:'Anton',sans-serif;font-size:19px;line-height:1;">{{ c.day }}</span>
+                                <span style="font-weight:700;font-size:8.5px;line-height:1.1;white-space:nowrap;color:{{ c.condColor }};">{{ c.cond }}</span>
+                              </button>
+                            </sc-if>
+                          </sc-for>
+                        </div>
+                        <p style="margin:0;font-size:11px;font-weight:700;color:#666666;">数字下は選択できる開始時刻帯です(平日8-19 / 土18・19 / 日14-19)。</p>
+                        <sc-if value="{{ p.hasTemp }}" hint-placeholder-val="{{ false }}">
+                          <div style="border-top:3px solid #111111;padding-top:14px;">
+                            <p style="margin:0 0 10px;font-weight:900;font-size:14px;">{{ p.tempTitle }}</p>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;">
+                              <sc-for list="{{ p.times }}" as="t" hint-placeholder-count="6">
+                                <button type="button" onClick="{{ t.onPick }}" aria-pressed="{{ t.pressed }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ t.bg }};padding:10px 6px;display:grid;gap:2px;justify-items:center;min-height:58px;">
+                                  <span style="font-family:'Anton',sans-serif;font-size:20px;line-height:1;">{{ t.label }}</span>
+                                  <span style="font-weight:700;font-size:11px;">{{ t.sub }}</span>
+                                </button>
+                              </sc-for>
+                            </div>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div>
+              <label for="court" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">希望コート(コート名・エリアなど) <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></label>
+              <input id="court" type="text" value="{{ court }}" onChange="{{ onCourt }}" placeholder="例:〇〇公園テニスコート/△△区周辺で相談したい" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
+              <button type="button" onClick="{{ onCourtReserve }}" aria-pressed="{{ courtReservePressed }}" style="margin-top:10px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ courtReserveBg }};padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;min-height:52px;">
+                <span aria-hidden="true" style="width:24px;height:24px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:15px;flex:none;">{{ courtReserveMark }}</span>
+                <span style="font-weight:900;font-size:13.5px;line-height:1.5;">コートの予約もお願いしたい</span>
+              </button>
+            </div>
+
+            <div>
+              <p style="font-weight:900;font-size:14px;margin:0 0 10px;">練習ボールレンタル <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+              <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                <sc-for list="{{ rentalOpts }}" as="o" hint-placeholder-count="2">
+                  <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </sc-if>
+
+      <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">4</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">規約・質問</h2>
+        </div>
+        <div style="border:3px solid #111111;padding:16px 18px;max-height:250px;overflow:auto;font-size:13px;font-weight:500;line-height:2;background:#FFFFFF;">
+          <p style="margin:0;font-weight:900;">レッスン規約</p>
+          <ul style="margin:10px 0 0;padding-left:18px;display:grid;gap:6px;">
+            <li>お申込み後、Instagram DM(@duffy_tennis)より日程・お支払い方法をご連絡し、確定となります。</li>
+            <li>オンライン動画添削は 1往復 = 1pt 消費、チケットの有効期限は購入から5ヶ月です。</li>
+            <li>対面レッスンは120分・一律16,500円(マンツーマン・グループ共通)です。</li>
+            <li>対面レッスンの移動費はお1人分をご負担ください。練習ボールレンタルは1カゴ1,200円です。</li>
+            <li>レッスン動画は後日無料で共有します。</li>
+            <li>天候・コート事情等により実施できない場合は、日程を振り替えます。</li>
+            <li>ご記入いただいた個人情報は、レッスン運営の目的以外には使用しません。</li>
+          </ul>
+        </div>
+        <button type="button" onClick="{{ onAgree }}" aria-pressed="{{ agreePressed }}" style="margin-top:16px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ agreeBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
+          <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ agreeMark }}</span>
+          <span style="font-weight:900;font-size:14px;">規約に同意します</span>
+        </button>
+        <div style="margin-top:24px;">
+          <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin:0 0 10px;">お支払い方法 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <sc-for list="{{ paymentOpts }}" as="o" hint-placeholder-count="3">
+              <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
+            </sc-for>
+          </div>
+          <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ お支払いの詳細は申込後、Instagram DM(@duffy_tennis)にてご案内します。</p>
+        </div>
+        <div style="margin-top:24px;">
+          <label for="q" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">質問・ご要望 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
+          <textarea id="q" value="{{ question }}" onChange="{{ onQuestion }}" rows="5" placeholder="気になること・伝えておきたいことがあればご記入ください" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:500;font-family:inherit;resize:vertical;"></textarea>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">5</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">入力内容の確認</h2>
+        </div>
+        <div style="border:3px solid #111111;">
+          <sc-for list="{{ confirmRows }}" as="r" hint-placeholder-count="7">
+            <div style="display:grid;grid-template-columns:minmax(96px,110px) 1fr;gap:10px;padding:12px 14px;border-bottom:2px solid #EEEEEE;">
+              <span style="font-weight:900;font-size:12.5px;">{{ r.k }}</span>
+              <span style="font-weight:700;font-size:13.5px;line-height:1.7;overflow-wrap:anywhere;">{{ r.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:20px;border:3px solid #111111;background:#111111;color:#FFFFFF;padding:20px;box-shadow:-8px 8px 0 #E9FF00;">
+          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.25em;font-size:13px;color:#E9FF00;">ESTIMATE</div>
+          <div style="font-weight:900;font-size:14px;margin:4px 0 10px;">概算金額</div>
+          <sc-for list="{{ estRows }}" as="r" hint-placeholder-count="2">
+            <div style="display:flex;justify-content:space-between;gap:10px;border-top:2px solid rgba(255,255,255,0.3);padding:9px 0;font-weight:700;font-size:13px;">
+              <span>{{ r.k }}</span>
+              <span>{{ r.v }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:3px solid #FFFFFF;padding-top:10px;">
+            <span style="font-weight:900;font-size:14px;">合計(概算)</span>
+            <span style="font-family:'Anton',sans-serif;font-size:36px;line-height:1;color:#E9FF00;">{{ estTotal }}</span>
+          </div>
+          <p style="margin:12px 0 0;font-size:11.5px;font-weight:500;line-height:1.9;color:rgba(255,255,255,0.85);">{{ estNote }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="border:3px solid #111111;background:#E9FF00;font-weight:900;font-size:14px;padding:12px 16px;margin-top:26px;transform:rotate(-0.4deg);">{{ err }}</div>
+      </sc-if>
+
+      <div style="display:flex;gap:12px;margin-top:28px;">
+        <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+          <button type="button" onClick="{{ onBack }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:15px;padding:16px 20px;min-height:58px;">← 戻る</button>
+        </sc-if>
+        <button type="button" onClick="{{ onNext }}" style="flex:1;font-family:inherit;cursor:pointer;border:3px solid #111111;background:#111111;color:#E9FF00;font-weight:900;font-size:17px;padding:16px 20px;min-height:58px;box-shadow:6px 6px 0 #E9FF00;transition:box-shadow 0.15s ease, transform 0.15s ease;" style-hover="box-shadow:2px 2px 0 #E9FF00;transform:translate(3px,3px);">{{ nextLabel }}</button>
+      </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:760px;margin:0 auto;padding:clamp(40px,8vw,80px) clamp(16px,4vw,24px) 110px;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:15px;">APPLICATION SENT</div>
+          <div style="font-family:'Anton',sans-serif;font-size:clamp(64px,18vw,140px);line-height:0.95;margin-top:6px;">THANKS<span style="color:#E9FF00;-webkit-text-stroke:3px #111111;">!</span></div>
+        </div>
+        <img src="assets/bear_3.png" alt="ガッツポーズするダッフィーベア" style="width:clamp(110px,24vw,180px);transform:rotate(-4deg);flex:none;">
+      </div>
+      <p style="font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:20px 0 0;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">送信が完了しました。</span></p>
+      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:14px 0 0;">この後、Instagram DM(@duffy_tennis)より日程・お支払いのご連絡をいたします。DMが届くまで少々お待ちください。</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;">
+        <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener" style="background:#E9FF00;border:3px solid #111111;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;text-decoration:none;" style-hover="background:#111111;color:#E9FF00;">Instagramを開く</a>
+        <a href="index.html" style="border:3px solid #111111;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;text-decoration:none;" style-hover="background:#111111;color:#FFFFFF;">LPへ戻る</a>
+        <button type="button" onClick="{{ resetAll }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:#FFFFFF;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;">新しく申込む</button>
+      </div>
+    </main>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;monthsAhead&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 2, &quot;min&quot;: 1, &quot;max&quot;: 4, &quot;step&quot;: 1, &quot;unit&quot;: &quot;ヶ月&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;日程ピッカー&quot; },
+  &quot;maxPeople&quot;: { &quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 6, &quot;min&quot;: 2, &quot;max&quot;: 10, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;フォーム設定&quot; }
+}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.STORE_KEY = 'duffy-tennis-apply-v1';
+    this.PLANS = [
+      { key: '3', price: 2400, per: 800, badge: 'TICKET' },
+      { key: '5', price: 3750, per: 750, badge: 'TICKET' },
+      { key: '10', price: 6500, per: 650, badge: 'いちばんおトク' }
+    ];
+    this.MONTH_EN = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    this.state = {
+      step: 1,
+      done: false,
+      data: {
+        name: '', email: '', phone: '', sns: '', category: '',
+        menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
+        date1: null, date2: null, agree: false, payment: '', question: ''
+      },
+      open1: false, open2: false, temp1: '', temp2: '', err: ''
+    };
+    try {
+      const raw = localStorage.getItem(this.STORE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s && s.data) {
+          this.state = {
+            ...this.state,
+            data: { ...this.state.data, ...s.data },
+            step: s.step || 1,
+            done: !!s.done
+          };
+        }
+      }
+    } catch (e) {}
+  }
+
+  save(patch) {
+    try {
+      localStorage.setItem(this.STORE_KEY, JSON.stringify({
+        data: patch.data !== undefined ? patch.data : this.state.data,
+        step: patch.step !== undefined ? patch.step : this.state.step,
+        done: patch.done !== undefined ? patch.done : this.state.done
+      }));
+    } catch (e) {}
+  }
+
+  setData(patch) {
+    const data = { ...this.state.data, ...patch };
+    this.setState({ data, err: '' });
+    this.save({ data });
+  }
+
+  go(step) {
+    this.setState({ step, err: '' });
+    this.save({ step });
+    window.scrollTo(0, 0);
+  }
+
+  fmtYen(n) { return '¥' + n.toLocaleString('ja-JP'); }
+  t(h) { return String(h).padStart(2, '0') + ':00'; }
+
+  parseKey(key) {
+    const p = key.split('-').map(Number);
+    const dt = new Date(p[0], p[1] - 1, p[2]);
+    return { m: p[1], d: p[2], dow: dt.getDay(), wd: '日月火水木金土'[dt.getDay()] };
+  }
+  shortDate(key) { const p = this.parseKey(key); return p.m + '/' + p.d + '(' + p.wd + ')'; }
+  selLine(sel) { return this.shortDate(sel.key) + ' ' + this.t(sel.start) + '〜' + this.t(sel.start + 2) + '(2時間)'; }
+
+  hoursFor(dow) {
+    if (dow === 0) return [14, 15, 16, 17, 18, 19];
+    if (dow === 6) return [18, 19];
+    const arr = []; for (let h = 8; h <= 19; h++) arr.push(h); return arr;
+  }
+
+  monthKey(y, m) { return y + '-' + String(m).padStart(2, '0'); }
+
+  buildPicker(i) {
+    const d = this.state.data;
+    const sel = d['date' + i];
+    const open = this.state['open' + i];
+    const temp = this.state['temp' + i];
+
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const curMonth = { y: today.getFullYear(), m: today.getMonth() + 1 };
+
+    // 表示中の月(未指定なら選択中の月 or 今月)
+    let view = this.state['cur' + i];
+    if (!view) {
+      if (sel) { const p = this.parseKey(sel.key); view = { y: new Date(sel.key).getFullYear(), m: p.m }; }
+      else view = { ...curMonth };
+    }
+
+    const weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+    const cells = [];
+    if (open) {
+      const first = new Date(view.y, view.m - 1, 1);
+      const lead = (first.getDay() + 6) % 7; // 月曜始まり
+      for (let k = 0; k < lead; k++) cells.push({ empty: true });
+      const daysInMonth = new Date(view.y, view.m, 0).getDate();
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dt = new Date(view.y, view.m - 1, day); dt.setHours(0, 0, 0, 0);
+        const dow = dt.getDay();
+        const key = view.y + '-' + String(view.m).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+        const past = dt < today;
+        const cond = dow === 0 ? '14-19' : dow === 6 ? '18・19' : '8-19';
+        const pressedTemp = temp === key;
+        const pickedHere = !!(sel && sel.key === key);
+        const weekend = dow === 0 || dow === 6;
+        cells.push({
+          empty: false, isDay: true, key, day, cond,
+          pressed: pickedHere || pressedTemp,
+          disabled: past,
+          bg: past ? '#F2F2F2' : pressedTemp ? '#E9FF00' : pickedHere ? '#111111' : '#FFFFFF',
+          fg: past ? '#BBBBBB' : pickedHere ? '#FFFFFF' : '#111111',
+          condColor: past ? '#CCCCCC' : weekend ? '#111111' : '#666666',
+          aria: view.y + '年' + view.m + '月' + day + '日 ' + '日月火水木金土'[dow] + '曜日' + (past ? ' 選択不可' : ' 選択可能時間 ' + cond + '時'),
+          onPick: () => { if (!past) this.setState({ ['temp' + i]: key }); }
+        });
+      }
+      // 末尾を7の倍数に揃える
+      while (cells.length % 7 !== 0) cells.push({ empty: true });
+    }
+
+    const atCurMonth = view.y === curMonth.y && view.m === curMonth.m;
+    const shiftMonth = (delta) => {
+      const nv = new Date(view.y, view.m - 1 + delta, 1);
+      const next = { y: nv.getFullYear(), m: nv.getMonth() + 1 };
+      if (delta < 0 && (next.y < curMonth.y || (next.y === curMonth.y && next.m < curMonth.m))) return;
+      this.setState({ ['cur' + i]: next });
+    };
+
+    let times = [];
+    if (open && temp) {
+      const dow = this.parseKey(temp).dow;
+      times = this.hoursFor(dow).map((h) => {
+        const pressed = !!(sel && sel.key === temp && sel.start === h);
+        return {
+          label: this.t(h), sub: '〜' + this.t(h + 2), pressed,
+          bg: pressed ? '#E9FF00' : '#FFFFFF',
+          onPick: () => {
+            const data = { ...this.state.data, ['date' + i]: { key: temp, start: h } };
+            const st = { data, ['open' + i]: false, ['temp' + i]: '', err: '' };
+            if (i === 1 && !data.date2) { st.open2 = true; st.temp2 = ''; }
+            this.setState(st);
+            this.save({ data });
+          }
+        };
+      });
+    }
+
+    return {
+      idx: i,
+      title: '第' + i + '希望',
+      badge: i === 1 ? '必須' : '任意',
+      badgeBg: i === 1 ? '#E9FF00' : '#EEEEEE',
+      hasSel: !!sel,
+      confirmedLine: sel ? this.selLine(sel) + ' でご希望' : '',
+      toggleLabel: sel ? this.shortDate(sel.key) + ' タップで変更' : '日付を選ぶ',
+      arrow: open ? '▲' : '▼',
+      open,
+      onToggle: () => this.setState({ ['open' + i]: !open, ['temp' + i]: !open && sel ? sel.key : '', ['cur' + i]: null }),
+      showClear: i === 2 && !!sel,
+      onClear: () => {
+        const data = { ...this.state.data, date2: null };
+        this.setState({ data, open2: false, temp2: '', cur2: null });
+        this.save({ data });
+      },
+      weekdays: weekdays.map((w, k) => ({ w, weekend: k >= 5 ? '#111111' : '#666666' })),
+      cells,
+      monthLabel: view.y + '年' + view.m + '月',
+      monthEn: this.MONTH_EN[view.m - 1],
+      prevDisabled: atCurMonth,
+      prevOpacity: atCurMonth ? 0.3 : 1,
+      onPrev: () => shiftMonth(-1),
+      onNext: () => shiftMonth(1),
+      hasTemp: !!(open && temp),
+      tempTitle: temp ? this.shortDate(temp) + ' の開始時刻を選ぶ(1レッスン = 2時間)' : '',
+      times
+    };
+  }
+
+  validate(step) {
+    const d = this.state.data;
+    if (step === 1) {
+      if (!d.name.trim()) return '氏名を入力してください。';
+      if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
+      if (!d.phone.trim()) return '電話番号を入力してください。';
+      if (!d.category) return 'ご本人の区分を選択してください。';
+    }
+    if (step === 2 && !d.menu) return 'メニューを選択してください。';
+    if (step === 3) {
+      if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
+      if (d.menu === 'offline') {
+        if (!d.date1) return '第1希望の日程を選択してください。';
+        if (!d.court.trim()) return '希望コートを入力してください。';
+        if (!d.rental) return '練習ボールレンタルの有無を選択してください。';
+      }
+    }
+    if (step === 4) {
+      if (!d.agree) return '規約への同意が必要です。';
+      if (!d.payment) return 'お支払い方法を選択してください。';
+    }
+    return '';
+  }
+
+  renderVals() {
+    const st = this.state;
+    const d = st.data;
+    const labels = ['基本情報', 'メニュー', '詳細', '規約・質問', '確認'];
+
+    const steps = labels.map((label, idx) => {
+      const n = idx + 1;
+      const isCur = st.step === n;
+      const isDone = st.step > n;
+      return {
+        n, label,
+        bg: isCur ? '#E9FF00' : isDone ? '#111111' : '#FFFFFF',
+        fg: isDone ? '#FFFFFF' : '#111111',
+        opacity: isCur || isDone ? 1 : 0.4,
+        cursor: isDone ? 'pointer' : 'default',
+        disabled: !isDone,
+        ariaCurrent: isCur ? 'step' : undefined,
+        onGo: () => { if (st.step > n) this.go(n); }
+      };
+    });
+
+    const fieldDefs = [
+      { id: 'f-name', key: 'name', label: '氏名', type: 'text', placeholder: '例:山田 太郎', auto: 'name', req: true },
+      { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true },
+      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: true },
+      { id: 'f-sns', key: 'sns', label: 'SNSアカウント', type: 'text', placeholder: '例:@your_account(Instagram等)', auto: 'off', req: false }
+    ];
+    const fields1 = fieldDefs.map((f) => ({
+      ...f,
+      value: d[f.key],
+      reqText: f.req ? '必須' : '任意',
+      reqBg: f.req ? '#E9FF00' : '#EEEEEE',
+      onChange: (e) => this.setData({ [f.key]: e.target.value })
+    }));
+
+    const categoryOpts = ['小学生', '高校生', '大学生', '社会人', 'その他'].map((v) => ({
+      label: v,
+      pressed: d.category === v,
+      bg: d.category === v ? '#E9FF00' : '#FFFFFF',
+      onPick: () => this.setData({ category: v })
+    }));
+
+    const menuDefs = [
+      { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
+      { key: 'offline', en: 'IN-PERSON', title: '対面レッスン', desc: 'コートで受ける120分レッスン。マンツーマン・グループ共通で一律16,500円。レッスン動画は後日無料で共有。' }
+    ];
+    const menuCards = menuDefs.map((c) => {
+      const pressed = d.menu === c.key;
+      return {
+        ...c, pressed,
+        bg: pressed ? '#E9FF00' : '#FFFFFF',
+        shadow: pressed ? '8px 8px 0 #111111' : 'none',
+        mark: pressed ? '✓ 選択中' : '選ぶ',
+        markBg: pressed ? '#111111' : '#FFFFFF',
+        markFg: pressed ? '#E9FF00' : '#111111',
+        onPick: () => this.setData({ menu: c.key })
+      };
+    });
+
+    const planCards = this.PLANS.map((p) => {
+      const pressed = d.plan === p.key;
+      return {
+        count: p.key, pressed,
+        price: this.fmtYen(p.price),
+        per: p.per + '円/回',
+        badge: p.badge,
+        badgeBg: p.badge === 'TICKET' ? '#FFFFFF' : '#E9FF00',
+        bg: pressed ? '#E9FF00' : '#FFFFFF',
+        shadow: pressed ? '8px 8px 0 #111111' : 'none',
+        onPick: () => this.setData({ plan: p.key })
+      };
+    });
+
+    const maxPeople = this.props.maxPeople ?? 6;
+    const peopleOpts = [];
+    for (let n = 1; n <= maxPeople; n++) {
+      const pressed = d.people === n;
+      peopleOpts.push({
+        label: n + '人', pressed,
+        bg: pressed ? '#E9FF00' : '#FFFFFF',
+        onPick: () => this.setData({ people: n })
+      });
+    }
+
+    const rentalOpts = ['あり', 'なし'].map((v) => {
+      const pressed = d.rental === v;
+      return {
+        label: v === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし',
+        pressed,
+        bg: pressed ? '#E9FF00' : '#FFFFFF',
+        onPick: () => this.setData({ rental: v })
+      };
+    });
+
+    const pickers = [this.buildPicker(1), this.buildPicker(2)];
+
+    const paymentOpts = ['クレジットカード', 'PayPay', '口座振り込み'].map((v) => ({
+      label: v,
+      pressed: d.payment === v,
+      bg: d.payment === v ? '#E9FF00' : '#FFFFFF',
+      onPick: () => this.setData({ payment: v })
+    }));
+
+    const confirmRows = [
+      { k: '氏名', v: d.name },
+      { k: 'メール', v: d.email },
+      { k: '電話番号', v: d.phone },
+      { k: 'SNSアカウント', v: d.sns || '(未記入)' },
+      { k: '区分', v: d.category || '(未選択)' },
+      { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
+    ];
+    const estRows = [];
+    let total = 0;
+    let estNote = '';
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      if (p) {
+        confirmRows.push({ k: 'チケットプラン', v: p.key + '回 ' + this.fmtYen(p.price) + '(' + p.per + '円/回)' });
+        estRows.push({ k: 'オンライン動画添削 ' + p.key + '回チケット', v: this.fmtYen(p.price) });
+        total = p.price;
+      }
+      estNote = '※ 1往復 = 1pt 消費/有効期限5ヶ月。お支払い方法は申込後、Instagram DM(@duffy_tennis)にてご案内します。';
+    } else if (d.menu === 'offline') {
+      confirmRows.push({ k: '参加人数', v: d.people + '人' });
+      confirmRows.push({ k: '第1希望', v: d.date1 ? this.selLine(d.date1) : '(未選択)' });
+      confirmRows.push({ k: '第2希望', v: d.date2 ? this.selLine(d.date2) : '(なし)' });
+      confirmRows.push({ k: '希望コート', v: d.court + (d.courtReserve ? '(コート予約も依頼)' : '') });
+      confirmRows.push({ k: 'ボールレンタル', v: d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし' });
+      estRows.push({ k: '対面レッスン 120分(一律)', v: this.fmtYen(16500) });
+      total = 16500;
+      if (d.rental === 'あり') { estRows.push({ k: '練習ボールレンタル 1カゴ', v: this.fmtYen(1200) }); total += 1200; }
+      estNote = '※ 移動費(お1人分)は別途実費です。日程・お支払いは申込後、Instagram DM(@duffy_tennis)にて確定します。';
+    }
+    confirmRows.push({ k: 'お支払い方法', v: d.payment || '(未選択)' });
+    confirmRows.push({ k: '質問・ご要望', v: d.question || '(なし)' });
+
+    return {
+      done: st.done,
+      notDone: !st.done,
+      isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3,
+      isStep4: st.step === 4, isStep5: st.step === 5,
+      isOnline: d.menu === 'online', isOffline: d.menu === 'offline',
+      step3Title: d.menu === 'online' ? '詳細(オンライン動画添削)' : d.menu === 'offline' ? '詳細(対面レッスン)' : '詳細',
+      err: st.err, hasErr: !!st.err,
+      steps, fields1, categoryOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
+      court: d.court,
+      onCourt: (e) => this.setData({ court: e.target.value }),
+      courtReservePressed: d.courtReserve,
+      courtReserveBg: d.courtReserve ? '#E9FF00' : '#FFFFFF',
+      courtReserveMark: d.courtReserve ? '✓' : '',
+      onCourtReserve: () => this.setData({ courtReserve: !d.courtReserve }),
+      agreePressed: d.agree,
+      agreeBg: d.agree ? '#E9FF00' : '#FFFFFF',
+      agreeMark: d.agree ? '✓' : '',
+      onAgree: () => this.setData({ agree: !d.agree }),
+      question: d.question,
+      onQuestion: (e) => this.setData({ question: e.target.value }),
+      confirmRows, estRows,
+      estTotal: this.fmtYen(total),
+      estNote,
+      showBack: st.step > 1,
+      onBack: () => this.go(st.step - 1),
+      nextLabel: st.step === 5 ? '送信する →' : '次へ →',
+      onNext: () => {
+        const msg = this.validate(st.step);
+        if (msg) { this.setState({ err: msg }); return; }
+        if (st.step === 5) {
+          this.setState({ done: true });
+          this.save({ done: true });
+          window.scrollTo(0, 0);
+          return;
+        }
+        const nextStep = st.step + 1;
+        const patch = { step: nextStep, err: '' };
+        if (nextStep === 3 && d.menu === 'offline' && !d.date1) patch.open1 = true;
+        this.setState(patch);
+        this.save({ step: nextStep });
+        window.scrollTo(0, 0);
+      },
+      resetAll: () => {
+        try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
+        this.setState({
+          step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
+          data: { name: '', email: '', phone: '', sns: '', category: '', menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
+        });
+        window.scrollTo(0, 0);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
