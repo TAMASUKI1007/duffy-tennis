@@ -506,7 +506,7 @@ class Component extends DCLogic {
 
   sendEmails() {
     const d = this.state.data;
-    if (!window.emailjs) return Promise.reject(new Error('emailjs not loaded'));
+    if (!window.emailjs) return Promise.reject(new Error('メール送信ライブラリが読み込まれていません(通信環境をご確認ください)。'));
     const params = {
       name: d.name,
       customer_email: d.email,
@@ -518,10 +518,9 @@ class Component extends DCLogic {
       message: this.buildSummary()
     };
     const cfg = this.EMAILJS;
-    return Promise.all([
-      window.emailjs.send(cfg.serviceId, cfg.customerTemplate, params),
-      window.emailjs.send(cfg.serviceId, cfg.adminTemplate, params)
-    ]);
+    const opts = { publicKey: cfg.publicKey };
+    return window.emailjs.send(cfg.serviceId, cfg.adminTemplate, params, opts)
+      .then(() => window.emailjs.send(cfg.serviceId, cfg.customerTemplate, params, opts));
   }
 
   save(patch) {
@@ -881,7 +880,8 @@ class Component extends DCLogic {
               window.scrollTo(0, 0);
             })
             .catch((e) => {
-              this.setState({ sending: false, err: '送信に失敗しました。通信環境をご確認のうえ、もう一度お試しください。' });
+              const detail = (e && (e.text || e.message)) ? ('(' + (e.text || e.message) + ')') : '';
+              this.setState({ sending: false, err: '送信に失敗しました。通信環境をご確認のうえ、もう一度お試しください。' + detail });
             });
           return;
         }
