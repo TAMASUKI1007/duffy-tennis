@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 html, body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; }
 body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
@@ -65,6 +66,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
                 <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
               </sc-for>
             </div>
+            <sc-if value="{{ needsGuardian }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ onGuardian }}" aria-pressed="{{ guardianPressed }}" style="margin-top:14px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ guardianBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
+                <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ guardianMark }}</span>
+                <span style="font-weight:900;font-size:13.5px;line-height:1.5;">保護者の許可を得ています <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></span>
+              </button>
+            </sc-if>
           </div>
         </div>
       </sc-if>
@@ -189,12 +196,18 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             </div>
 
             <div>
-              <label for="court" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">希望コート(コート名・エリアなど) <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></label>
+              <label for="court" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">希望コート(コート名・エリアなど)
+                <sc-if value="{{ courtOptional }}" hint-placeholder-val="{{ false }}"><span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></sc-if>
+                <sc-if value="{{ courtRequired }}" hint-placeholder-val="{{ true }}"><span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></sc-if>
+              </label>
               <input id="court" type="text" value="{{ court }}" onChange="{{ onCourt }}" placeholder="例:〇〇公園テニスコート/△△区周辺で相談したい" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
               <button type="button" onClick="{{ onCourtReserve }}" aria-pressed="{{ courtReservePressed }}" style="margin-top:10px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ courtReserveBg }};padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;min-height:52px;">
                 <span aria-hidden="true" style="width:24px;height:24px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:15px;flex:none;">{{ courtReserveMark }}</span>
                 <span style="font-weight:900;font-size:13.5px;line-height:1.5;">コートの予約もお願いしたい</span>
               </button>
+              <sc-if value="{{ courtOptional }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:8px 0 0;font-size:12px;font-weight:700;color:#166534;">コート予約を代行するので、希望コートの入力は任意です。エリアの希望があればご記入ください。</p>
+              </sc-if>
             </div>
 
             <div>
@@ -214,17 +227,113 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">4</span>
           <h2 style="margin:0;font-weight:900;font-size:20px;">規約・質問</h2>
         </div>
-        <div style="border:3px solid #111111;padding:16px 18px;max-height:250px;overflow:auto;font-size:13px;font-weight:500;line-height:2;background:#FFFFFF;">
-          <p style="margin:0;font-weight:900;">レッスン規約</p>
-          <ul style="margin:10px 0 0;padding-left:18px;display:grid;gap:6px;">
-            <li>お申込み後、Instagram DM(@duffy_tennis)より日程・お支払い方法をご連絡し、確定となります。</li>
-            <li>オンライン動画添削は 1往復 = 1pt 消費、チケットの有効期限は購入から5ヶ月です。</li>
-            <li>対面レッスンは120分・一律16,500円(マンツーマン・グループ共通)です。</li>
-            <li>対面レッスンの移動費はお1人分をご負担ください。練習ボールレンタルは1カゴ1,200円です。</li>
-            <li>レッスン動画は後日無料で共有します。</li>
-            <li>天候・コート事情等により実施できない場合は、日程を振り替えます。</li>
-            <li>ご記入いただいた個人情報は、レッスン運営の目的以外には使用しません。</li>
-          </ul>
+        <div style="border:3px solid #111111;padding:18px 20px;max-height:340px;overflow:auto;font-size:12.5px;font-weight:500;line-height:1.95;background:#FFFFFF;">
+          <p style="margin:0;font-weight:900;font-size:15px;">レッスン利用規約</p>
+          <p style="margin:12px 0 0;">本規約は、ダッフィー先生(@duffy_tennis、以下「主催者」といいます)が提供するテニスレッスン(対面レッスンおよびオンライン動画添削を含み、以下「本レッスン」といいます)の利用条件を定めるものです。本レッスンにお申込みいただいた方(以下「お客様」といいます)は、本規約のすべての条項に同意したものとみなします。</p>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第1条(本規約への同意)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>お客様は、本レッスンのお申込みにあたり、本規約の内容を確認し、これに同意したうえでお申込みを行うものとします。</li>
+            <li>お客様が本レッスンのお申込みを完了した時点で、本規約に同意したものとみなします。</li>
+            <li>お客様が未成年である場合は、保護者の同意を得たうえでお申込みを行うものとします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第2条(お申込みおよび予約の確定)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>本レッスンのお申込みは、主催者所定の申込フォームを通じて行うものとします。</li>
+            <li>お申込みの完了は、予約の確定を意味するものではありません。お申込み後、主催者よりInstagramのダイレクトメッセージ(@duffy_tennis)を通じて、日程およびお支払い方法についてご連絡いたします。</li>
+            <li>日程およびお支払い方法について、お客様と主催者との間で合意が成立した時点をもって、予約が確定するものとします。</li>
+            <li>主催者は、レッスンの運営上必要と判断した場合、お申込みをお断りすることがあります。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第3条(料金)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>対面レッスンの料金は、120分あたり一律16,500円(税込)とし、マンツーマン・グループを問わず同額とします。</li>
+            <li>前項の料金は、参加人数の多寡にかかわらず変動しないものとします。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。</li>
+            <li>オンライン動画添削は、チケット制とします。1往復のやり取りにつき1ポイントを消費するものとし、チケットの有効期限は購入日から5ヶ月とします。</li>
+            <li>購入済みのチケット料金については、原則として返金を行いません。ただし、有効期限内であればご利用いただけます。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第4条(お支払い)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>お客様は、日程確定後、本レッスン実施日の3日前までにお支払いを完了するものとします。</li>
+            <li>本レッスン実施日の3日前までに主催者がご入金を確認できない場合、当該お申込みはキャンセルされたものとして取り扱うことがあります。</li>
+            <li>お支払いを銀行振込により行う場合、振込手数料はお客様のご負担とします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第5条(コート利用料およびその他の費用)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>対面レッスンにおけるコート利用料は、実費としてお客様のご負担とします。</li>
+            <li>対面レッスンにおける主催者の移動費は、お1人分をお客様のご負担とします。</li>
+            <li>練習用ボールのレンタルをご希望の場合、1カゴにつき1,200円を申し受けます。</li>
+            <li>お客様のご希望に応じて、主催者がコートの予約を代行することがあります。この場合においても、コート利用料はお客様のご負担とします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第6条(キャンセルおよび日程変更)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>お客様のご都合により本レッスンをキャンセルする場合、以下のキャンセル料を申し受けます。なお、本条のキャンセル料はレッスン料を基準として算定し、コート利用料その他の実費については各施設等の定めに従うものとします。
+              <ul style="margin:6px 0 0;padding-left:18px;display:grid;gap:2px;">
+                <li>実施日の3日前まで:無料</li>
+                <li>実施日の前日まで:レッスン料の50%</li>
+                <li>実施日当日:レッスン料の100%</li>
+              </ul>
+            </li>
+            <li>日程変更をご希望の場合は、Instagramのダイレクトメッセージを通じて、できる限りお早めにご連絡ください。</li>
+            <li>お客様が事前の連絡なく本レッスンに参加しなかった場合(無断キャンセル)、主催者は以降のお申込みをお断りすることがあります。</li>
+            <li>やむを得ない事情によるキャンセルまたは日程変更については、遠慮なく主催者までご相談ください。主催者は、可能な範囲で柔軟に対応するよう努めます。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第7条(主催者都合による中止・悪天候時の取り扱い)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>天候、コート事情その他の事由により本レッスンを実施できない場合、主催者はお客様と協議のうえ、日程を振り替えるものとします。</li>
+            <li>主催者側の都合により本レッスンを中止した場合、主催者はお客様に対し、既にお支払いいただいた料金の全額を返金するか、または別日への振替をもって対応します。</li>
+            <li>屋外コートを使用する場合、当日の実施可否については、本レッスン開始前までにInstagramのダイレクトメッセージを通じてご連絡します。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第8条(本レッスン当日の取り扱い)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>お客様のご都合により本レッスンの開始に遅刻された場合であっても、本レッスンの終了時刻は変更されません。遅刻された時間分のレッスン時間の延長は行いません。</li>
+            <li>お客様または同伴者が、他の受講者、コート施設、近隣の利用者等に対して迷惑となる行為を行った場合、主催者は本レッスンを中止することがあります。この場合、料金の返金は行いません。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第9条(未成年者の参加)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>未成年のお客様が本レッスンにお申込みになる場合は、あらかじめ保護者の同意を得るものとします。</li>
+            <li>ジュニアおよび未成年のお客様の本レッスンについては、保護者の見学を可能とします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第10条(写真・動画の撮影および利用)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>主催者は、本レッスンの様子を撮影した動画を、後日、お客様に無料で共有します。</li>
+            <li>主催者は、本レッスン中に撮影した写真および動画を、SNS(Instagram等)その他の媒体における広報・宣伝の目的で使用することがあります。</li>
+            <li>前項の掲載を希望されないお客様は、お申込み時またはレッスン実施前までに、その旨を主催者までお申し出ください。この場合、主催者は当該お客様が判別される写真・動画の掲載を行いません。</li>
+            <li>未成年のお客様の写真および動画を掲載する場合、主催者は事前に保護者の同意を確認するものとします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第11条(安全および免責)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>主催者は、お客様の安全に配慮して本レッスンを実施します。</li>
+            <li>お客様は、体調に不安がある場合、本レッスンの開始前にその旨を主催者に申し出るものとします。</li>
+            <li>本レッスン中に生じた負傷、事故その他の損害について、主催者の故意または重大な過失による場合を除き、主催者は責任を負わないものとします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第12条(個人情報の取り扱い)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>主催者は、お客様からご提供いただいた個人情報を、本レッスンの運営および連絡の目的の範囲内でのみ使用します。</li>
+            <li>主催者は、法令に基づく場合を除き、お客様の同意なく個人情報を第三者に提供しません。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第13条(本規約の改定)</p>
+          <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
+            <li>主催者は、必要と判断した場合、お客様への予告なく本規約を改定することがあります。</li>
+            <li>本規約が改定された場合であっても、お客様の本レッスンには、当該お客様のお申込み時点における規約が適用されるものとします。</li>
+          </ol>
+
+          <p style="margin:16px 0 4px;font-weight:900;">第14条(準拠法および協議)</p>
+          <ol style="margin:0 0 2px;padding-left:20px;display:grid;gap:4px;">
+            <li>本規約の解釈および適用は、日本法に準拠するものとします。</li>
+            <li>本レッスンに関して本規約に定めのない事項、または本規約の解釈に疑義が生じた場合は、お客様と主催者が誠実に協議のうえ、これを解決するものとします。</li>
+          </ol>
         </div>
         <button type="button" onClick="{{ onAgree }}" aria-pressed="{{ agreePressed }}" style="margin-top:16px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ agreeBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
           <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ agreeMark }}</span>
@@ -301,7 +410,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
       <p style="font-size:14px;font-weight:500;line-height:2.1;margin:14px 0 0;">この後、Instagram DM(@duffy_tennis)より日程・お支払いのご連絡をいたします。DMが届くまで少々お待ちください。</p>
       <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px;">
         <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener" style="background:#E9FF00;border:3px solid #111111;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;text-decoration:none;" style-hover="background:#111111;color:#E9FF00;">Instagramを開く</a>
-        <a href="index.html" style="border:3px solid #111111;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;text-decoration:none;" style-hover="background:#111111;color:#FFFFFF;">LPへ戻る</a>
+        <a href="index.html" style="border:3px solid #111111;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;text-decoration:none;" style-hover="background:#111111;color:#FFFFFF;">MatchUpへ</a>
         <button type="button" onClick="{{ resetAll }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:#FFFFFF;color:#111111;font-weight:900;font-size:14px;padding:13px 18px;">新しく申込む</button>
       </div>
     </main>
@@ -326,11 +435,17 @@ class Component extends DCLogic {
       step: 1,
       done: false,
       data: {
-        name: '', email: '', phone: '', sns: '', category: '',
+        name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false,
         menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
         date1: null, date2: null, agree: false, payment: '', question: ''
       },
-      open1: false, open2: false, temp1: '', temp2: '', err: ''
+      open1: false, open2: false, temp1: '', temp2: '', err: '', sending: false
+    };
+    this.EMAILJS = {
+      publicKey: 'GSMoBClKajUxu9UZe',
+      serviceId: 'service_h8ie8gv',
+      customerTemplate: 'template_ajff44h',
+      adminTemplate: 'template_gatpyud'
     };
     try {
       const raw = localStorage.getItem(this.STORE_KEY);
@@ -346,6 +461,67 @@ class Component extends DCLogic {
         }
       }
     } catch (e) {}
+  }
+
+  componentDidMount() {
+    try {
+      if (window.emailjs && this.EMAILJS.publicKey) {
+        window.emailjs.init({ publicKey: this.EMAILJS.publicKey });
+      }
+    } catch (e) {}
+  }
+
+  buildSummary() {
+    const d = this.state.data;
+    const yen = (n) => '¥' + n.toLocaleString('ja-JP');
+    const t = (h) => String(h).padStart(2, '0') + ':00';
+    const selLine = (sel) => sel ? (this.shortDate(sel.key) + ' ' + t(sel.start) + '〜' + t(sel.start + 2) + '(2時間)') : '';
+    const lines = [];
+    lines.push('■お名前:' + d.name);
+    lines.push('■SNS:' + (d.sns || '(未記入)'));
+    lines.push('■メール:' + d.email);
+    lines.push('■電話番号:' + d.phone);
+    const minor = ['12歳未満', '12〜15歳', '16〜17歳'].indexOf(d.category) >= 0;
+    lines.push('■区分:' + (d.category || '(未選択)') + (minor ? (d.guardianConsent ? '(保護者の許可あり)' : '') : ''));
+    lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? '対面レッスン' : '(未選択)'));
+
+    let total = 0;
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      if (p) { lines.push('■チケット:' + p.key + '回 ' + yen(p.price) + '(' + p.per + '円/回)'); total = p.price; }
+    } else if (d.menu === 'offline') {
+      lines.push('■参加人数:' + d.people + '人');
+      lines.push('■第1希望:' + (d.date1 ? selLine(d.date1) : '(未選択)'));
+      lines.push('■第2希望:' + (d.date2 ? selLine(d.date2) : '(なし)'));
+      lines.push('■希望コート:' + (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : ''));
+      lines.push('■ボールレンタル:' + (d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし'));
+      total = 16500;
+      if (d.rental === 'あり') total += 1200;
+    }
+    lines.push('■お支払い方法:' + (d.payment || '(未選択)'));
+    lines.push('■概算金額:' + yen(total));
+    lines.push('■質問・ご要望:' + (d.question || '(なし)'));
+    return lines.join('\n');
+  }
+
+  sendEmails() {
+    const d = this.state.data;
+    if (!window.emailjs) return Promise.reject(new Error('emailjs not loaded'));
+    const params = {
+      name: d.name,
+      customer_email: d.email,
+      email: d.email,
+      phone: d.phone,
+      sns: d.sns || '(未記入)',
+      category: d.category,
+      menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+      message: this.buildSummary()
+    };
+    const cfg = this.EMAILJS;
+    return Promise.all([
+      window.emailjs.send(cfg.serviceId, cfg.customerTemplate, params),
+      window.emailjs.send(cfg.serviceId, cfg.adminTemplate, params)
+    ]);
   }
 
   save(patch) {
@@ -500,14 +676,16 @@ class Component extends DCLogic {
       if (!d.name.trim()) return '氏名を入力してください。';
       if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
       if (!d.phone.trim()) return '電話番号を入力してください。';
+      if (!d.sns.trim()) return 'SNSアカウントを入力してください。';
       if (!d.category) return 'ご本人の区分を選択してください。';
+      if (['12歳未満', '12〜15歳', '16〜17歳'].indexOf(d.category) >= 0 && !d.guardianConsent) return '保護者の許可を得ているかご確認ください。';
     }
     if (step === 2 && !d.menu) return 'メニューを選択してください。';
     if (step === 3) {
       if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
       if (d.menu === 'offline') {
         if (!d.date1) return '第1希望の日程を選択してください。';
-        if (!d.court.trim()) return '希望コートを入力してください。';
+        if (!d.courtReserve && !d.court.trim()) return '希望コートを入力するか、コート予約代行を選択してください。';
         if (!d.rental) return '練習ボールレンタルの有無を選択してください。';
       }
     }
@@ -541,9 +719,9 @@ class Component extends DCLogic {
 
     const fieldDefs = [
       { id: 'f-name', key: 'name', label: '氏名', type: 'text', placeholder: '例:山田 太郎', auto: 'name', req: true },
+      { id: 'f-sns', key: 'sns', label: 'SNSアカウント', type: 'text', placeholder: '例:@your_account(Instagram等)', auto: 'off', req: true },
       { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true },
-      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: true },
-      { id: 'f-sns', key: 'sns', label: 'SNSアカウント', type: 'text', placeholder: '例:@your_account(Instagram等)', auto: 'off', req: false }
+      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: true }
     ];
     const fields1 = fieldDefs.map((f) => ({
       ...f,
@@ -553,12 +731,15 @@ class Component extends DCLogic {
       onChange: (e) => this.setData({ [f.key]: e.target.value })
     }));
 
-    const categoryOpts = ['小学生', '高校生', '大学生', '社会人', 'その他'].map((v) => ({
+    const CATS = ['12歳未満', '12〜15歳', '16〜17歳', '18〜22歳', '23歳以上'];
+    const MINOR_CATS = ['12歳未満', '12〜15歳', '16〜17歳'];
+    const categoryOpts = CATS.map((v) => ({
       label: v,
       pressed: d.category === v,
       bg: d.category === v ? '#E9FF00' : '#FFFFFF',
       onPick: () => this.setData({ category: v })
     }));
+    const needsGuardian = MINOR_CATS.indexOf(d.category) >= 0;
 
     const menuDefs = [
       { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
@@ -626,8 +807,7 @@ class Component extends DCLogic {
       { k: 'メール', v: d.email },
       { k: '電話番号', v: d.phone },
       { k: 'SNSアカウント', v: d.sns || '(未記入)' },
-      { k: '区分', v: d.category || '(未選択)' },
-      { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
+      { k: '区分', v: d.category ? (d.category + (['12歳未満','12〜15歳','16〜17歳'].indexOf(d.category) >= 0 ? (d.guardianConsent ? '(保護者の許可あり)' : '') : '')) : '(未選択)' },      { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
     ];
     const estRows = [];
     let total = 0;
@@ -663,12 +843,19 @@ class Component extends DCLogic {
       step3Title: d.menu === 'online' ? '詳細(オンライン動画添削)' : d.menu === 'offline' ? '詳細(対面レッスン)' : '詳細',
       err: st.err, hasErr: !!st.err,
       steps, fields1, categoryOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
+      needsGuardian,
+      guardianPressed: d.guardianConsent,
+      guardianBg: d.guardianConsent ? '#E9FF00' : '#FFFFFF',
+      guardianMark: d.guardianConsent ? '✓' : '',
+      onGuardian: () => this.setData({ guardianConsent: !d.guardianConsent }),
       court: d.court,
       onCourt: (e) => this.setData({ court: e.target.value }),
       courtReservePressed: d.courtReserve,
       courtReserveBg: d.courtReserve ? '#E9FF00' : '#FFFFFF',
       courtReserveMark: d.courtReserve ? '✓' : '',
       onCourtReserve: () => this.setData({ courtReserve: !d.courtReserve }),
+      courtOptional: d.courtReserve,
+      courtRequired: !d.courtReserve,
       agreePressed: d.agree,
       agreeBg: d.agree ? '#E9FF00' : '#FFFFFF',
       agreeMark: d.agree ? '✓' : '',
@@ -680,14 +867,22 @@ class Component extends DCLogic {
       estNote,
       showBack: st.step > 1,
       onBack: () => this.go(st.step - 1),
-      nextLabel: st.step === 5 ? '送信する →' : '次へ →',
+      nextLabel: st.step === 5 ? (st.sending ? '送信中…' : '送信する →') : '次へ →',
       onNext: () => {
+        if (st.sending) return;
         const msg = this.validate(st.step);
         if (msg) { this.setState({ err: msg }); return; }
         if (st.step === 5) {
-          this.setState({ done: true });
-          this.save({ done: true });
-          window.scrollTo(0, 0);
+          this.setState({ sending: true, err: '' });
+          this.sendEmails()
+            .then(() => {
+              this.setState({ done: true, sending: false });
+              this.save({ done: true });
+              window.scrollTo(0, 0);
+            })
+            .catch((e) => {
+              this.setState({ sending: false, err: '送信に失敗しました。通信環境をご確認のうえ、もう一度お試しください。' });
+            });
           return;
         }
         const nextStep = st.step + 1;
@@ -701,7 +896,7 @@ class Component extends DCLogic {
         try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
-          data: { name: '', email: '', phone: '', sns: '', category: '', menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
+          data: { name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
       }
