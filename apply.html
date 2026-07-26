@@ -447,6 +447,10 @@ class Component extends DCLogic {
       customerTemplate: 'template_ajff44h',
       adminTemplate: 'template_gatpyud'
     };
+    this.SUPABASE = {
+      url: 'https://gnzymfqsffzqmwvajnnw.supabase.co',
+      key: 'sb_publishable_EIvgIb6VR-33PdM8hrotCg_bbqYbEbi'
+    };
     try {
       const raw = localStorage.getItem(this.STORE_KEY);
       if (raw) {
@@ -502,6 +506,41 @@ class Component extends DCLogic {
     lines.push('■概算金額:' + yen(total));
     lines.push('■質問・ご要望:' + (d.question || '(なし)'));
     return lines.join('\n');
+  }
+
+  saveToSupabase() {
+    const d = this.state.data;
+    const t = (h) => String(h).padStart(2, '0') + ':00';
+    const selLine = (sel) => sel ? (this.shortDate(sel.key) + ' ' + t(sel.start) + '〜' + t(sel.start + 2)) : null;
+    let estimate = 0;
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      if (p) estimate = p.price;
+    } else if (d.menu === 'offline') {
+      estimate = 16500 + (d.rental === 'あり' ? 1200 : 0);
+    }
+    const row = {
+      name: d.name, sns: d.sns, email: d.email, phone: d.phone,
+      category: d.category, guardian_consent: !!d.guardianConsent,
+      menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+      plan: d.menu === 'online' ? d.plan : null,
+      people: d.menu === 'offline' ? d.people : null,
+      court: d.menu === 'offline' ? d.court : null,
+      court_reserve: d.menu === 'offline' ? !!d.courtReserve : null,
+      rental: d.menu === 'offline' ? d.rental : null,
+      date1: selLine(d.date1), date2: selLine(d.date2),
+      payment: d.payment, question: d.question, estimate
+    };
+    return fetch(this.SUPABASE.url + '/rest/v1/applications', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: this.SUPABASE.key,
+        Authorization: 'Bearer ' + this.SUPABASE.key,
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(row)
+    });
   }
 
   sendEmails() {
@@ -873,6 +912,7 @@ class Component extends DCLogic {
         if (msg) { this.setState({ err: msg }); return; }
         if (st.step === 5) {
           this.setState({ sending: true, err: '' });
+          this.saveToSupabase().catch(() => {});
           this.sendEmails()
             .then(() => {
               this.setState({ done: true, sending: false });
