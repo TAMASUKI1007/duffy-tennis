@@ -470,3 +470,26 @@ test('日付ラベルがサーバーのタイムゾーンに影響されない',
   assert.ok(res.body.dateLabel.startsWith(`${mm}/${dd}(`),
     `JSTの月日と一致すること: ${res.body.dateLabel} vs ${mm}/${dd}`);
 });
+
+test('対面レッスン: ボールレンタルの有無で概算金額が変わる（既存料金のまま）', async () => {
+  const start = toJstIso(jstToEpoch(targetDate(), 10 * 60));
+
+  const without = await call(reserve, { ...baseApplicant, rental: 'なし', choice1: start });
+  assert.equal(without.statusCode, 200);
+  assert.equal(scenario.saved.estimate, 16500, 'レッスンのみ16,500円');
+
+  const withBall = await call(reserve, { ...baseApplicant, rental: 'あり', choice1: start });
+  assert.equal(withBall.statusCode, 200);
+  assert.equal(scenario.saved.estimate, 17700, 'ボールレンタル1,200円を加算');
+  assert.equal(scenario.saved.rental, 'あり');
+
+  // 顧客向けの文面に移動費の金額が出ていないこと（第6-2節）
+  assert.ok(withBall.body.emailParams.message.includes('移動費別'));
+  assert.ok(!/移動費[^\n]*[0-9,]+円/.test(withBall.body.emailParams.message), '移動費の金額を書かない');
+});
+
+test('GETなど許可されていないメソッドは405', async () => {
+  const res = makeRes();
+  await availability(makeReq({}, { method: 'GET' }), res);
+  assert.equal(res.statusCode, 405);
+});
