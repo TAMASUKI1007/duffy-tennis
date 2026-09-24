@@ -461,3 +461,12 @@ test('オンライン動画添削: プラン未選択は弾く', async () => {
   assert.equal(res.statusCode, 400);
   assert.match(res.body.error, /チケットプラン/);
 });
+
+test('日付ラベルがサーバーのタイムゾーンに影響されない', async () => {
+  const date = targetDate();
+  const res = await call(availability, { mode: 'operator', date });
+  const [, mm, dd] = date.split('-').map(Number);
+  assert.equal(res.body.date, date);
+  assert.ok(res.body.dateLabel.startsWith(`${mm}/${dd}(`),
+    `JSTの月日と一致すること: ${res.body.dateLabel} vs ${mm}/${dd}`);
+});

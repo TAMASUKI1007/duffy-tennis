@@ -105,11 +105,15 @@ export default handler(async (req, res) => {
     }
   }
 
-  const d = new Date(`${date}T00:00:00+09:00`);
+  // サーバー（Vercel）はUTCで動くので、Dateのローカル系メソッドは使わない。
+  // 必ずJSTに直してから月日・曜日を組み立てる。
+  const noon = epochToJst(jstToEpoch(date, 12 * 60));
+  const [, mm, dd] = noon.date.split('-').map(Number);
+
   return sendJson(res, 200, {
     ok: true,
     date,
-    dateLabel: `${d.getMonth() + 1}/${d.getDate()}(${WD[epochToJst(jstToEpoch(date, 12 * 60)).dow]})`,
+    dateLabel: `${mm}/${dd}(${WD[noon.dow]})`,
     mode,
     slots,
     travelNote,
