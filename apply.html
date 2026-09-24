@@ -130,166 +130,103 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             </div>
 
             <div>
-              <p style="font-weight:900;font-size:14px;margin:0 0 10px;">コートの手配 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
-              <div style="display:grid;gap:10px;">
-                <sc-for list="{{ arrangerOpts }}" as="o" hint-placeholder-count="2">
-                  <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="display:flex;align-items:flex-start;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};padding:14px;width:100%;box-sizing:border-box;text-align:left;">
-                    <span aria-hidden="true" style="width:24px;height:24px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:15px;flex:none;margin-top:2px;">{{ o.mark }}</span>
-                    <span style="display:grid;gap:4px;">
-                      <span style="font-weight:900;font-size:14.5px;line-height:1.5;">{{ o.title }}</span>
-                      <span style="font-weight:700;font-size:12px;line-height:1.8;color:#444444;">{{ o.desc }}</span>
-                    </span>
-                  </button>
+              <p style="font-weight:900;font-size:14px;margin:0 0 4px;">希望日程(1レッスン = 2時間固定)</p>
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">受付できる曜日と時間帯のなかから、2時間のレッスンが収まる開始時刻をご案内します。</p>
+              <div style="display:grid;gap:16px;">
+                <sc-for list="{{ pickers }}" as="p" hint-placeholder-count="2">
+                  <div style="border:3px solid #111111;background:#FFFFFF;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:3px solid #111111;">
+                      <span style="font-weight:900;font-size:15px;">{{ p.title }}</span>
+                      <span style="font-weight:900;font-size:11px;background:{{ p.badgeBg }};border:2px solid #111111;padding:0 8px;">{{ p.badge }}</span>
+                      <sc-if value="{{ p.showClear }}" hint-placeholder-val="{{ false }}">
+                        <button type="button" onClick="{{ p.onClear }}" style="margin-left:auto;font-family:inherit;cursor:pointer;border:2px solid #111111;background:#FFFFFF;font-weight:900;font-size:11px;padding:4px 10px;">クリア</button>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ p.hasSel }}" hint-placeholder-val="{{ false }}">
+                      <div style="margin:14px 14px 0;border:3px solid #111111;background:#E9FF00;font-weight:900;font-size:14px;padding:12px 14px;line-height:1.7;">{{ p.confirmedLine }}</div>
+                    </sc-if>
+                    <div style="padding:14px;">
+                      <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="width:100%;box-sizing:border-box;font-family:inherit;color:#111111;cursor:pointer;border:3px dashed #111111;background:#FFFFFF;font-weight:900;font-size:15px;padding:14px;text-align:center;min-height:52px;">{{ p.toggleLabel }} {{ p.arrow }}</button>
+                    </div>
+                    <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:0 14px 16px;display:grid;gap:14px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                          <button type="button" onClick="{{ p.onPrev }}" disabled="{{ p.prevDisabled }}" aria-label="前の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;opacity:{{ p.prevOpacity }};">‹</button>
+                          <div style="text-align:center;">
+                            <div style="font-weight:900;font-size:17px;background:linear-gradient(transparent 60%, #E9FF00 60%);display:inline-block;padding:0 4px;">{{ p.monthLabel }}</div>
+                            <div style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.2em;">{{ p.monthEn }}</div>
+                          </div>
+                          <button type="button" onClick="{{ p.onNext }}" aria-label="次の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;">›</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+                          <sc-for list="{{ p.weekdays }}" as="w" hint-placeholder-count="7">
+                            <div style="text-align:center;font-weight:900;font-size:11px;padding:4px 0;color:{{ w.weekend }};">{{ w.w }}</div>
+                          </sc-for>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
+                          <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="35">
+                            <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
+                              <div aria-hidden="true"></div>
+                            </sc-if>
+                            <sc-if value="{{ c.isDay }}" hint-placeholder-val="{{ true }}">
+                              <button type="button" onClick="{{ c.onPick }}" disabled="{{ c.disabled }}" aria-pressed="{{ c.pressed }}" aria-label="{{ c.aria }}" style="font-family:inherit;cursor:pointer;border:2px solid #111111;background:{{ c.bg }};color:{{ c.fg }};padding:5px 2px;display:grid;gap:1px;justify-items:center;min-height:52px;">
+                                <span style="font-family:'Anton',sans-serif;font-size:19px;line-height:1;">{{ c.day }}</span>
+                                <span style="font-weight:700;font-size:8.5px;line-height:1.1;white-space:nowrap;color:{{ c.condColor }};">{{ c.cond }}</span>
+                              </button>
+                            </sc-if>
+                          </sc-for>
+                        </div>
+                        <p style="margin:0;font-size:11px;font-weight:700;color:#666666;">{{ p.legend }}</p>
+                        <sc-if value="{{ p.hasTimes }}" hint-placeholder-val="{{ false }}">
+                          <div style="border-top:3px solid #111111;padding-top:14px;">
+                            <p style="margin:0 0 10px;font-weight:900;font-size:14px;">{{ p.tempTitle }}</p>
+                            <sc-if value="{{ p.tempFixedCourt }}" hint-placeholder-val="{{ false }}">
+                              <p style="margin:0 0 10px;border:3px solid #111111;background:#E9FF00;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">{{ p.tempFixedCourtNote }}</p>
+                            </sc-if>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;">
+                              <sc-for list="{{ p.times }}" as="t" hint-placeholder-count="6">
+                                <button type="button" onClick="{{ t.onPick }}" aria-pressed="{{ t.pressed }}" aria-label="{{ t.aria }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ t.bg }};padding:10px 6px;display:grid;gap:2px;justify-items:center;min-height:58px;">
+                                  <span style="font-family:'Anton',sans-serif;font-size:20px;line-height:1;">{{ t.label }}</span>
+                                  <span style="font-weight:700;font-size:11px;">{{ t.sub }}</span>
+                                </button>
+                              </sc-for>
+                            </div>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ p.emptyDay }}" hint-placeholder-val="{{ false }}">
+                          <p style="margin:0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ p.emptyDayText }}</p>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
                 </sc-for>
               </div>
             </div>
 
-            <sc-if value="{{ isCustomerCourt }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ courtFixed }}" hint-placeholder-val="{{ false }}">
               <div>
-                <label for="courtq" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">コートを検索 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></label>
-                <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">同じ名前の施設があるため、検索して正しい場所をお選びください。選んだ場所をもとに東小金井駅からの往復経路を調べます。</p>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                  <input id="courtq" type="text" value="{{ courtQuery }}" onChange="{{ onCourtQuery }}" placeholder="例:有明テニスの森公園" style="flex:1 1 200px;min-width:0;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
-                  <button type="button" onClick="{{ onCourtSearch }}" disabled="{{ courtSearchDisabled }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:#E9FF00;color:#111111;font-weight:900;font-size:14px;padding:14px 20px;min-height:52px;opacity:{{ courtSearchOpacity }};">{{ courtSearchLabel }}</button>
-                </div>
-
-                <sc-if value="{{ courtError }}" hint-placeholder-val="{{ false }}">
-                  <p role="alert" style="margin:10px 0 0;border:3px solid #111111;background:#FFE9E9;padding:12px 14px;font-size:13px;font-weight:900;line-height:1.8;">{{ courtError }}</p>
-                </sc-if>
-
-                <sc-if value="{{ hasCourtCandidates }}" hint-placeholder-val="{{ false }}">
-                  <div style="margin-top:12px;display:grid;gap:8px;">
-                    <p style="margin:0;font-weight:900;font-size:13px;">候補から選んでください</p>
-                    <sc-for list="{{ courtCandidates }}" as="c" hint-placeholder-count="3">
-                      <button type="button" onClick="{{ c.onPick }}" aria-pressed="{{ c.pressed }}" style="display:flex;align-items:flex-start;gap:10px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ c.bg }};padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;">
-                        <span aria-hidden="true" style="width:22px;height:22px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:14px;flex:none;margin-top:1px;">{{ c.mark }}</span>
-                        <span style="font-weight:700;font-size:12.5px;line-height:1.8;">{{ c.label }}</span>
-                      </button>
-                    </sc-for>
-                  </div>
-                </sc-if>
-
-                <sc-if value="{{ hasCourtSelected }}" hint-placeholder-val="{{ false }}">
-                  <div style="margin-top:12px;border:3px solid #111111;background:#E9FF00;padding:12px 14px;">
-                    <p style="margin:0;font-weight:900;font-size:13px;line-height:1.8;">選択中のコート</p>
-                    <p style="margin:4px 0 0;font-weight:700;font-size:12.5px;line-height:1.8;">{{ courtSelectedLabel }}</p>
-                  </div>
-                  <button type="button" onClick="{{ onCourtReserve }}" aria-pressed="{{ courtReservePressed }}" style="margin-top:10px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ courtReserveBg }};padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;min-height:52px;">
-                    <span aria-hidden="true" style="width:24px;height:24px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:15px;flex:none;">{{ courtReserveMark }}</span>
-                    <span style="font-weight:900;font-size:13.5px;line-height:1.5;">このコートの予約も代行してほしい<span style="font-weight:700;font-size:11.5px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;margin-left:8px;">任意</span></span>
-                  </button>
-                  <p style="margin:8px 0 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">すでにコートを確保済みの場合は、チェック不要です。</p>
-                </sc-if>
-              </div>
-            </sc-if>
-
-            <sc-if value="{{ isOperatorCourt }}" hint-placeholder-val="{{ false }}">
-              <div style="border:3px solid #111111;background:#FFFFFF;padding:14px 16px;">
-                <p style="margin:0;font-weight:900;font-size:13.5px;line-height:1.8;">三鷹周辺のコートで開催します。</p>
-                <p style="margin:6px 0 0;font-weight:700;font-size:12px;line-height:1.9;color:#444444;">具体的なコートは、お申込み後にLINE公式で調整させていただきます。往復の移動時間(片道1時間)を含めて空いている日時をご案内します。</p>
-              </div>
-            </sc-if>
-
-            <sc-if value="{{ canPickDate }}" hint-placeholder-val="{{ true }}">
-              <div>
-                <p style="font-weight:900;font-size:14px;margin:0 0 4px;">希望日程(1レッスン = 2時間固定)</p>
-                <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">{{ dateHelp }}</p>
-                <div style="display:grid;gap:16px;">
-                  <sc-for list="{{ pickers }}" as="p" hint-placeholder-count="2">
-                    <div style="border:3px solid #111111;background:#FFFFFF;">
-                      <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:3px solid #111111;">
-                        <span style="font-weight:900;font-size:15px;">{{ p.title }}</span>
-                        <span style="font-weight:900;font-size:11px;background:{{ p.badgeBg }};border:2px solid #111111;padding:0 8px;">{{ p.badge }}</span>
-                        <sc-if value="{{ p.showClear }}" hint-placeholder-val="{{ false }}">
-                          <button type="button" onClick="{{ p.onClear }}" style="margin-left:auto;font-family:inherit;cursor:pointer;border:2px solid #111111;background:#FFFFFF;font-weight:900;font-size:11px;padding:4px 10px;">クリア</button>
-                        </sc-if>
-                      </div>
-                      <sc-if value="{{ p.hasSel }}" hint-placeholder-val="{{ false }}">
-                        <div style="margin:14px 14px 0;border:3px solid #111111;background:#E9FF00;font-weight:900;font-size:14px;padding:12px 14px;line-height:1.7;">{{ p.confirmedLine }}</div>
-                      </sc-if>
-                      <div style="padding:14px;">
-                        <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="width:100%;box-sizing:border-box;font-family:inherit;color:#111111;cursor:pointer;border:3px dashed #111111;background:#FFFFFF;font-weight:900;font-size:15px;padding:14px;text-align:center;min-height:52px;">{{ p.toggleLabel }} {{ p.arrow }}</button>
-                      </div>
-                      <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
-                        <div style="padding:0 14px 16px;display:grid;gap:14px;">
-                          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                            <button type="button" onClick="{{ p.onPrev }}" disabled="{{ p.prevDisabled }}" aria-label="前の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;opacity:{{ p.prevOpacity }};">‹</button>
-                            <div style="text-align:center;">
-                              <div style="font-weight:900;font-size:17px;background:linear-gradient(transparent 60%, #E9FF00 60%);display:inline-block;padding:0 4px;">{{ p.monthLabel }}</div>
-                              <div style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.2em;">{{ p.monthEn }}</div>
-                            </div>
-                            <button type="button" onClick="{{ p.onNext }}" aria-label="次の月" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:16px;width:44px;height:44px;">›</button>
-                          </div>
-                          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
-                            <sc-for list="{{ p.weekdays }}" as="w" hint-placeholder-count="7">
-                              <div style="text-align:center;font-weight:900;font-size:11px;padding:4px 0;color:{{ w.weekend }};">{{ w.w }}</div>
-                            </sc-for>
-                          </div>
-                          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;">
-                            <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="35">
-                              <sc-if value="{{ c.empty }}" hint-placeholder-val="{{ false }}">
-                                <div aria-hidden="true"></div>
-                              </sc-if>
-                              <sc-if value="{{ c.isDay }}" hint-placeholder-val="{{ true }}">
-                                <button type="button" onClick="{{ c.onPick }}" disabled="{{ c.disabled }}" aria-pressed="{{ c.pressed }}" aria-label="{{ c.aria }}" style="font-family:inherit;cursor:pointer;border:2px solid #111111;background:{{ c.bg }};color:{{ c.fg }};padding:5px 2px;display:grid;gap:1px;justify-items:center;min-height:52px;">
-                                  <span style="font-family:'Anton',sans-serif;font-size:19px;line-height:1;">{{ c.day }}</span>
-                                  <span style="font-weight:700;font-size:8.5px;line-height:1.1;white-space:nowrap;color:{{ c.condColor }};">{{ c.cond }}</span>
-                                </button>
-                              </sc-if>
-                            </sc-for>
-                          </div>
-                          <p style="margin:0;font-size:11px;font-weight:700;color:#666666;">日付を選ぶと、その日の空いている開始時刻をお調べします(2日後〜30日先)。</p>
-
-                          <sc-if value="{{ p.loading }}" hint-placeholder-val="{{ false }}">
-                            <div role="status" style="border-top:3px solid #111111;padding-top:14px;display:flex;align-items:center;gap:10px;">
-                              <span aria-hidden="true" style="width:18px;height:18px;border:3px solid #111111;border-top-color:transparent;border-radius:50%;animation:dcSpin 0.8s linear infinite;flex:none;"></span>
-                              <span style="font-weight:900;font-size:13px;">空き時間を確認しています…</span>
-                            </div>
-                          </sc-if>
-
-                          <sc-if value="{{ p.slotError }}" hint-placeholder-val="{{ false }}">
-                            <div role="alert" style="border-top:3px solid #111111;padding-top:14px;">
-                              <p style="margin:0;border:3px solid #111111;background:#FFE9E9;padding:12px 14px;font-size:13px;font-weight:900;line-height:1.8;">{{ p.slotError }}</p>
-                              <button type="button" onClick="{{ p.onRetry }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:#FFFFFF;font-weight:900;font-size:13px;padding:10px 16px;min-height:44px;">もう一度試す</button>
-                            </div>
-                          </sc-if>
-
-                          <sc-if value="{{ p.hasTimes }}" hint-placeholder-val="{{ false }}">
-                            <div style="border-top:3px solid #111111;padding-top:14px;">
-                              <p style="margin:0 0 10px;font-weight:900;font-size:14px;">{{ p.tempTitle }}</p>
-                              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;">
-                                <sc-for list="{{ p.times }}" as="t" hint-placeholder-count="6">
-                                  <button type="button" onClick="{{ t.onPick }}" aria-pressed="{{ t.pressed }}" aria-label="{{ t.aria }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ t.bg }};padding:10px 6px;display:grid;gap:2px;justify-items:center;min-height:58px;">
-                                    <span style="font-family:'Anton',sans-serif;font-size:20px;line-height:1;">{{ t.label }}</span>
-                                    <span style="font-weight:700;font-size:11px;">{{ t.sub }}</span>
-                                  </button>
-                                </sc-for>
-                              </div>
-                            </div>
-                          </sc-if>
-
-                          <sc-if value="{{ p.hasNotices }}" hint-placeholder-val="{{ false }}">
-                            <div style="display:grid;gap:8px;">
-                              <sc-for list="{{ p.notices }}" as="n" hint-placeholder-count="1">
-                                <p style="margin:0;border:3px solid #111111;background:#FFFDE7;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ n.text }}</p>
-                              </sc-for>
-                            </div>
-                          </sc-if>
-
-                          <sc-if value="{{ p.emptyDay }}" hint-placeholder-val="{{ false }}">
-                            <p style="margin:0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">この日は空いている時間がありませんでした。別の日をお選びください。</p>
-                          </sc-if>
-                        </div>
-                      </sc-if>
-                    </div>
-                  </sc-for>
+                <p style="font-weight:900;font-size:14px;margin:0 0 8px;">開催コート</p>
+                <div style="border:3px solid #111111;background:#E9FF00;padding:14px 16px;">
+                  <p style="margin:0;font-weight:900;font-size:15px;line-height:1.7;">{{ courtFixedName }}</p>
+                  <p style="margin:6px 0 0;font-weight:700;font-size:12px;line-height:1.9;">{{ courtFixedNote }}</p>
                 </div>
               </div>
             </sc-if>
 
-            <sc-if value="{{ cannotPickDate }}" hint-placeholder-val="{{ false }}">
-              <div style="border:3px dashed #111111;background:#F4F4F4;padding:16px;">
-                <p style="margin:0;font-weight:900;font-size:13.5px;line-height:1.8;">{{ datePrereq }}</p>
+            <sc-if value="{{ courtInputShown }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <label for="court" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">希望コート(コート名・エリアなど)
+                  <sc-if value="{{ courtOptional }}" hint-placeholder-val="{{ false }}"><span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></sc-if>
+                  <sc-if value="{{ courtRequired }}" hint-placeholder-val="{{ true }}"><span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></sc-if>
+                </label>
+                <input id="court" type="text" value="{{ court }}" onChange="{{ onCourt }}" placeholder="例:〇〇公園テニスコート/△△区周辺で相談したい" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
+                <button type="button" onClick="{{ onCourtReserve }}" aria-pressed="{{ courtReservePressed }}" style="margin-top:10px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ courtReserveBg }};padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;min-height:52px;">
+                  <span aria-hidden="true" style="width:24px;height:24px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:15px;flex:none;">{{ courtReserveMark }}</span>
+                  <span style="font-weight:900;font-size:13.5px;line-height:1.5;">コートの予約もお願いしたい</span>
+                </button>
+                <sc-if value="{{ courtOptional }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:8px 0 0;font-size:12px;font-weight:700;color:#166534;">コート予約を代行するので、希望コートの入力は任意です。エリアの希望があればご記入ください。</p>
+                </sc-if>
               </div>
             </sc-if>
 
@@ -494,8 +431,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
       <p style="font-weight:900;font-size:clamp(15px,3.8vw,18px);margin:10px 0 0;line-height:1.7;">予約はまだ確定していません。</p>
 
       <div style="margin-top:20px;border:4px solid #111111;background:#111111;color:#FFFFFF;padding:clamp(18px,4vw,26px);box-shadow:10px 10px 0 #E9FF00;">
-        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;color:#E9FF00;">YOUR REFERENCE</div>
-        <div style="font-family:'Anton',sans-serif;font-size:clamp(30px,8vw,52px);line-height:1.05;margin-top:6px;letter-spacing:0.02em;word-break:break-all;">{{ referenceCode }}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;color:#E9FF00;">YOUR REQUEST</div>
+        <div style="font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;margin-top:6px;">お申込みの内容</div>
         <div style="margin-top:14px;border-top:3px solid rgba(255,255,255,0.35);padding-top:14px;display:grid;gap:6px;">
           <sc-for list="{{ doneSummary }}" as="s" hint-placeholder-count="5">
             <div style="font-size:13px;font-weight:700;line-height:1.85;">{{ s.text }}</div>
@@ -503,7 +440,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
-      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">下のボタンからLINE公式で受付番号をお送りください。コートと日時を確認して予約を確定します。日程・移動費・お支払い方法もLINEでご案内します。</p>
+      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">下のボタンからLINE公式でお申込み内容をお送りください。コートと日時を確認して予約を確定します。移動費・お支払い方法もLINEでご案内します。</p>
 
       <sc-if value="{{ hasLineUrl }}" hint-placeholder-val="{{ true }}">
         <div style="margin-top:20px;">
@@ -511,9 +448,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             <span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:34px;height:34px;">
               <svg viewBox="0 0 24 24" width="30" height="30" role="img" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M12 2.5c-5.238 0-9.5 3.44-9.5 7.67 0 3.79 3.38 6.965 7.945 7.566.309.066.73.203.836.466.096.239.063.613.031.855l-.135.81c-.041.24-.19.937.821.511 1.012-.426 5.46-3.215 7.449-5.504C20.76 14.104 21.5 12.19 21.5 10.17c0-4.23-4.262-7.67-9.5-7.67z"/></svg>
             </span>
-            <span>LINEで受付番号を送る</span>
+            <span>LINEで申込内容を送る</span>
           </a>
-          <p style="margin:10px 2px 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップするとメッセージが入力された状態でトーク画面が開きます。送信ボタンはご自身で押してください。友だち追加がまだの場合は、追加してからお送りください。</p>
+          <p style="margin:10px 2px 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップするとメッセージが入力された状態でトーク画面が開きます。送信ボタンはご自身で押してください。</p>
+          <a href="{{ lineAddUrl }}" target="_blank" rel="noopener" style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:10px;background:#FFFFFF;border:3px solid #06C755;color:#06C755;font-weight:900;font-size:14px;padding:14px 18px;text-decoration:none;box-sizing:border-box;" style-hover="background:#06C755;color:#FFFFFF;">
+            <span>まだ友だち追加していない方はこちら</span>
+          </a>
         </div>
       </sc-if>
 
@@ -539,10 +479,94 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
   &quot;monthsAhead&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 2, &quot;min&quot;: 1, &quot;max&quot;: 4, &quot;step&quot;: 1, &quot;unit&quot;: &quot;ヶ月&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;日程ピッカー&quot; },
   &quot;maxPeople&quot;: { &quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 6, &quot;min&quot;: 2, &quot;max&quot;: 10, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;フォーム設定&quot; }
 }">
+/* ============================================================================
+ * 受付設定  ★ 受付時間・休みの日・固定コートは、この BOOKING_CONFIG だけ直せばOKです
+ * ============================================================================
+ *
+ * 【受付時間の書き方】
+ *   hours の各曜日に { from: '開始', to: '終了' } を書きます。時刻は 'H:MM' 形式。
+ *   受付をしない曜日は null にしてください。
+ *
+ *   レッスンは2時間なので、「終了時刻の2時間前」が最後に選べる開始時刻になります。
+ *     例) 月 8:00〜12:00  → 選べる開始時刻は 8:00 / 8:30 / 9:00 / 9:30 / 10:00
+ *     例) 金 13:00〜16:00 → 選べる開始時刻は 13:00 / 13:30 / 14:00
+ *
+ * 【お休み・大会などで受付を止める日】
+ *   blockedDates に 'YYYY-MM-DD' の形式で足してください。カレンダー上で選べなくなります。
+ *     例) blockedDates: ['2026-10-10', '2026-10-11', '2026-12-29'],
+ *
+ * 【曜日ごとに開催コートが決まっている場合】
+ *   fixedCourts にその曜日とコート名を書きます。
+ *   その曜日を選ぶと、希望コートの入力欄とコート予約代行のチェックは表示されず、
+ *   コート名が自動で入ります。
+ *     例) fixedCourts: { fri: 'グリーンテニスプラザ', wed: '〇〇コート' }
+ *   固定しない場合は fixedCourts: {} にしてください。
+ *
+ * 【注意】曜日のキーは mon火...ではなく sun/mon/tue/wed/thu/fri/sat です（英語3文字）。
+ * ========================================================================== */
+const BOOKING_CONFIG = {
+  hours: {
+    sun: { from: '12:00', to: '20:00' },
+    mon: { from: '8:00',  to: '12:00' },
+    tue: { from: '12:00', to: '20:00' },
+    wed: { from: '8:00',  to: '20:00' },
+    thu: null,
+    fri: { from: '13:00', to: '16:00' },
+    sat: { from: '12:00', to: '20:00' }
+  },
+
+  // 受付を止める日（'YYYY-MM-DD'）。初期値は空です。
+  blockedDates: [],
+
+  // 曜日を固定コートで開催する場合
+  fixedCourts: {
+    fri: 'グリーンテニスプラザ'
+  },
+
+  // レッスンの長さ（分）
+  lessonMinutes: 120,
+
+  // 開始時刻の刻み（分）
+  stepMinutes: 30,
+
+  // 何日先まで申し込めるようにするか
+  monthsAhead: 2
+};
+
+/* ----------------------------------------------------------------------------
+ * LINE公式アカウント
+ *   LINE_OA_ID … アカウントのベーシックID（@から始まるもの）
+ * -------------------------------------------------------------------------- */
+const LINE_OA_ID = '@950admqv';
+const LINE_MESSAGE_URL_BASE = 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_OA_ID) + '/?';
+const LINE_ADD_FRIEND_URL = 'https://line.me/R/ti/p/' + encodeURIComponent(LINE_OA_ID);
+
+/* ===== ここから下は設定ではありません（編集不要） ===== */
+
+const DOW_KEYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+/** 'H:MM' を「0時からの分数」に直す。 */
+function hmToMin(hm) {
+  const p = String(hm).split(':');
+  return Number(p[0]) * 60 + Number(p[1] || 0);
+}
+
+/** 分数を 'HH:MM' に直す。 */
+function minToHm(min) {
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+}
+
+/** 'YYYY-MM-DD' を作る（ローカル時刻の Date から）。 */
+function dateKeyOf(dt) {
+  return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+}
+
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.STORE_KEY = 'duffy-tennis-apply-v2';
+    this.STORE_KEY = 'duffy-tennis-apply-v3';
     this.PLANS = [
       { key: '3', price: 2400, per: 800, badge: 'TICKET' },
       { key: '5', price: 3750, per: 750, badge: 'TICKET' },
@@ -554,21 +578,19 @@ class Component extends DCLogic {
       done: false,
       data: {
         name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false,
-        menu: '', plan: '', people: 1, rental: '',
-        // コート手配: '' 未選択 / 'operator' 運営者手配(三鷹周辺) / 'customer' お客さん指定
-        arranger: '', courtName: '', courtAddress: '', courtCoord: '', courtReserve: false,
-        // date1/date2 は { startIso, endIso, dateKey, dateLabel, timeLabel, full }
+        menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
+        // 固定コートの日を選んで court を自動で入れたかどうか
+        courtFixedApplied: false,
+        // date1/date2 は { key: 'YYYY-MM-DD', start: 開始の分数 }
         date1: null, date2: null, agree: false, payment: '', question: ''
       },
       open1: false, open2: false, temp1: '', temp2: '', err: '', sending: false,
-      // 日付ごとの候補時刻（APIから取得）。null=未取得、[]=空き無し
-      slots1: null, slots2: null, loading1: false, loading2: false,
-      slotErr1: '', slotErr2: '', notices1: [], notices2: [],
-      // コート検索
-      courtQuery: '', courtCandidates: null, courtSearching: false, courtError: '',
       // 送信結果
-      referenceCode: '', lineUrl: '', lineMessage: '', doneSummary: [],
-      mailWarning: '', copied: false
+      lineMessage: '', doneSummary: [], mailWarning: '', copied: false
+    };
+    this.SUPABASE = {
+      url: 'https://gnzymfqsffzqmwvajnnw.supabase.co',
+      key: 'sb_publishable_EIvgIb6VR-33PdM8hrotCg_bbqYbEbi'
     };
     this.EMAILJS = {
       publicKey: 'GSMoBClKajUxu9UZe',
@@ -617,10 +639,9 @@ class Component extends DCLogic {
       if (p) { lines.push('■チケット:' + p.key + '回 ' + yen(p.price) + '(' + p.per + '円/回)'); total = p.price; }
     } else if (d.menu === 'offline') {
       lines.push('■参加人数:' + d.people + '人');
-      lines.push('■第1希望:' + (d.date1 ? d.date1.full : '(未選択)'));
-      lines.push('■第2希望:' + (d.date2 ? d.date2.full : '(なし)'));
-      lines.push('■コート手配:' + (d.arranger === 'operator' ? '運営者にお願いする(三鷹周辺)' : '自分で指定する'));
-      lines.push('■コート:' + (d.arranger === 'customer' ? (d.courtName || '(未選択)') : '(運営者手配・三鷹周辺)'));
+      lines.push('■第1希望:' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
+      lines.push('■第2希望:' + (d.date2 ? this.selLine(d.date2) : '(なし)'));
+      lines.push('■希望コート:' + (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : ''));
       lines.push('■ボールレンタル:' + (d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし'));
       total = 16500;
       if (d.rental === 'あり') total += 1200;
@@ -628,46 +649,102 @@ class Component extends DCLogic {
     lines.push('■お支払い方法:' + (d.payment || '(未選択)'));
     lines.push('■概算金額:' + yen(total) + (d.menu === 'offline' ? '(移動費別)' : ''));
     lines.push('■質問・ご要望:' + (d.question || '(なし)'));
+
+    // 仮予約であること、確定はLINEであることを本文にも入れる
+    lines.push('');
+    lines.push('--------------------');
+    if (d.menu === 'offline') {
+      lines.push('※こちらは仮予約の受付です。予約はまだ確定していません。');
+      lines.push('※LINE公式(' + LINE_OA_ID + ')でコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
+    } else {
+      lines.push('※お申込みを受け付けました。');
+      lines.push('※LINE公式(' + LINE_OA_ID + ')でお支払い方法をご案内します。');
+    }
     return lines.join('\n');
   }
 
   /**
-   * 仮予約を送信する（第8節）。
+   * Supabaseへ申込を保存する。
    *
-   * ブラウザから直接Supabaseへ書き込むのはやめ、/api/reserve に一本化した。
-   * サーバー側で日時・空き状況を検証し直し、保存に成功したときだけ ok:true が返る。
-   * 保存できなかった場合はここで例外になり、完了画面には進まない。
+   * 失敗したら例外にする（握りつぶさない）。呼び出し側は保存とメールの
+   * 結果を見てから、完了画面を出すかどうかを決める。
    */
-  submitReservation() {
+  saveToSupabase() {
     const d = this.state.data;
-    const payload = {
-      menu: d.menu,
-      plan: d.plan,
-      mode: d.arranger,
-      name: d.name, email: d.email, phone: d.phone, sns: d.sns,
-      category: d.category, guardianConsent: !!d.guardianConsent,
-      people: d.people, rental: d.rental,
-      courtName: d.courtName, courtAddress: d.courtAddress, courtCoord: d.courtCoord,
-      courtReserve: !!d.courtReserve,
-      choice1: d.date1 ? d.date1.startIso : null,
-      choice2: d.date2 ? d.date2.startIso : null,
-      payment: d.payment, question: d.question, agree: !!d.agree
+    let estimate = 0;
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      if (p) estimate = p.price;
+    } else if (d.menu === 'offline') {
+      estimate = 16500 + (d.rental === 'あり' ? 1200 : 0);
+    }
+    const row = {
+      name: d.name, sns: d.sns, email: d.email, phone: d.phone,
+      category: d.category, guardian_consent: !!d.guardianConsent,
+      menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+      plan: d.menu === 'online' ? d.plan : null,
+      people: d.menu === 'offline' ? d.people : null,
+      court: d.menu === 'offline' ? d.court : null,
+      court_reserve: d.menu === 'offline' ? !!d.courtReserve : null,
+      rental: d.menu === 'offline' ? d.rental : null,
+      date1: d.date1 ? this.selLine(d.date1) : null,
+      date2: d.date2 ? this.selLine(d.date2) : null,
+      payment: d.payment, question: d.question, estimate: estimate
     };
-
-    return fetch('/api/reserve', {
+    return fetch(this.SUPABASE.url + '/rest/v1/applications', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then((r) => r.json().catch(() => ({})).then((j) => ({ ok: r.ok, status: r.status, j: j })))
-      .then((res) => {
-        if (!res.ok || !res.j || !res.j.ok) {
-          const err = new Error((res.j && res.j.error) || '申込を送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。');
-          err.code = res.j && res.j.code;
-          throw err;
-        }
-        return res.j;
-      });
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: this.SUPABASE.key,
+        Authorization: 'Bearer ' + this.SUPABASE.key,
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify(row)
+    }).then((r) => {
+      if (!r.ok) {
+        return r.text().catch(() => '').then((t) => {
+          throw new Error('保存に失敗しました (HTTP ' + r.status + ') ' + String(t).slice(0, 120));
+        });
+      }
+      return true;
+    });
+  }
+
+  /** 完了画面の黒いカードに出す申込内容。 */
+  buildDoneSummary() {
+    const d = this.state.data;
+    const rows = ['お名前：' + d.name];
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      rows.push('メニュー：オンライン動画添削' + (p ? '（' + p.key + '回チケット）' : ''));
+    } else {
+      rows.push('メニュー：対面レッスン');
+      rows.push('第1希望：' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
+      if (d.date2) rows.push('第2希望：' + this.selLine(d.date2));
+      rows.push('コート：' + (d.court || '(未指定)') + (d.courtReserve ? '(予約代行を希望)' : ''));
+      rows.push('ボールレンタル：' + (d.rental || '(未選択)'));
+    }
+    return rows;
+  }
+
+  /** LINEのトーク画面に入れる本文。申込内容の要約。 */
+  buildLineMessage() {
+    const d = this.state.data;
+    const lines = ['お申込みの内容をお送りします。', ''];
+    lines.push('お名前：' + d.name);
+    lines.push('メニュー：' + (d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン'));
+    if (d.menu === 'online') {
+      const p = this.PLANS.find((x) => x.key === d.plan);
+      if (p) lines.push('チケット：' + p.key + '回');
+    } else {
+      lines.push('第1希望：' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
+      if (d.date2) lines.push('第2希望：' + this.selLine(d.date2));
+      lines.push('コート：' + (d.court || '(未指定)') + (d.courtReserve ? '(予約代行を希望)' : ''));
+      lines.push('ボールレンタル：' + (d.rental || '(未選択)'));
+    }
+    lines.push('');
+    lines.push('よろしくお願いします。');
+    return lines.join('\n');
   }
 
   /**
@@ -713,7 +790,7 @@ class Component extends DCLogic {
     return { m: p[1], d: p[2], dow: dt.getDay(), wd: '日月火水木金土'[dt.getDay()] };
   }
   shortDate(key) { const p = this.parseKey(key); return p.m + '/' + p.d + '(' + p.wd + ')'; }
-  selLine(sel) { return sel ? sel.full : ''; }
+  selLine(sel) { return sel ? (this.shortDate(sel.key) + ' ' + minToHm(sel.start) + '〜' + minToHm(sel.start + BOOKING_CONFIG.lessonMinutes) + '(2時間)') : ''; }
 
   monthKey(y, m) { return y + '-' + String(m).padStart(2, '0'); }
 
@@ -721,92 +798,69 @@ class Component extends DCLogic {
    * 指定日の候補時刻をサーバーから取得する（第5-3節：日付を選んだ後、その日だけ計算する）。
    * 失敗を「空き無し」と混同しないよう、slots=null のまま slotErr を立てる。
    */
-  fetchSlots(i, dateKey) {
-    const d = this.state.data;
-    const mode = d.arranger === 'operator' ? 'operator' : 'customer';
-    const payload = { mode: mode, date: dateKey };
-    if (mode === 'customer') payload.courtCoord = d.courtCoord;
+  /**
+   * その日に選べるレッスン開始時刻を返す（BOOKING_CONFIG から計算する）。
+   * レッスンの終了が受付終了時刻を超えないものだけを返す。
+   * 受付なしの曜日・受付停止日は空配列になる。
+   */
+  startTimesFor(dateKey) {
+    if (BOOKING_CONFIG.blockedDates.indexOf(dateKey) >= 0) return [];
 
-    const seq = (this._slotSeq = (this._slotSeq || 0) + 1);
-    this._slotSeqFor = this._slotSeqFor || {};
-    this._slotSeqFor[i] = seq;
+    const p = dateKey.split('-').map(Number);
+    const dow = new Date(p[0], p[1] - 1, p[2]).getDay();
+    const band = BOOKING_CONFIG.hours[DOW_KEYS[dow]];
+    if (!band) return [];
 
-    this.setState({
-      ['loading' + i]: true, ['slotErr' + i]: '', ['slots' + i]: null, ['notices' + i]: []
-    });
+    const from = hmToMin(band.from);
+    const to = hmToMin(band.to);
+    const lesson = BOOKING_CONFIG.lessonMinutes;
+    const step = BOOKING_CONFIG.stepMinutes;
 
-    fetch('/api/availability', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then((r) => r.json().catch(() => ({})).then((j) => ({ ok: r.ok, j: j })))
-      .then((res) => {
-        // 連打で古い応答が後から届いた場合は捨てる
-        if (this._slotSeqFor[i] !== seq) return;
-        if (!res.ok || !res.j || !res.j.ok) {
-          throw new Error((res.j && res.j.error) || '空き時間を取得できませんでした。');
-        }
-        this.setState({
-          ['loading' + i]: false,
-          ['slots' + i]: res.j.slots || [],
-          ['notices' + i]: (res.j.notices || []).map((t) => ({ text: t }))
-        });
-      })
-      .catch((e) => {
-        if (this._slotSeqFor[i] !== seq) return;
-        this.setState({
-          ['loading' + i]: false,
-          ['slots' + i]: null,
-          ['slotErr' + i]: (e && e.message) || '空き時間を取得できませんでした。通信環境をご確認ください。'
-        });
-      });
+    const out = [];
+    for (let m = from; m + lesson <= to; m += step) out.push(m);
+    return out;
   }
 
-  /** コート名から候補住所を取得する（第3節A-2）。 */
-  searchCourt() {
-    const q = (this.state.courtQuery || '').trim();
-    if (q.length < 2) {
-      this.setState({ courtError: 'コート名を2文字以上で入力してください。' });
-      return;
+  /** その日が受付対象か（過去・期間外・受付なしの曜日・受付停止日でないか）。 */
+  isOpenDay(dateKey) {
+    return this.startTimesFor(dateKey).length > 0;
+  }
+
+  /** その曜日に固定コートがあれば名前を返す。無ければ ''。 */
+  fixedCourtFor(dateKey) {
+    if (!dateKey) return '';
+    const p = dateKey.split('-').map(Number);
+    const dow = new Date(p[0], p[1] - 1, p[2]).getDay();
+    return BOOKING_CONFIG.fixedCourts[DOW_KEYS[dow]] || '';
+  }
+
+  /** 受付時間帯の短い表示（カレンダーのマス下に出す）。 */
+  bandLabelFor(dateKey) {
+    if (BOOKING_CONFIG.blockedDates.indexOf(dateKey) >= 0) return '休み';
+    const p = dateKey.split('-').map(Number);
+    const dow = new Date(p[0], p[1] - 1, p[2]).getDay();
+    const band = BOOKING_CONFIG.hours[DOW_KEYS[dow]];
+    if (!band) return '-';
+    // '8:00' → '8'、'12:30' → '12:30'
+    const trim = (hm) => hm.replace(/:00$/, '');
+    return trim(band.from) + '-' + trim(band.to);
+  }
+
+  /**
+   * 選択済みの日程に固定コートがあれば、希望コートに自動で入れる。
+   * 第1希望を基準にする（第2希望だけ金曜というケースはLINEで調整する）。
+   */
+  applyFixedCourt(data) {
+    const fixed = this.fixedCourtFor(data.date1 ? data.date1.key : '');
+    if (fixed) {
+      data.court = fixed;
+      data.courtReserve = false; // 固定コートでは予約代行の選択は出さない
+    } else if (data.courtFixedApplied && !fixed) {
+      // 固定コートの日から別の日に変えたときは、自動で入れた値を消す
+      data.court = '';
     }
-    this.setState({ courtSearching: true, courtError: '', courtCandidates: null });
-
-    fetch('/api/court-search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: q })
-    })
-      .then((r) => r.json().catch(() => ({})).then((j) => ({ ok: r.ok, j: j })))
-      .then((res) => {
-        if (!res.ok || !res.j || !res.j.ok) {
-          throw new Error((res.j && res.j.error) || 'コートを検索できませんでした。');
-        }
-        this.setState({
-          courtSearching: false,
-          courtCandidates: res.j.candidates || [],
-          courtError: (res.j.candidates || []).length ? '' : (res.j.notice || '該当する場所が見つかりませんでした。')
-        });
-      })
-      .catch((e) => {
-        this.setState({
-          courtSearching: false,
-          courtCandidates: null,
-          courtError: (e && e.message) || 'コートを検索できませんでした。'
-        });
-      });
-  }
-
-  /** コートや手配方法が変わったら、取得済みの候補日時を捨てる（古い前提の枠を残さない）。 */
-  resetSchedule(patch) {
-    const data = { ...this.state.data, ...patch, date1: null, date2: null };
-    this.setState({
-      data: data,
-      open1: false, open2: false, temp1: '', temp2: '',
-      slots1: null, slots2: null, slotErr1: '', slotErr2: '',
-      notices1: [], notices2: [], err: ''
-    });
-    this.save({ data: data });
+    data.courtFixedApplied = !!fixed;
+    return data;
   }
 
   buildPicker(i) {
@@ -815,20 +869,14 @@ class Component extends DCLogic {
     const sel = d['date' + i];
     const open = st['open' + i];
     const temp = st['temp' + i];
-    const slots = st['slots' + i];
-    const loading = st['loading' + i];
-    const slotErr = st['slotErr' + i];
-    const notices = st['notices' + i] || [];
 
-    // 表示対象期間: 2日後〜30日先（確認リスト#1）
     const today = new Date(); today.setHours(0, 0, 0, 0);
-    const minDate = new Date(today); minDate.setDate(minDate.getDate() + 2);
-    const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 30);
-    const curMonth = { y: minDate.getFullYear(), m: minDate.getMonth() + 1 };
+    const curMonth = { y: today.getFullYear(), m: today.getMonth() + 1 };
+    const last = new Date(today.getFullYear(), today.getMonth() + (BOOKING_CONFIG.monthsAhead || 2) + 1, 0);
 
     let view = st['cur' + i];
     if (!view) {
-      if (sel) { const p = sel.dateKey.split('-').map(Number); view = { y: p[0], m: p[1] }; }
+      if (sel) { const p = sel.key.split('-').map(Number); view = { y: p[0], m: p[1] }; }
       else view = { ...curMonth };
     }
 
@@ -838,31 +886,32 @@ class Component extends DCLogic {
       const first = new Date(view.y, view.m - 1, 1);
       const lead = (first.getDay() + 6) % 7; // 月曜始まり
       for (let k = 0; k < lead; k++) cells.push({ empty: true });
+
       const daysInMonth = new Date(view.y, view.m, 0).getDate();
       for (let day = 1; day <= daysInMonth; day++) {
         const dt = new Date(view.y, view.m - 1, day); dt.setHours(0, 0, 0, 0);
         const dow = dt.getDay();
-        const key = view.y + '-' + String(view.m).padStart(2, '0') + '-' + String(day).padStart(2, '0');
-        const outOfRange = dt < minDate || dt > maxDate;
+        const key = dateKeyOf(dt);
+        const past = dt < today;
+        const tooFar = dt > last;
+        const openDay = this.isOpenDay(key);
+        const disabled = past || tooFar || !openDay;
+
         const pressedTemp = temp === key;
-        const pickedHere = !!(sel && sel.dateKey === key);
+        const pickedHere = !!(sel && sel.key === key);
         const weekend = dow === 0 || dow === 6;
+
         cells.push({
           empty: false, isDay: true, key: key, day: day,
-          // 空き状況は日付を選んでから調べるため、ここには時間帯を書かない
-          cond: '',
+          cond: disabled ? (past || tooFar ? '' : this.bandLabelFor(key)) : this.bandLabelFor(key),
           pressed: pickedHere || pressedTemp,
-          disabled: outOfRange,
-          bg: outOfRange ? '#F2F2F2' : pressedTemp ? '#E9FF00' : pickedHere ? '#111111' : '#FFFFFF',
-          fg: outOfRange ? '#BBBBBB' : pickedHere ? '#FFFFFF' : '#111111',
-          condColor: outOfRange ? '#CCCCCC' : weekend ? '#111111' : '#666666',
+          disabled: disabled,
+          bg: disabled ? '#F2F2F2' : pressedTemp ? '#E9FF00' : pickedHere ? '#111111' : '#FFFFFF',
+          fg: disabled ? '#BBBBBB' : pickedHere ? '#FFFFFF' : '#111111',
+          condColor: disabled ? '#CCCCCC' : weekend ? '#111111' : '#666666',
           aria: view.y + '年' + view.m + '月' + day + '日 ' + '日月火水木金土'[dow] + '曜日'
-            + (outOfRange ? ' 選択不可' : ' 空き時間を調べる'),
-          onPick: () => {
-            if (outOfRange) return;
-            this.setState({ ['temp' + i]: key });
-            this.fetchSlots(i, key);
-          }
+            + (disabled ? ' 受付不可' : ' 受付時間 ' + this.bandLabelFor(key)),
+          onPick: () => { if (!disabled) this.setState({ ['temp' + i]: key }); }
         });
       }
       while (cells.length % 7 !== 0) cells.push({ empty: true });
@@ -876,34 +925,27 @@ class Component extends DCLogic {
       this.setState({ ['cur' + i]: next });
     };
 
-    // 取得済みの候補時刻をボタンに変換する
+    // 選択中の日付の開始時刻ボタン
     let times = [];
-    if (open && temp && slots && slots.length) {
-      times = slots.map((s) => {
-        const pressed = !!(sel && sel.startIso === s.startIso);
-        const startLabel = s.label.split('〜')[0];
+    if (open && temp) {
+      times = this.startTimesFor(temp).map((min) => {
+        const pressed = !!(sel && sel.key === temp && sel.start === min);
+        const endHm = minToHm(min + BOOKING_CONFIG.lessonMinutes);
         return {
-          label: startLabel,
-          sub: '〜' + s.label.split('〜')[1],
-          aria: startLabel + 'から2時間のレッスン',
+          label: minToHm(min),
+          sub: '〜' + endHm,
+          aria: minToHm(min) + 'から' + endHm + 'まで',
           pressed: pressed,
           bg: pressed ? '#E9FF00' : '#FFFFFF',
           onPick: () => {
-            const dateKey = temp;
-            const p = dateKey.split('-').map(Number);
-            const dt = new Date(p[0], p[1] - 1, p[2]);
-            const dateLabel = p[1] + '/' + p[2] + '(' + '日月火水木金土'[dt.getDay()] + ')';
-            const picked = {
-              startIso: s.startIso, endIso: s.endIso, dateKey: dateKey,
-              dateLabel: dateLabel, timeLabel: s.label,
-              full: dateLabel + ' ' + s.label + '(2時間)'
-            };
+            const picked = { key: temp, start: min };
             const other = d['date' + (i === 1 ? 2 : 1)];
-            if (other && other.startIso === picked.startIso) {
+            if (other && other.key === picked.key && other.start === picked.start) {
               this.setState({ err: '第1希望と第2希望が同じ日時です。別の日時をお選びください。' });
               return;
             }
-            const data = { ...this.state.data, ['date' + i]: picked };
+            let data = { ...this.state.data, ['date' + i]: picked };
+            data = this.applyFixedCourt(data);
             const stx = { data: data, ['open' + i]: false, ['temp' + i]: '', err: '' };
             if (i === 1 && !data.date2) { stx.open2 = true; stx.temp2 = ''; }
             this.setState(stx);
@@ -913,7 +955,8 @@ class Component extends DCLogic {
       });
     }
 
-    const tempLabel = temp ? (Number(temp.split('-')[1]) + '/' + Number(temp.split('-')[2])) : '';
+    const tempFixed = temp ? this.fixedCourtFor(temp) : '';
+    const tempTimes = temp ? this.startTimesFor(temp) : [];
 
     return {
       idx: i,
@@ -921,22 +964,20 @@ class Component extends DCLogic {
       badge: i === 1 ? '必須' : '任意',
       badgeBg: i === 1 ? '#E9FF00' : '#EEEEEE',
       hasSel: !!sel,
-      confirmedLine: sel ? sel.full + ' でご希望' : '',
-      toggleLabel: sel ? sel.dateLabel + ' タップで変更' : '日付を選ぶ',
+      confirmedLine: sel ? this.selLine(sel) + ' でご希望' : '',
+      toggleLabel: sel ? this.shortDate(sel.key) + ' タップで変更' : '日付を選ぶ',
       arrow: open ? '▲' : '▼',
       open: open,
       showClear: i === 2 && !!sel,
       onClear: () => {
         const data = { ...this.state.data, date2: null };
-        this.setState({ data: data, open2: false, temp2: '', cur2: null, slots2: null, slotErr2: '' });
+        this.setState({ data: data, open2: false, temp2: '', cur2: null });
         this.save({ data: data });
       },
       onToggle: () => this.setState({
         ['open' + i]: !open,
-        ['temp' + i]: '',
-        ['cur' + i]: null,
-        ['slots' + i]: null,
-        ['slotErr' + i]: ''
+        ['temp' + i]: !open && sel ? sel.key : '',
+        ['cur' + i]: null
       }),
       weekdays: weekdays.map((w, k) => ({ w: w, weekend: k >= 5 ? '#111111' : '#666666' })),
       cells: cells,
@@ -946,15 +987,14 @@ class Component extends DCLogic {
       prevOpacity: atCurMonth ? '0.35' : '1',
       onPrev: () => shiftMonth(-1),
       onNext: () => shiftMonth(1),
-      loading: loading,
-      slotError: slotErr,
-      onRetry: () => { if (temp) this.fetchSlots(i, temp); },
-      hasTimes: !!(temp && slots && slots.length),
-      emptyDay: !!(temp && !loading && !slotErr && slots && slots.length === 0),
-      tempTitle: tempLabel + ' の空いている開始時刻',
-      times: times,
-      hasNotices: notices.length > 0,
-      notices: notices
+      legend: '数字の下は受付時間です。受付のない日は選べません。',
+      hasTimes: !!(temp && tempTimes.length),
+      emptyDay: !!(temp && !tempTimes.length),
+      emptyDayText: 'この日は受付していません。別の日をお選びください。',
+      tempTitle: temp ? this.shortDate(temp) + ' の開始時刻を選ぶ(1レッスン = 2時間)' : '',
+      tempFixedCourt: !!tempFixed,
+      tempFixedCourtNote: tempFixed ? ('この日は ' + tempFixed + ' で開催します。') : '',
+      times: times
     };
   }
 
@@ -972,10 +1012,14 @@ class Component extends DCLogic {
     if (step === 3) {
       if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
       if (d.menu === 'offline') {
-        if (!d.arranger) return 'コートの手配方法を選択してください。';
-        if (d.arranger === 'customer' && !d.courtCoord) return 'コートを検索して、候補から場所をお選びください。';
         if (!d.date1) return '第1希望の日程を選択してください。';
-        if (d.date2 && d.date1 && d.date2.startIso === d.date1.startIso) return '第1希望と第2希望が同じ日時です。';
+        if (d.date2 && d.date1 && d.date2.key === d.date1.key && d.date2.start === d.date1.start) {
+          return '第1希望と第2希望が同じ日時です。';
+        }
+        // 固定コートの曜日（金曜など）は court が自動で入るため、この分岐には来ない
+        if (!this.fixedCourtFor(d.date1.key) && !d.courtReserve && !d.court.trim()) {
+          return '希望コートを入力するか、コート予約代行を選択してください。';
+        }
         if (!d.rental) return '練習ボールレンタルの有無を選択してください。';
       }
     }
@@ -1092,54 +1136,8 @@ class Component extends DCLogic {
       onPick: () => this.setData({ payment: v })
     }));
 
-    // --- コート手配の2分岐（第3節） ---
-    const ARRANGERS = [
-      {
-        key: 'operator',
-        title: 'コートの手配をお願いする',
-        desc: '三鷹周辺のコートで開催します。具体的なコートはLINEで調整します。往復の移動(片道1時間)を含めて空いている日時をご案内します。'
-      },
-      {
-        key: 'customer',
-        title: '自分でコートを指定する',
-        desc: '関東のコートをご指定ください。東小金井駅からの往復の実際の経路を調べて、移動を含めて空いている日時をご案内します。'
-      }
-    ];
-    const arrangerOpts = ARRANGERS.map((a) => {
-      const pressed = d.arranger === a.key;
-      return {
-        key: a.key, title: a.title, desc: a.desc, pressed: pressed,
-        mark: pressed ? '✓' : '',
-        bg: pressed ? '#E9FF00' : '#FFFFFF',
-        onPick: () => {
-          if (d.arranger === a.key) return;
-          // 手配方法が変われば前提が変わるので、選択済みの日程を破棄する
-          this.resetSchedule({
-            arranger: a.key,
-            courtName: '', courtAddress: '', courtCoord: '',
-            courtReserve: a.key === 'operator'
-          });
-          this.setState({ courtQuery: '', courtCandidates: null, courtError: '' });
-        }
-      };
-    });
-
-    const courtCandidates = (st.courtCandidates || []).map((c) => {
-      const pressed = d.courtCoord === c.coord;
-      return {
-        label: c.label, coord: c.coord, pressed: pressed,
-        mark: pressed ? '✓' : '',
-        bg: pressed ? '#E9FF00' : '#FFFFFF',
-        onPick: () => {
-          // コートが変われば経路が変わるので、選択済みの日程を破棄する
-          this.resetSchedule({ courtName: c.label, courtAddress: c.address, courtCoord: c.coord });
-        }
-      };
-    });
-
-    const isCustomerCourt = d.menu === 'offline' && d.arranger === 'customer';
-    const isOperatorCourt = d.menu === 'offline' && d.arranger === 'operator';
-    const canPickDate = isOperatorCourt || (isCustomerCourt && !!d.courtCoord);
+    // --- 固定コートの曜日かどうか（金曜など。BOOKING_CONFIG.fixedCourts で設定） ---
+    const fixedCourtName = d.menu === 'offline' ? this.fixedCourtFor(d.date1 ? d.date1.key : '') : '';
 
     const confirmRows = [
       { k: '氏名', v: d.name },
@@ -1161,10 +1159,9 @@ class Component extends DCLogic {
       estNote = '※ 1往復 = 1pt 消費/有効期限5ヶ月。お支払い方法は申込後、LINE公式アカウントにてご案内します。';
     } else if (d.menu === 'offline') {
       confirmRows.push({ k: '参加人数', v: d.people + '人' });
-      confirmRows.push({ k: 'コート手配', v: d.arranger === 'operator' ? '運営者にお願いする(三鷹周辺)' : '自分で指定する' });
-      confirmRows.push({ k: 'コート', v: d.arranger === 'customer' ? (d.courtName || '(未選択)') : '(運営者手配・三鷹周辺)' });
-      confirmRows.push({ k: '第1希望', v: d.date1 ? d.date1.full : '(未選択)' });
-      confirmRows.push({ k: '第2希望', v: d.date2 ? d.date2.full : '(なし)' });
+      confirmRows.push({ k: '第1希望', v: d.date1 ? this.selLine(d.date1) : '(未選択)' });
+      confirmRows.push({ k: '第2希望', v: d.date2 ? this.selLine(d.date2) : '(なし)' });
+      confirmRows.push({ k: '希望コート', v: (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : '') });
       confirmRows.push({ k: 'ボールレンタル', v: d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし' });
       estRows.push({ k: '対面レッスン 120分(一律)', v: this.fmtYen(16500) });
       total = 16500;
@@ -1190,32 +1187,16 @@ class Component extends DCLogic {
       guardianBg: d.guardianConsent ? '#E9FF00' : '#FFFFFF',
       guardianMark: d.guardianConsent ? '✓' : '',
       onGuardian: () => this.setData({ guardianConsent: !d.guardianConsent }),
-      arrangerOpts: arrangerOpts,
-      isCustomerCourt: isCustomerCourt,
-      isOperatorCourt: isOperatorCourt,
-      canPickDate: canPickDate,
-      cannotPickDate: d.menu === 'offline' && !canPickDate,
-      datePrereq: !d.arranger
-        ? '先に「コートの手配」をお選びください。選んだあとに、空いている日時をご案内します。'
-        : 'コートを検索して候補からお選びください。選んだあとに、空いている日時をご案内します。',
-      dateHelp: isOperatorCourt
-        ? '往復の移動(片道1時間)とレッスン2時間が空いている日時だけを表示します。'
-        : '東小金井駅からの往復の実際の経路とレッスン2時間が空いている日時だけを表示します。',
-      courtQuery: st.courtQuery,
-      onCourtQuery: (e) => this.setState({ courtQuery: e.target.value, courtError: '' }),
-      onCourtSearch: () => this.searchCourt(),
-      courtSearchLabel: st.courtSearching ? '検索中…' : '検索',
-      courtSearchDisabled: st.courtSearching,
-      courtSearchOpacity: st.courtSearching ? '0.5' : '1',
-      courtError: st.courtError,
-      hasCourtCandidates: courtCandidates.length > 0,
-      courtCandidates: courtCandidates,
-      hasCourtSelected: !!d.courtCoord,
-      courtSelectedLabel: d.courtName,
-      referenceCode: st.referenceCode,
-      lineUrl: st.lineUrl,
-      hasLineUrl: !!st.lineUrl,
+      court: d.court,
+      onCourt: (e) => this.setData({ court: e.target.value }),
+      courtFixed: !!fixedCourtName,
+      courtFixedName: fixedCourtName,
+      courtFixedNote: fixedCourtName ? 'この曜日は ' + fixedCourtName + ' で開催するため、コートの指定は不要です。' : '',
+      courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
+      lineAddUrl: LINE_ADD_FRIEND_URL,
+      lineUrl: st.lineMessage ? (LINE_MESSAGE_URL_BASE + encodeURIComponent(st.lineMessage)) : '',
+      hasLineUrl: !!st.lineMessage,
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
       copyLabel: st.copied ? 'コピーしました ✓' : '内容をコピー',
@@ -1236,6 +1217,8 @@ class Component extends DCLogic {
           } catch (e) {}
         }
       },
+      courtOptional: d.courtReserve,
+      courtRequired: !d.courtReserve,
       courtReservePressed: d.courtReserve,
       courtReserveBg: d.courtReserve ? '#E9FF00' : '#FFFFFF',
       courtReserveMark: d.courtReserve ? '✓' : '',
@@ -1259,51 +1242,60 @@ class Component extends DCLogic {
         if (msg) { this.setState({ err: msg }); return; }
         if (st.step === 5) {
           this.setState({ sending: true, err: '' });
-          this.submitReservation()
-            .then((result) => {
-              // ここに来た時点で仮予約は保存済み。以降の失敗で完了を取り消さない。
+
+          const summary = this.buildSummary();
+          const emailParams = {
+            name: d.name,
+            customer_email: d.email,
+            email: d.email,
+            phone: d.phone,
+            sns: d.sns || '(未記入)',
+            category: d.category,
+            menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+            message: summary
+          };
+
+          // 保存とメールを両方試し、結果を見てから完了かどうかを決める。
+          // どちらか一方でも成功していれば申込は運営者に届いている。
+          const settle = (p) => p.then(() => ({ ok: true }), (e) => ({ ok: false, error: e }));
+
+          Promise.all([settle(this.saveToSupabase()), settle(this.sendEmails(emailParams))])
+            .then((results) => {
+              const saved = results[0].ok;
+              const mailed = results[1].ok;
+
+              if (!saved && !mailed) {
+                // 両方だめ。完了表示は出さず、LINEでの連絡を案内する。
+                this.setState({
+                  sending: false,
+                  err: '申込を送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。'
+                     + '繰り返し失敗する場合は、お手数ですがLINE公式(' + LINE_OA_ID + ')から直接ご連絡ください。'
+                });
+                return;
+              }
+
+              // 片方でも成功していれば完了扱い。ただし届いていない経路は記録に残す。
+              let warn = '';
+              if (!saved) warn = '確認用の控えを保存できませんでしたが、お申込みは受け付けています。念のため下のボタンからLINEでもお送りください。';
+              else if (!mailed) warn = '確認メールをお送りできませんでしたが、お申込みは受け付けています。下のボタンからLINEでもお送りください。';
+
+              if (!saved) console.error('[apply] 保存に失敗:', results[0].error);
+              if (!mailed) console.error('[apply] メール送信に失敗:', results[1].error);
+
               this.setState({
                 done: true, sending: false,
-                referenceCode: result.referenceCode || '',
-                lineUrl: result.lineUrl || '',
-                lineMessage: result.lineMessage || '',
-                doneSummary: result.summary || [],
-                mailWarning: result.lineUrl ? '' : 'LINEのご案内先が未設定です。お手数ですが上の内容をコピーしてLINE公式へお送りください。'
+                lineMessage: this.buildLineMessage(),
+                doneSummary: this.buildDoneSummary(),
+                mailWarning: warn
               });
               try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
               window.scrollTo(0, 0);
-
-              // メール通知は補助。失敗しても申込は有効なので、画面で知らせるだけにする。
-              if (result.emailParams) {
-                this.sendEmails(result.emailParams).catch(() => {
-                  this.setState({
-                    mailWarning: '確認メールをお送りできませんでした。お手数ですが、上の受付番号をLINEでお送りください。'
-                  });
-                });
-              }
-            })
-            .catch((e) => {
-              // 枠が埋まった場合は日程の選び直しへ案内する（受入条件）
-              if (e && e.code === 'slot_taken') {
-                const data = { ...this.state.data, date1: null, date2: null };
-                this.setState({
-                  sending: false, err: e.message, data: data, step: 3,
-                  slots1: null, slots2: null, temp1: '', temp2: '', open1: true
-                });
-                this.save({ data: data, step: 3 });
-                window.scrollTo(0, 0);
-                return;
-              }
-              this.setState({
-                sending: false,
-                err: (e && e.message) || '送信に失敗しました。通信環境をご確認のうえ、もう一度お試しください。'
-              });
             });
           return;
         }
         const nextStep = st.step + 1;
         const patch = { step: nextStep, err: '' };
-        if (nextStep === 3 && d.menu === 'offline' && canPickDate && !d.date1) patch.open1 = true;
+        if (nextStep === 3 && d.menu === 'offline' && !d.date1) patch.open1 = true;
         this.setState(patch);
         this.save({ step: nextStep });
         window.scrollTo(0, 0);
@@ -1312,11 +1304,8 @@ class Component extends DCLogic {
         try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
-          slots1: null, slots2: null, loading1: false, loading2: false, slotErr1: '', slotErr2: '',
-          notices1: [], notices2: [],
-          courtQuery: '', courtCandidates: null, courtSearching: false, courtError: '',
-          referenceCode: '', lineUrl: '', lineMessage: '', doneSummary: [], mailWarning: '', copied: false,
-          data: { name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false, menu: '', plan: '', people: 1, rental: '', arranger: '', courtName: '', courtAddress: '', courtCoord: '', courtReserve: false, date1: null, date2: null, agree: false, payment: '', question: '' }
+          lineMessage: '', doneSummary: [], mailWarning: '', copied: false,
+          data: { name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
       }
