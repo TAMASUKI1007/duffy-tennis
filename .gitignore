@@ -1,0 +1,13 @@
+# 秘密情報（APIキー等）は絶対にコミットしない
+.env
+.env.*
+!.env.example
+
+# 検証スクリプトの生の応答ログ（経路データを含むため）
+scripts/out/
+
+# 依存・ビルド成果物
+node_modules/
+.vercel/
+.DS_Store
+Thumbs.db
