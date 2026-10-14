@@ -61,18 +61,26 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             </div>
           </sc-for>
           <div>
-            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">区分 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-              <sc-for list="{{ categoryOpts }}" as="o" hint-placeholder-count="5">
-                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
-              </sc-for>
+            <label for="f-age" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">年齢 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></label>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input id="f-age" type="number" inputMode="numeric" min="1" max="120" value="{{ age }}" onChange="{{ onAge }}" placeholder="例:25" autoComplete="off" style="width:120px;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;text-align:right;">
+              <span style="font-weight:900;font-size:15px;">歳</span>
             </div>
+            <p style="margin:8px 0 0;font-size:12px;font-weight:700;color:#444444;">受講されるご本人の年齢をご記入ください。</p>
             <sc-if value="{{ needsGuardian }}" hint-placeholder-val="{{ false }}">
               <button type="button" onClick="{{ onGuardian }}" aria-pressed="{{ guardianPressed }}" style="margin-top:14px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ guardianBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
                 <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ guardianMark }}</span>
                 <span style="font-weight:900;font-size:13.5px;line-height:1.5;">保護者の許可を得ています <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></span>
               </button>
             </sc-if>
+          </div>
+          <div>
+            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">どこで知りましたか? <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <sc-for list="{{ sourceOpts }}" as="o" hint-placeholder-count="6">
+                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
+              </sc-for>
+            </div>
           </div>
         </div>
       </sc-if>
@@ -424,7 +432,9 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:15px;">REQUEST RECEIVED</div>
           <div style="font-family:'Anton',sans-serif;font-size:clamp(64px,18vw,140px);line-height:0.95;margin-top:6px;">THANKS<span style="color:#E9FF00;-webkit-text-stroke:3px #111111;">!</span></div>
         </div>
-        <img src="assets/bear_3.png" alt="ガッツポーズするダッフィーベア" style="width:clamp(110px,24vw,180px);transform:rotate(-4deg);flex:none;">
+        <div aria-hidden="true" style="flex:none;width:clamp(96px,20vw,140px);height:clamp(96px,20vw,140px);border-radius:50%;background:#E9FF00;border:4px solid #111111;box-shadow:8px 8px 0 #111111;display:grid;place-items:center;transform:rotate(-6deg);">
+          <span style="font-family:'Anton',sans-serif;font-size:clamp(44px,9vw,64px);line-height:1;">✓</span>
+        </div>
       </div>
 
       <p style="font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:20px 0 0;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">仮予約を受け付けました。</span></p>
@@ -505,11 +515,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
  * 【注意】曜日のキーは mon火...ではなく sun/mon/tue/wed/thu/fri/sat です（英語3文字）。
  * ========================================================================== */
 const BOOKING_CONFIG = {
+  // 基本ルール：日曜午前・月曜午前・水曜終日は受付しない
   hours: {
-    sun: { from: '12:00', to: '20:00' },
-    mon: { from: '8:00',  to: '12:00' },
+    sun: { from: '12:00', to: '20:00' },  // 午前は受付なし
+    mon: { from: '12:00', to: '20:00' },  // 午前は受付なし
     tue: { from: '12:00', to: '20:00' },
-    wed: { from: '8:00',  to: '20:00' },
+    wed: null,                            // 終日受付なし
     thu: null,
     fri: { from: '13:00', to: '16:00' },
     sat: { from: '12:00', to: '20:00' }
@@ -566,7 +577,9 @@ function dateKeyOf(dt) {
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.STORE_KEY = 'duffy-tennis-apply-v3';
+    // v4: 区分 → 年齢の数値入力に変更。古い保存データ（category）は読み込まない
+    this.STORE_KEY = 'duffy-tennis-apply-v4';
+    this.SOURCES = ['Instagram', 'TikTok', 'Facebook', 'YouTube', '知人の紹介', 'その他'];
     this.PLANS = [
       { key: '3', price: 2400, per: 800, badge: 'TICKET' },
       { key: '5', price: 3750, per: 750, badge: 'TICKET' },
@@ -577,7 +590,7 @@ class Component extends DCLogic {
       step: 1,
       done: false,
       data: {
-        name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false,
+        name: '', email: '', phone: '', sns: '', age: '', source: '', guardianConsent: false,
         menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
         // 固定コートの日を選んで court を自動で入れたかどうか
         courtFixedApplied: false,
@@ -629,8 +642,8 @@ class Component extends DCLogic {
     lines.push('■SNS:' + (d.sns || '(未記入)'));
     lines.push('■メール:' + d.email);
     lines.push('■電話番号:' + d.phone);
-    const minor = ['12歳未満', '12〜15歳', '16〜17歳'].indexOf(d.category) >= 0;
-    lines.push('■区分:' + (d.category || '(未選択)') + (minor ? (d.guardianConsent ? '(保護者の許可あり)' : '') : ''));
+    lines.push('■年齢:' + this.ageLabel());
+    lines.push('■知ったきっかけ:' + (d.source || '(未選択)'));
     lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? '対面レッスン' : '(未選択)'));
 
     let total = 0;
@@ -680,7 +693,10 @@ class Component extends DCLogic {
     }
     const row = {
       name: d.name, sns: d.sns, email: d.email, phone: d.phone,
-      category: d.category, guardian_consent: !!d.guardianConsent,
+      // category 列は以前の「区分」用。既存の一覧でも年齢が読めるように文字列で入れておく
+      category: this.ageLabel(),
+      age: this.ageNumber(), source: d.source || null,
+      guardian_consent: !!d.guardianConsent,
       menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
       plan: d.menu === 'online' ? d.plan : null,
       people: d.menu === 'offline' ? d.people : null,
@@ -691,6 +707,20 @@ class Component extends DCLogic {
       date2: d.date2 ? this.selLine(d.date2) : null,
       payment: d.payment, question: d.question, estimate: estimate
     };
+    return this.postApplication(row).catch((e) => {
+      // age / source 列がまだ作られていない（db/003 未実行）ときは、
+      // その2項目を質問欄の先頭に書き足して、列なしで保存し直す。
+      if (!/column|PGRST204/i.test(String(e && e.message))) throw e;
+      const fallback = { ...row };
+      delete fallback.age;
+      delete fallback.source;
+      fallback.question = '[年齢:' + this.ageLabel() + ' / 知ったきっかけ:' + (d.source || '(未選択)') + ']\n' + (d.question || '');
+      console.warn('[apply] age/source 列が見つからないため、質問欄に含めて保存します。db/003 のSQLを実行してください。');
+      return this.postApplication(fallback);
+    });
+  }
+
+  postApplication(row) {
     return fetch(this.SUPABASE.url + '/rest/v1/applications', {
       method: 'POST',
       headers: {
@@ -703,11 +733,24 @@ class Component extends DCLogic {
     }).then((r) => {
       if (!r.ok) {
         return r.text().catch(() => '').then((t) => {
-          throw new Error('保存に失敗しました (HTTP ' + r.status + ') ' + String(t).slice(0, 120));
+          throw new Error('保存に失敗しました (HTTP ' + r.status + ') ' + String(t).slice(0, 160));
         });
       }
       return true;
     });
+  }
+
+  /** 年齢を数値で返す。未入力や不正なら null。 */
+  ageNumber() {
+    const n = parseInt(String(this.state.data.age).trim(), 10);
+    return Number.isFinite(n) && n >= 1 && n <= 120 ? n : null;
+  }
+
+  /** 年齢の表示用。保護者の許可があればそれも添える。 */
+  ageLabel() {
+    const n = this.ageNumber();
+    if (n === null) return '(未記入)';
+    return n + '歳' + (n < 18 && this.state.data.guardianConsent ? '(保護者の許可あり)' : '');
   }
 
   /** 完了画面の黒いカードに出す申込内容。 */
@@ -1005,8 +1048,10 @@ class Component extends DCLogic {
       if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
       if (!d.phone.trim()) return '電話番号を入力してください。';
       if (!d.sns.trim()) return 'SNSアカウントを入力してください。';
-      if (!d.category) return 'ご本人の区分を選択してください。';
-      if (['12歳未満', '12〜15歳', '16〜17歳'].indexOf(d.category) >= 0 && !d.guardianConsent) return '保護者の許可を得ているかご確認ください。';
+      const age = this.ageNumber();
+      if (age === null) return '年齢を1〜120の数字で入力してください。';
+      if (age < 18 && !d.guardianConsent) return '保護者の許可を得ているかご確認ください。';
+      if (!d.source) return 'どこで知ったかを選択してください。';
     }
     if (step === 2 && !d.menu) return 'メニューを選択してください。';
     if (step === 3) {
@@ -1065,15 +1110,15 @@ class Component extends DCLogic {
       onChange: (e) => this.setData({ [f.key]: e.target.value })
     }));
 
-    const CATS = ['12歳未満', '12〜15歳', '16〜17歳', '18〜22歳', '23歳以上'];
-    const MINOR_CATS = ['12歳未満', '12〜15歳', '16〜17歳'];
-    const categoryOpts = CATS.map((v) => ({
+    const ageNum = this.ageNumber();
+    const needsGuardian = ageNum !== null && ageNum < 18;
+
+    const sourceOpts = this.SOURCES.map((v) => ({
       label: v,
-      pressed: d.category === v,
-      bg: d.category === v ? '#E9FF00' : '#FFFFFF',
-      onPick: () => this.setData({ category: v })
+      pressed: d.source === v,
+      bg: d.source === v ? '#E9FF00' : '#FFFFFF',
+      onPick: () => this.setData({ source: v })
     }));
-    const needsGuardian = MINOR_CATS.indexOf(d.category) >= 0;
 
     const menuDefs = [
       { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
@@ -1144,7 +1189,9 @@ class Component extends DCLogic {
       { k: 'メール', v: d.email },
       { k: '電話番号', v: d.phone },
       { k: 'SNSアカウント', v: d.sns || '(未記入)' },
-      { k: '区分', v: d.category ? (d.category + (['12歳未満','12〜15歳','16〜17歳'].indexOf(d.category) >= 0 ? (d.guardianConsent ? '(保護者の許可あり)' : '') : '')) : '(未選択)' },      { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
+      { k: '年齢', v: this.ageLabel() },
+      { k: '知ったきっかけ', v: d.source || '(未選択)' },
+      { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
     ];
     const estRows = [];
     let total = 0;
@@ -1181,7 +1228,9 @@ class Component extends DCLogic {
       isOnline: d.menu === 'online', isOffline: d.menu === 'offline',
       step3Title: d.menu === 'online' ? '詳細(オンライン動画添削)' : d.menu === 'offline' ? '詳細(対面レッスン)' : '詳細',
       err: st.err, hasErr: !!st.err,
-      steps, fields1, categoryOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
+      steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
+      age: d.age,
+      onAge: (e) => this.setData({ age: e.target.value }),
       needsGuardian,
       guardianPressed: d.guardianConsent,
       guardianBg: d.guardianConsent ? '#E9FF00' : '#FFFFFF',
@@ -1250,7 +1299,10 @@ class Component extends DCLogic {
             email: d.email,
             phone: d.phone,
             sns: d.sns || '(未記入)',
-            category: d.category,
+            // メールテンプレートの {{category}} はそのまま使えるように年齢を入れる
+            category: this.ageLabel(),
+            age: this.ageLabel(),
+            source: d.source || '(未選択)',
             menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
             message: summary
           };
@@ -1305,7 +1357,7 @@ class Component extends DCLogic {
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
           lineMessage: '', doneSummary: [], mailWarning: '', copied: false,
-          data: { name: '', email: '', phone: '', sns: '', category: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
+          data: { name: '', email: '', phone: '', sns: '', age: '', source: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
       }

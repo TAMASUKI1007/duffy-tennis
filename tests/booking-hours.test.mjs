@@ -64,8 +64,12 @@ test('検証に使う日付の曜日が想定どおり', () => {
 // 曜日ごとの受付時間
 // ---------------------------------------------------------------------------
 
-test('月曜 8:00〜12:00 → 8:00〜10:00開始', () => {
-  assert.deepEqual(startsOf(MON), ['08:00', '08:30', '09:00', '09:30', '10:00']);
+test('月曜は午前受付なし。12:00〜20:00 → 12:00〜18:00開始', () => {
+  const t = startsOf(MON);
+  assert.equal(t[0], '12:00');
+  assert.equal(t[t.length - 1], '18:00');
+  assert.equal(t.length, 13);
+  assert.ok(!t.some((hm) => hm < '12:00'), '午前の枠が出ている');
 });
 
 test('火曜 12:00〜20:00 → 12:00〜18:00開始', () => {
@@ -75,11 +79,9 @@ test('火曜 12:00〜20:00 → 12:00〜18:00開始', () => {
   assert.equal(t.length, 13);
 });
 
-test('水曜 8:00〜20:00 → 8:00〜18:00開始', () => {
-  const t = startsOf(WED);
-  assert.equal(t[0], '08:00');
-  assert.equal(t[t.length - 1], '18:00');
-  assert.equal(t.length, 21);
+test('水曜は終日受付なし', () => {
+  assert.deepEqual(startsOf(WED), []);
+  assert.equal(booking.isOpenDay(WED), false);
 });
 
 test('木曜は受付なし', () => {
@@ -91,21 +93,22 @@ test('金曜 13:00〜16:00 → 13:00/13:30/14:00 の3枠だけ', () => {
   assert.deepEqual(startsOf(FRI), ['13:00', '13:30', '14:00']);
 });
 
-test('土曜・日曜 12:00〜20:00 → 12:00〜18:00開始', () => {
+test('土曜・日曜 12:00〜20:00 → 12:00〜18:00開始（日曜午前は受付なし）', () => {
   for (const day of [SAT, SUN]) {
     const t = startsOf(day);
     assert.equal(t[0], '12:00');
     assert.equal(t[t.length - 1], '18:00');
   }
+  assert.ok(!startsOf(SUN).some((hm) => hm < '12:00'), '日曜に午前の枠が出ている');
 });
 
 test('レッスン終了が受付終了を超える開始時刻は出さない', () => {
-  // 月曜は12:00終了なので、10:30開始（12:30終了）は出てはいけない
-  assert.ok(!startsOf(MON).includes('10:30'));
+  // 月曜は20:00終了なので、18:30開始（20:30終了）は出てはいけない
+  assert.ok(!startsOf(MON).includes('18:30'));
   // 金曜は16:00終了なので、14:30開始（16:30終了）は出てはいけない
   assert.ok(!startsOf(FRI).includes('14:30'));
   // すべての枠で「開始＋2時間 <= 受付終了」が成り立つこと
-  for (const [day, endHm] of [[MON, '12:00'], [TUE, '20:00'], [WED, '20:00'], [FRI, '16:00'], [SAT, '20:00'], [SUN, '20:00']]) {
+  for (const [day, endHm] of [[MON, '20:00'], [TUE, '20:00'], [FRI, '16:00'], [SAT, '20:00'], [SUN, '20:00']]) {
     const endMin = Number(endHm.split(':')[0]) * 60;
     for (const m of booking.startTimesFor(day)) {
       assert.ok(m + BOOKING_CONFIG.lessonMinutes <= endMin, `${day} ${minToHm(m)} が受付時間を超えています`);
@@ -114,7 +117,7 @@ test('レッスン終了が受付終了を超える開始時刻は出さない',
 });
 
 test('開始時刻は30分刻み', () => {
-  for (const m of booking.startTimesFor(WED)) {
+  for (const m of booking.startTimesFor(TUE)) {
     assert.equal(m % BOOKING_CONFIG.stepMinutes, 0);
   }
 });
@@ -124,16 +127,16 @@ test('開始時刻は30分刻み', () => {
 // ---------------------------------------------------------------------------
 
 test('受付停止日に入れた日付は選べなくなる', () => {
-  const before = startsOf(WED);
+  const before = startsOf(TUE);
   assert.ok(before.length > 0, '停止前は受付できる');
 
-  BOOKING_CONFIG.blockedDates.push(WED);
+  BOOKING_CONFIG.blockedDates.push(TUE);
   try {
-    assert.deepEqual(startsOf(WED), [], '停止日は0枠');
-    assert.equal(booking.isOpenDay(WED), false);
-    assert.equal(booking.bandLabelFor(WED), '休み');
+    assert.deepEqual(startsOf(TUE), [], '停止日は0枠');
+    assert.equal(booking.isOpenDay(TUE), false);
+    assert.equal(booking.bandLabelFor(TUE), '休み');
     // 他の日には影響しない
-    assert.ok(startsOf(TUE).length > 0);
+    assert.ok(startsOf(SAT).length > 0);
   } finally {
     BOOKING_CONFIG.blockedDates.length = 0;
   }
@@ -171,7 +174,7 @@ test('金曜から別の曜日に変えると、自動で入れたコート名�
   let data = booking.applyFixedCourt({ date1: { key: FRI, start: 13 * 60 }, court: '', courtReserve: false, courtFixedApplied: false });
   assert.equal(data.court, 'グリーンテニスプラザ');
 
-  data.date1 = { key: WED, start: 10 * 60 };
+  data.date1 = { key: TUE, start: 13 * 60 };
   data = booking.applyFixedCourt(data);
   assert.equal(data.court, '', '固定コート名が残らない');
   assert.equal(data.courtFixedApplied, false);
@@ -179,7 +182,7 @@ test('金曜から別の曜日に変えると、自動で入れたコート名�
 
 test('自分で入力したコート名は、固定コート以外の日で消されない', () => {
   const data = booking.applyFixedCourt({
-    date1: { key: WED, start: 10 * 60 }, court: '〇〇公園テニスコート', courtReserve: false, courtFixedApplied: false
+    date1: { key: TUE, start: 13 * 60 }, court: '〇〇公園テニスコート', courtReserve: false, courtFixedApplied: false
   });
   assert.equal(data.court, '〇〇公園テニスコート');
 });
@@ -189,14 +192,53 @@ test('自分で入力したコート名は、固定コート以外の日で消�
 // ---------------------------------------------------------------------------
 
 test('受付時間の短縮表示', () => {
-  assert.equal(booking.bandLabelFor(MON), '8-12');
+  assert.equal(booking.bandLabelFor(MON), '12-20');
   assert.equal(booking.bandLabelFor(FRI), '13-16');
   assert.equal(booking.bandLabelFor(THU), '-');
+  assert.equal(booking.bandLabelFor(WED), '-');
 });
 
 // ---------------------------------------------------------------------------
 // 旧仕様が残っていないこと
 // ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// 申込フォームの項目（年齢・知ったきっかけ）
+// ---------------------------------------------------------------------------
+
+test('区分の選択肢が残っておらず、年齢は数字入力になっている', () => {
+  for (const old of ['12歳未満', '12〜15歳', '16〜17歳', '18〜22歳', '23歳以上']) {
+    assert.ok(!html.includes(old), `旧い区分「${old}」が残っています`);
+  }
+  assert.ok(html.includes('id="f-age" type="number"'), '年齢の数字入力欄');
+  assert.ok(html.includes("age: '', source: ''"), 'state に age / source がある');
+});
+
+test('知ったきっかけの選択肢', () => {
+  assert.ok(html.includes("this.SOURCES = ['Instagram', 'TikTok', 'Facebook', 'YouTube', '知人の紹介', 'その他'];"));
+  assert.ok(html.includes('どこで知りましたか?'));
+});
+
+test('年齢の判定（18歳未満は保護者の許可が必要）', () => {
+  const ageSrc = section('  ageNumber() {', '  /** 完了画面の黒いカードに出す申込内容。 */');
+  const F = new Function(`class A { constructor(age, g) { this.state = { data: { age, guardianConsent: g } }; } ${ageSrc} } return A;`);
+  const A = F();
+  assert.equal(new A('25', false).ageNumber(), 25);
+  assert.equal(new A(' 7 ', true).ageNumber(), 7);
+  assert.equal(new A('', false).ageNumber(), null);
+  assert.equal(new A('abc', false).ageNumber(), null);
+  assert.equal(new A('0', false).ageNumber(), null);
+  assert.equal(new A('121', false).ageNumber(), null);
+  assert.equal(new A('25', false).ageLabel(), '25歳');
+  assert.equal(new A('12', true).ageLabel(), '12歳(保護者の許可あり)');
+  assert.equal(new A('12', false).ageLabel(), '12歳');
+  assert.equal(new A('', false).ageLabel(), '(未記入)');
+});
+
+test('保存する行に age / source が入り、category にも年齢の文字列が入る', () => {
+  assert.ok(html.includes('age: this.ageNumber(), source: d.source || null,'));
+  assert.ok(html.includes('category: this.ageLabel(),'));
+});
 
 test('旧 hoursFor（曜日別の固定値）が残っていない', () => {
   assert.ok(!/hoursFor\s*\(/.test(html), 'hoursFor が残っています');
