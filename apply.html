@@ -269,7 +269,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <p style="margin:16px 0 4px;font-weight:900;">第2条(お申込みおよび予約の確定)</p>
           <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
             <li>本レッスンのお申込みは、主催者所定の申込フォームを通じて行うものとします。</li>
-            <li>お申込みの完了は、予約の確定を意味するものではありません。お申込み後、主催者よりLINE公式アカウントを通じて、日程・コート・移動費およびお支払い方法についてご連絡し、予約を確定いたします。</li>
+            <li>お申込みの完了は、予約の確定を意味するものではありません。お申込み後、主催者よりInstagramのダイレクトメッセージ（DM）を通じて、日程・コート・移動費およびお支払い方法についてご連絡し、予約を確定いたします。</li>
             <li>日程およびお支払い方法について、お客様と主催者との間で合意が成立した時点をもって、予約が確定するものとします。</li>
             <li>主催者は、レッスンの運営上必要と判断した場合、お申込みをお断りすることがあります。</li>
           </ol>
@@ -306,7 +306,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
                 <li>実施日当日:レッスン料の100%</li>
               </ul>
             </li>
-            <li>日程変更をご希望の場合は、LINE公式アカウントを通じて、できる限りお早めにご連絡ください。</li>
+            <li>日程変更をご希望の場合は、InstagramのDMを通じて、できる限りお早めにご連絡ください。</li>
             <li>お客様が事前の連絡なく本レッスンに参加しなかった場合(無断キャンセル)、主催者は以降のお申込みをお断りすることがあります。</li>
             <li>やむを得ない事情によるキャンセルまたは日程変更については、遠慮なく主催者までご相談ください。主催者は、可能な範囲で柔軟に対応するよう努めます。</li>
           </ol>
@@ -315,7 +315,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
             <li>天候、コート事情その他の事由により本レッスンを実施できない場合、主催者はお客様と協議のうえ、日程を振り替えるものとします。</li>
             <li>主催者側の都合により本レッスンを中止した場合、主催者はお客様に対し、既にお支払いいただいた料金の全額を返金するか、または別日への振替をもって対応します。</li>
-            <li>屋外コートを使用する場合、当日の実施可否については、本レッスン開始前までにLINE公式アカウントを通じてご連絡します。</li>
+            <li>屋外コートを使用する場合、当日の実施可否については、本レッスン開始前までにInstagramのDMを通じてご連絡します。</li>
           </ol>
 
           <p style="margin:16px 0 4px;font-weight:900;">第8条(本レッスン当日の取り扱い)</p>
@@ -374,7 +374,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
               <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
             </sc-for>
           </div>
-          <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ お支払いの詳細は申込後、LINE公式アカウントにてご案内します。</p>
+          <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ お支払いの詳細は申込後、InstagramのDMにてご案内します。</p>
         </div>
         <div style="margin-top:24px;">
           <label for="q" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">質問・ご要望 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
@@ -450,42 +450,28 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
-      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">下のボタンからLINE公式でお申込み内容をお送りください。コートと日時を確認して予約を確定します。移動費・お支払い方法もLINEでご案内します。</p>
+      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">お申込みのあと、Instagramの <strong>@duffy_tennis</strong> にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。</p>
 
-      <sc-if value="{{ hasLineUrl }}" hint-placeholder-val="{{ true }}">
-        <div style="margin-top:20px;">
-          <a href="{{ lineUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:12px;background:#06C755;border:4px solid #111111;box-shadow:8px 8px 0 #111111;color:#FFFFFF;font-weight:900;font-size:clamp(15px,4vw,18px);padding:18px 22px;text-decoration:none;box-sizing:border-box;" style-hover="box-shadow:3px 3px 0 #111111;">
-            <span aria-hidden="true" style="flex:none;display:grid;place-items:center;width:34px;height:34px;">
-              <svg viewBox="0 0 24 24" width="30" height="30" role="img" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M12 2.5c-5.238 0-9.5 3.44-9.5 7.67 0 3.79 3.38 6.965 7.945 7.566.309.066.73.203.836.466.096.239.063.613.031.855l-.135.81c-.041.24-.19.937.821.511 1.012-.426 5.46-3.215 7.449-5.504C20.76 14.104 21.5 12.19 21.5 10.17c0-4.23-4.262-7.67-9.5-7.67z"/></svg>
-            </span>
-            <span>LINEで申込内容を送る</span>
-          </a>
-          <p style="margin:10px 2px 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップするとメッセージが入力された状態でトーク画面が開きます。送信ボタンはご自身で押してください。</p>
-          <a href="{{ lineAddUrl }}" target="_blank" rel="noopener" style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:10px;background:#FFFFFF;border:3px solid #06C755;color:#06C755;font-weight:900;font-size:14px;padding:14px 18px;text-decoration:none;box-sizing:border-box;" style-hover="background:#06C755;color:#FFFFFF;">
-            <span>まだ友だち追加していない方はこちら</span>
-          </a>
-        </div>
-      </sc-if>
-
-      <div style="margin-top:18px;border:3px solid #111111;background:#FFFFFF;padding:14px 16px;">
-        <p style="margin:0;font-weight:900;font-size:13px;">ボタンでうまく開かないときは、この内容をコピーしてLINEでお送りください。</p>
-        <pre style="margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:12.5px;font-weight:700;line-height:1.9;background:#F4F4F4;border:2px solid #111111;padding:12px;">{{ lineMessage }}</pre>
-        <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:13px;padding:11px 18px;min-height:46px;">{{ copyLabel }}</button>
-      </div>
-
-      <div style="margin-top:24px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
+      <div style="margin-top:20px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
         <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">INSTAGRAM DM</div>
-        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;">InstagramのDMでもご連絡いただけます。</p>
+        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;">InstagramのDMでご連絡ください。</p>
         <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;align-items:start;">
           <div style="border:3px solid #111111;background:#111111;overflow:hidden;width:100%;max-width:300px;margin:0 auto;box-sizing:border-box;">
             <img src="uploads/dm-example.jpg" alt="InstagramのDM画面。「対面レッスン申し込みました！よろしくお願いいたします」と送っている例" style="display:block;width:100%;height:auto;">
           </div>
           <div style="display:grid;gap:12px;">
-            <p style="margin:0;font-size:13.5px;font-weight:700;line-height:1.95;">申込後、<span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">@duffy_tennis</span> のDMに、この画像のように一言お送りください。こちらから日程・コート・お支払いのご案内をします。</p>
-            <div style="border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.9;">対面レッスン申し込みました！<br>よろしくお願いいたします</div>
-            <a href="https://ig.me/m/duffy_tennis" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:3px solid #111111;color:#E9FF00;font-weight:900;font-size:14px;padding:14px 18px;text-decoration:none;box-sizing:border-box;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
+            <p style="margin:0;font-size:13.5px;font-weight:700;line-height:1.95;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">@duffy_tennis</span> のDMに、この画像のように一言お送りください。申込内容は届いているので、文面は短くて大丈夫です。</p>
+            <div style="border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.9;">{{ dmExample }}<br>よろしくお願いいたします</div>
+            <a href="{{ dmUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #111111;color:#E9FF00;font-weight:900;font-size:clamp(15px,4vw,17px);padding:16px 20px;text-decoration:none;box-sizing:border-box;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
+            <p style="margin:0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップすると @duffy_tennis のDM画面が開きます。</p>
           </div>
         </div>
+      </div>
+
+      <div style="margin-top:18px;border:3px solid #111111;background:#FFFFFF;padding:14px 16px;">
+        <p style="margin:0;font-weight:900;font-size:13px;">申込内容も一緒に送りたい方は、こちらをコピーしてDMに貼り付けてください。</p>
+        <pre style="margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:12.5px;font-weight:700;line-height:1.9;background:#F4F4F4;border:2px solid #111111;padding:12px;">{{ lineMessage }}</pre>
+        <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:13px;padding:11px 18px;min-height:46px;">{{ copyLabel }}</button>
       </div>
 
       <sc-if value="{{ mailWarning }}" hint-placeholder-val="{{ false }}">
@@ -560,12 +546,12 @@ const BOOKING_CONFIG = {
 };
 
 /* ----------------------------------------------------------------------------
- * LINE公式アカウント
- *   LINE_OA_ID … アカウントのベーシックID（@から始まるもの）
+ * Instagram
+ *   INSTAGRAM_ID … アカウント名（@から始まるもの）
+ *   申込後の連絡はInstagramのDMで行う（LINEは運用開始まで使わない）。
  * -------------------------------------------------------------------------- */
-const LINE_OA_ID = '@950admqv';
-const LINE_MESSAGE_URL_BASE = 'https://line.me/R/oaMessage/' + encodeURIComponent(LINE_OA_ID) + '/?';
-const LINE_ADD_FRIEND_URL = 'https://line.me/R/ti/p/' + encodeURIComponent(LINE_OA_ID);
+const INSTAGRAM_ID = '@duffy_tennis';
+const INSTAGRAM_DM_URL = 'https://ig.me/m/' + INSTAGRAM_ID.replace(/^@/, '');
 
 /* ===== ここから下は設定ではありません（編集不要） ===== */
 
@@ -678,15 +664,15 @@ class Component extends DCLogic {
     lines.push('■概算金額:' + yen(total) + (d.menu === 'offline' ? '(移動費別)' : ''));
     lines.push('■質問・ご要望:' + (d.question || '(なし)'));
 
-    // 仮予約であること、確定はLINEであることを本文にも入れる
+    // 仮予約であること、確定はInstagramのDMであることを本文にも入れる
     lines.push('');
     lines.push('--------------------');
     if (d.menu === 'offline') {
       lines.push('※こちらは仮予約の受付です。予約はまだ確定していません。');
-      lines.push('※LINE公式(' + LINE_OA_ID + ')でコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
+      lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
     } else {
       lines.push('※お申込みを受け付けました。');
-      lines.push('※LINE公式(' + LINE_OA_ID + ')でお支払い方法をご案内します。');
+      lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでお支払い方法をご案内します。');
     }
     return lines.join('\n');
   }
@@ -785,7 +771,7 @@ class Component extends DCLogic {
     return rows;
   }
 
-  /** LINEのトーク画面に入れる本文。申込内容の要約。 */
+  /** DMに貼り付けてもらう本文。申込内容の要約。 */
   buildLineMessage() {
     const d = this.state.data;
     const lines = ['お申込みの内容をお送りします。', ''];
@@ -906,7 +892,7 @@ class Component extends DCLogic {
 
   /**
    * 選択済みの日程に固定コートがあれば、希望コートに自動で入れる。
-   * 第1希望を基準にする（第2希望だけ金曜というケースはLINEで調整する）。
+   * 第1希望を基準にする（第2希望だけ金曜というケースはDMで調整する）。
    */
   applyFixedCourt(data) {
     const fixed = this.fixedCourtFor(data.date1 ? data.date1.key : '');
@@ -1218,7 +1204,7 @@ class Component extends DCLogic {
         estRows.push({ k: 'オンライン動画添削 ' + p.key + '回チケット', v: this.fmtYen(p.price) });
         total = p.price;
       }
-      estNote = '※ 1往復 = 1pt 消費/有効期限5ヶ月。お支払い方法は申込後、LINE公式アカウントにてご案内します。';
+      estNote = '※ 1往復 = 1pt 消費/有効期限5ヶ月。お支払い方法は申込後、InstagramのDMにてご案内します。';
     } else if (d.menu === 'offline') {
       confirmRows.push({ k: '参加人数', v: d.people + '人' });
       confirmRows.push({ k: '第1希望', v: d.date1 ? this.selLine(d.date1) : '(未選択)' });
@@ -1230,7 +1216,7 @@ class Component extends DCLogic {
       if (d.rental === 'あり') { estRows.push({ k: '練習ボールレンタル 1カゴ', v: this.fmtYen(1200) }); total += 1200; }
       // 移動費は金額を算出・表示しない（第6-2節）。行としては必ず見せる。
       estRows.push({ k: '移動費(お1人分)', v: '別途' });
-      estNote = '※ 移動費は内容を確認のうえ、LINE公式アカウントでご案内します。日程・コート・お支払い方法もLINEで確定します。';
+      estNote = '※ 移動費は内容を確認のうえ、InstagramのDMでご案内します。日程・コート・お支払い方法もDMで確定します。';
     }
     confirmRows.push({ k: 'お支払い方法', v: d.payment || '(未選択)' });
     confirmRows.push({ k: '質問・ご要望', v: d.question || '(なし)' });
@@ -1258,9 +1244,8 @@ class Component extends DCLogic {
       courtFixedNote: fixedCourtName ? 'この曜日は ' + fixedCourtName + ' で開催するため、コートの指定は不要です。' : '',
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
-      lineAddUrl: LINE_ADD_FRIEND_URL,
-      lineUrl: st.lineMessage ? (LINE_MESSAGE_URL_BASE + encodeURIComponent(st.lineMessage)) : '',
-      hasLineUrl: !!st.lineMessage,
+      dmUrl: INSTAGRAM_DM_URL,
+      dmExample: d.menu === 'online' ? 'オンライン動画添削申し込みました！' : '対面レッスン申し込みました！',
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
       copyLabel: st.copied ? 'コピーしました ✓' : '内容をコピー',
@@ -1332,19 +1317,19 @@ class Component extends DCLogic {
               const mailed = results[1].ok;
 
               if (!saved && !mailed) {
-                // 両方だめ。完了表示は出さず、LINEでの連絡を案内する。
+                // 両方だめ。完了表示は出さず、InstagramのDMでの連絡を案内する。
                 this.setState({
                   sending: false,
                   err: '申込を送信できませんでした。通信環境をご確認のうえ、もう一度お試しください。'
-                     + '繰り返し失敗する場合は、お手数ですがLINE公式(' + LINE_OA_ID + ')から直接ご連絡ください。'
+                     + '繰り返し失敗する場合は、お手数ですがInstagram(' + INSTAGRAM_ID + ')のDMから直接ご連絡ください。'
                 });
                 return;
               }
 
               // 片方でも成功していれば完了扱い。ただし届いていない経路は記録に残す。
               let warn = '';
-              if (!saved) warn = '確認用の控えを保存できませんでしたが、お申込みは受け付けています。念のため下のボタンからLINEでもお送りください。';
-              else if (!mailed) warn = '確認メールをお送りできませんでしたが、お申込みは受け付けています。下のボタンからLINEでもお送りください。';
+              if (!saved) warn = '確認用の控えを保存できませんでしたが、お申込みは受け付けています。念のためInstagramのDMでもご連絡ください。';
+              else if (!mailed) warn = '確認メールをお送りできませんでしたが、お申込みは受け付けています。InstagramのDMでもご連絡ください。';
 
               if (!saved) console.error('[apply] 保存に失敗:', results[0].error);
               if (!mailed) console.error('[apply] メール送信に失敗:', results[1].error);

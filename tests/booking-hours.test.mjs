@@ -251,52 +251,22 @@ test('API連携のコードが残っていない', () => {
   }
 });
 
-test('LINE公式アカウントのIDとリンク形式', () => {
-  assert.ok(html.includes("const LINE_OA_ID = '@950admqv';"), 'LINE_OA_ID が設定されていること');
-  assert.ok(html.includes("'https://line.me/R/oaMessage/'"), 'メッセージ送信リンクの形式');
-  assert.ok(html.includes("'https://line.me/R/ti/p/'"), '友だち追加リンクの形式');
+test('InstagramのIDとDMリンクの形式', () => {
+  assert.ok(html.includes("const INSTAGRAM_ID = '@duffy_tennis';"), 'INSTAGRAM_ID が設定されていること');
+  assert.ok(html.includes("'https://ig.me/m/' + INSTAGRAM_ID.replace(/^@/, '')"), 'DMリンクの形式');
 });
 
-// ---------------------------------------------------------------------------
-// LINEリンクの組み立て
-// ---------------------------------------------------------------------------
-
-test('LINEのメッセージリンクが正しい形式で、本文が復元できる', () => {
-  const OA = '@950admqv';
-  const base = 'https://line.me/R/oaMessage/' + encodeURIComponent(OA) + '/?';
-
-  const message = [
-    'お申込みの内容をお送りします。',
-    '',
-    'お名前：山田 太郎',
-    'メニュー：対面レッスン',
-    '第1希望：10/9(金) 13:00〜15:00(2時間)',
-    'コート：グリーンテニスプラザ',
-    'ボールレンタル：あり',
-    '',
-    'よろしくお願いします。'
-  ].join('\n');
-
-  const url = base + encodeURIComponent(message);
-
-  assert.ok(url.startsWith('https://line.me/R/oaMessage/%40950admqv/?'), '公式アカウントIDが入る');
-  // 本文が欠けずに復元できること（改行・全角も含めて）
-  const query = url.slice(url.indexOf('/?') + 2);
-  assert.equal(decodeURIComponent(query), message);
-  // 生の改行やスペースがURLに混ざっていないこと
-  assert.ok(!/[\s]/.test(url), 'URLに空白・改行が含まれない');
+test('LINE公式の導線が残っていない（運用開始まで使わない）', () => {
+  for (const marker of ['line.me', 'LINE_OA_ID', 'LINEで申込内容を送る', '友だち追加', 'LINE公式']) {
+    assert.ok(!html.includes(marker), `${marker} が残っています`);
+  }
 });
 
-test('友だち追加リンクの形式', () => {
-  const url = 'https://line.me/R/ti/p/' + encodeURIComponent('@950admqv');
-  assert.equal(url, 'https://line.me/R/ti/p/%40950admqv');
-});
-
-test('完了画面にLINEの緑ボタンと友だち追加ボタンがある', () => {
-  assert.ok(html.includes('#06C755'), 'LINEブランドカラー');
-  assert.ok(html.includes('LINEで申込内容を送る'), '送信ボタンの文言');
-  assert.ok(html.includes('まだ友だち追加していない方はこちら'), '友だち追加ボタン');
-  assert.ok(html.includes('{{ lineAddUrl }}'), '友だち追加リンクが差し込まれる');
+test('完了画面にInstagram DMの案内とスクリーンショット例がある', () => {
+  assert.ok(html.includes('INSTAGRAM DM'), 'DMブロックの見出し');
+  assert.ok(html.includes('uploads/dm-example.jpg'), 'DMのスクリーンショット例');
+  assert.ok(html.includes('InstagramでDMを送る'), 'DMボタンの文言');
+  assert.ok(html.includes('href="{{ dmUrl }}"'), 'DMリンクが差し込まれる');
   assert.ok(html.includes('仮予約を受け付けました'), '仮予約である旨');
   assert.ok(html.includes('予約はまだ確定していません'), '未確定である旨');
 });
