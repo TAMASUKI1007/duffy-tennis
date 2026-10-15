@@ -16,20 +16,18 @@ html, body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; }
 body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 @keyframes duffyMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 :focus-visible { outline: 3px solid #111111; outline-offset: 3px; }
-.hero-burger { display: none; }
 .hero-photo-m { display: none; }
 @media (max-width: 640px) {
-  .hero-nav { display: none !important; }
-  .hero-burger { display: inline-flex !important; }
   .hero-photo-desktop { display: none !important; }
   .hero-photo-m { display: block !important; }
   .hero-vlabel { display: none !important; }
 }
-@keyframes duffyMenuIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes duffyMenuItem { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-.mobile-menu { animation: duffyMenuIn 0.22s ease both; }
-.mobile-menu-item { animation: duffyMenuItem 0.45s cubic-bezier(0.22,1,0.36,1) both; }
-.mobile-menu-item:active, .mobile-menu-item:hover { color: #E9FF00; }
+@keyframes duffyMenuIn { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: none; } }
+@keyframes duffyMenuItem { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+.site-menu { animation: duffyMenuIn 0.22s cubic-bezier(0.22,1,0.36,1) both; }
+.site-menu-item { animation: duffyMenuItem 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+.site-menu-item:active, .site-menu-item:hover { color: #E9FF00; }
+.site-menu-item:hover .site-menu-arrow { transform: translateX(4px); }
 body.menu-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
@@ -42,42 +40,27 @@ body.menu-open { overflow: hidden; }
 
   <header style="position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;">
     <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:clamp(18px,4vw,24px);letter-spacing:-0.01em;">MatchUp</div>
-    <nav class="hero-nav" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
-      <a href="message.html" style="font-weight:700;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#FFFFFF;" style-hover="background:#111111;color:#E9FF00;">ダッフィー先生の想い</a>
-      <a href="apply.html" style="font-weight:900;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#FFFFFF;" style-hover="background:#111111;color:#E9FF00;">レッスン申し込み</a>
-      <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener" style="font-weight:700;font-size:12.5px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;background:#FFFFFF;" style-hover="background:#111111;color:#E9FF00;">@duffy_tennis</a>
-    </nav>
-    <button type="button" class="hero-burger" onClick="{{ toggleMenu }}" aria-label="メニュー" aria-expanded="{{ menuOpen }}" style="position:relative;z-index:21;width:46px;height:46px;align-items:center;justify-content:center;flex-direction:column;gap:5px;background:{{ burgerBg }};border:3px solid {{ burgerBorder }};cursor:pointer;padding:0;">
-      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:{{ burgerBar }};transition:transform 0.2s ease;transform:{{ burgerTop }};"></span>
-      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:{{ burgerBar }};opacity:{{ burgerMidOpacity }};"></span>
-      <span aria-hidden="true" style="display:block;width:22px;height:3px;background:{{ burgerBar }};transition:transform 0.2s ease;transform:{{ burgerBot }};"></span>
+    <button type="button" class="hero-burger" onClick="{{ toggleMenu }}" aria-label="メニュー" aria-expanded="{{ menuOpen }}" style="position:relative;z-index:21;display:inline-flex;width:48px;height:48px;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:transparent;border:none;cursor:pointer;padding:0;">
+      <span aria-hidden="true" style="display:block;width:28px;height:3px;background:{{ burgerBar }};transition:transform 0.2s ease;transform:{{ burgerTop }};"></span>
+      <span aria-hidden="true" style="display:block;width:28px;height:3px;background:{{ burgerBar }};opacity:{{ burgerMidOpacity }};"></span>
+      <span aria-hidden="true" style="display:block;width:28px;height:3px;background:{{ burgerBar }};transition:transform 0.2s ease;transform:{{ burgerBot }};"></span>
     </button>
     <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-      <div class="mobile-menu" role="dialog" aria-label="メニュー" style="position:fixed;inset:0;z-index:20;background:#111111;color:#FFFFFF;display:flex;flex-direction:column;padding:84px clamp(16px,4vw,32px) 28px;box-sizing:border-box;overflow:auto;">
-        <div aria-hidden="true" style="position:absolute;right:-6%;top:60px;font-family:'Anton',sans-serif;font-size:clamp(120px,40vw,220px);line-height:0.85;color:#111111;-webkit-text-stroke:2px rgba(233,255,0,0.18);white-space:nowrap;pointer-events:none;">MENU</div>
-        <div style="position:relative;font-family:'Bebas Neue',sans-serif;letter-spacing:0.32em;font-size:13px;color:#E9FF00;">MATCHUP — DUFFY TENNIS</div>
-        <nav style="position:relative;margin-top:14px;display:grid;">
+      <div aria-hidden="true" onClick="{{ toggleMenu }}" style="position:fixed;inset:0;z-index:19;background:rgba(17,17,17,0.45);"></div>
+      <div class="site-menu" role="dialog" aria-label="メニュー" style="position:fixed;left:0;right:0;top:0;z-index:20;background:#111111;color:#FFFFFF;border-bottom:4px solid #E9FF00;padding:78px clamp(16px,4vw,56px) 14px;box-sizing:border-box;max-height:min(60vh,520px);overflow:auto;">
+        <div aria-hidden="true" style="position:absolute;right:clamp(8px,3vw,40px);top:66px;font-family:'Anton',sans-serif;font-size:clamp(80px,16vw,150px);line-height:0.85;color:#111111;-webkit-text-stroke:2px rgba(233,255,0,0.16);white-space:nowrap;pointer-events:none;">MENU</div>
+        <nav style="position:relative;max-width:1100px;margin:0 auto;display:grid;">
           <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="3">
-            <a href="{{ m.href }}" target="{{ m.target }}" rel="{{ m.rel }}" class="mobile-menu-item" style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:18px 4px;border-top:2px solid rgba(255,255,255,0.18);text-decoration:none;color:{{ m.fg }};animation-delay:{{ m.delay }};">
-              <span style="font-family:'Anton',sans-serif;font-size:14px;line-height:1;color:#E9FF00;">{{ m.no }}</span>
-              <span style="display:grid;gap:3px;">
-                <span style="font-weight:900;font-size:clamp(20px,5.6vw,26px);line-height:1.25;">{{ m.label }}</span>
-                <span style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.22em;font-size:12px;color:rgba(255,255,255,0.55);">{{ m.en }}</span>
+            <a href="{{ m.href }}" target="{{ m.target }}" rel="{{ m.rel }}" class="site-menu-item" style="display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;padding:13px 4px;border-top:2px solid rgba(255,255,255,0.18);text-decoration:none;color:#FFFFFF;animation-delay:{{ m.delay }};">
+              <span style="font-family:'Anton',sans-serif;font-size:13px;line-height:1;color:#E9FF00;">{{ m.no }}</span>
+              <span style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">
+                <span style="font-weight:900;font-size:clamp(17px,4.4vw,20px);line-height:1.3;">{{ m.label }}</span>
+                <span style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.22em;font-size:12px;color:rgba(255,255,255,0.5);">{{ m.en }}</span>
               </span>
-              <span aria-hidden="true" style="font-family:'Anton',sans-serif;font-size:22px;line-height:1;color:#E9FF00;">→</span>
+              <span aria-hidden="true" class="site-menu-arrow" style="font-family:'Anton',sans-serif;font-size:20px;line-height:1;color:#E9FF00;transition:transform 0.15s ease;">→</span>
             </a>
           </sc-for>
-          <div aria-hidden="true" style="border-top:2px solid rgba(255,255,255,0.18);"></div>
         </nav>
-        <a href="apply.html" class="mobile-menu-item" style="position:relative;margin-top:auto;padding-top:28px;text-decoration:none;color:#111111;animation-delay:{{ menuCtaDelay }};">
-          <span style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#E9FF00;border:3px solid #E9FF00;padding:18px 20px;box-shadow:6px 6px 0 #FFFFFF;">
-            <span style="display:grid;gap:2px;">
-              <span style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:12px;">APPLY NOW</span>
-              <span style="font-weight:900;font-size:18px;line-height:1.3;">レッスンを申し込む</span>
-            </span>
-            <span aria-hidden="true" style="font-family:'Anton',sans-serif;font-size:30px;line-height:1;">→</span>
-          </span>
-        </a>
       </div>
     </sc-if>
   </header><div style="position:relative;z-index:2;flex:1;display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(20px,4vw,48px);padding-top:clamp(16px,3vh,36px);">
@@ -418,7 +401,7 @@ body.menu-open { overflow: hidden; }
   &quot;marqueeSpeed&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 22, &quot;min&quot;: 8, &quot;max&quot;: 60, &quot;step&quot;: 1, &quot;unit&quot;: &quot;s&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;スクロール演出&quot; },
   &quot;parallax&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 1, &quot;min&quot;: 0, &quot;max&quot;: 2, &quot;step&quot;: 0.1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;スクロール演出&quot; }
 }">
-// スマホ用メニューの項目。ここに足すだけで増える。
+// メニュー（PC・スマホ共通、右上の三本線）の項目。ここに足すだけで増える。
 // target / rel は外部リンクのときだけ指定する。
 const MENU_ITEMS = [
   { label: 'ダッフィー先生の想い', en: 'MESSAGE', href: 'message.html' },
@@ -545,18 +528,14 @@ class Component extends DCLogic {
         document.body.classList.toggle('menu-open', next);
         return { menuOpen: next };
       }),
-      burgerBg: open ? '#111111' : '#E9FF00',
-      burgerBorder: open ? '#E9FF00' : '#111111',
-      burgerBar: open ? '#E9FF00' : '#111111',
+      burgerBar: open ? '#FFFFFF' : '#111111',
       menuItems: MENU_ITEMS.map((m, i) => ({
         ...m,
         target: m.target || '_self',
         rel: m.rel || '',
         no: String(i + 1).padStart(2, '0'),
-        fg: '#FFFFFF',
         delay: (0.05 + 0.06 * i).toFixed(2) + 's'
       })),
-      menuCtaDelay: (0.05 + 0.06 * MENU_ITEMS.length).toFixed(2) + 's',
       burgerTop: open ? 'translateY(8px) rotate(45deg)' : 'none',
       burgerBot: open ? 'translateY(-8px) rotate(-45deg)' : 'none',
       burgerMidOpacity: open ? 0 : 1,
