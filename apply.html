@@ -473,6 +473,21 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:13px;padding:11px 18px;min-height:46px;">{{ copyLabel }}</button>
       </div>
 
+      <div style="margin-top:24px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
+        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">INSTAGRAM DM</div>
+        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;">InstagramのDMでもご連絡いただけます。</p>
+        <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;align-items:start;">
+          <div style="border:3px solid #111111;background:#111111;overflow:hidden;width:100%;max-width:300px;margin:0 auto;box-sizing:border-box;">
+            <img src="uploads/dm-example.jpg" alt="InstagramのDM画面。「対面レッスン申し込みました！よろしくお願いいたします」と送っている例" style="display:block;width:100%;height:auto;">
+          </div>
+          <div style="display:grid;gap:12px;">
+            <p style="margin:0;font-size:13.5px;font-weight:700;line-height:1.95;">申込後、<span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">@duffy_tennis</span> のDMに、この画像のように一言お送りください。こちらから日程・コート・お支払いのご案内をします。</p>
+            <div style="border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.9;">対面レッスン申し込みました！<br>よろしくお願いいたします</div>
+            <a href="https://ig.me/m/duffy_tennis" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:3px solid #111111;color:#E9FF00;font-weight:900;font-size:14px;padding:14px 18px;text-decoration:none;box-sizing:border-box;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
+          </div>
+        </div>
+      </div>
+
       <sc-if value="{{ mailWarning }}" hint-placeholder-val="{{ false }}">
         <p role="status" style="margin:16px 0 0;border:3px solid #111111;background:#FFFDE7;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ mailWarning }}</p>
       </sc-if>
