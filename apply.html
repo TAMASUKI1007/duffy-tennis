@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<script src="./lib/pricing.js"></script>
 </head>
 <body>
 <x-dc>
@@ -134,7 +135,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
                   <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:15px;padding:12px 18px;min-width:64px;min-height:48px;">{{ o.label }}</button>
                 </sc-for>
               </div>
-              <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ 120分 一律16,500円(マンツーマン・グループ共通)です。</p>
+              <p style="margin:10px 0 0;font-size:12px;font-weight:700;">{{ peopleNote }}</p>
             </div>
 
             <div>
@@ -276,8 +277,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 
           <p style="margin:16px 0 4px;font-weight:900;">第3条(料金)</p>
           <ol style="margin:0;padding-left:20px;display:grid;gap:4px;">
-            <li>対面レッスンの料金は、120分あたり一律16,500円(税込)とし、マンツーマン・グループを問わず同額とします。</li>
-            <li>前項の料金は、参加人数の多寡にかかわらず変動しないものとします。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。</li>
+            <li>{{ termsFee1 }}</li>
+            <li>{{ termsFee2 }}</li>
             <li>オンライン動画添削は、チケット制とします。1往復のやり取りにつき1ポイントを消費するものとし、チケットの有効期限は購入日から5ヶ月とします。</li>
             <li>購入済みのチケット料金については、原則として返金を行いません。ただし、有効期限内であればご利用いただけます。</li>
           </ol>
@@ -581,11 +582,9 @@ class Component extends DCLogic {
     // v4: 区分 → 年齢の数値入力に変更。古い保存データ（category）は読み込まない
     this.STORE_KEY = 'duffy-tennis-apply-v4';
     this.SOURCES = ['Instagram', 'TikTok', 'Facebook', 'YouTube', '知人の紹介', 'その他'];
-    this.PLANS = [
-      { key: '3', price: 2400, per: 800, badge: 'TICKET' },
-      { key: '5', price: 3750, per: 750, badge: 'TICKET' },
-      { key: '10', price: 6500, per: 650, badge: 'いちばんおトク' }
-    ];
+    // 料金は lib/pricing.js で決まる（日付で新旧が切り替わる）
+    this.PRICING = window.DUFFY_PRICING.current();
+    this.PLANS = this.PRICING.plans;
     this.MONTH_EN = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     this.state = {
       step: 1,
@@ -657,7 +656,8 @@ class Component extends DCLogic {
       lines.push('■第2希望:' + (d.date2 ? this.selLine(d.date2) : '(なし)'));
       lines.push('■希望コート:' + (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : ''));
       lines.push('■ボールレンタル:' + (d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし'));
-      total = 16500;
+      total = this.lessonFee();
+      if (this.isGroup()) lines.push('■レッスン料:' + yen(total) + '(' + d.people + '人 合計・' + this.perPersonLabel() + ')');
       if (d.rental === 'あり') total += 1200;
     }
     lines.push('■お支払い方法:' + (d.payment || '(未選択)'));
@@ -690,7 +690,7 @@ class Component extends DCLogic {
       const p = this.PLANS.find((x) => x.key === d.plan);
       if (p) estimate = p.price;
     } else if (d.menu === 'offline') {
-      estimate = 16500 + (d.rental === 'あり' ? 1200 : 0);
+      estimate = this.lessonFee() + (d.rental === 'あり' ? 1200 : 0);
     }
     const row = {
       name: d.name, sns: d.sns, email: d.email, phone: d.phone,
@@ -739,6 +739,28 @@ class Component extends DCLogic {
       }
       return true;
     });
+  }
+
+  /** 対面レッスンの合計金額（人数で決まる）。 */
+  lessonFee() {
+    return window.DUFFY_PRICING.lessonFee(this.PRICING, this.state.data.people);
+  }
+
+  /** 2人以上のグループ料金が適用される状態か。 */
+  isGroup() {
+    return !!this.PRICING.lesson.group && Number(this.state.data.people) >= 2;
+  }
+
+  /** 「1人11,000円」の表示。 */
+  perPersonLabel() {
+    return window.DUFFY_PRICING.perPersonLabel(this.PRICING, this.state.data.people);
+  }
+
+  /** 料金の説明文（メニュー選択・人数の注記で使う）。 */
+  lessonFeeSentence() {
+    const L = this.PRICING.lesson;
+    if (!L.group) return 'マンツーマン・グループ共通で一律' + this.fmtYen(L.solo) + '。';
+    return '1人' + this.fmtYen(L.solo) + '、2人以上は人数にかかわらず合計' + this.fmtYen(L.group) + '(2人なら1人' + this.fmtYen(L.group / 2) + ')。';
   }
 
   /** 年齢を数値で返す。未入力や不正なら null。 */
@@ -1123,7 +1145,7 @@ class Component extends DCLogic {
 
     const menuDefs = [
       { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
-      { key: 'offline', en: 'IN-PERSON', title: '対面レッスン', desc: 'コートで受ける120分レッスン。マンツーマン・グループ共通で一律16,500円。レッスン動画は後日無料で共有。' }
+      { key: 'offline', en: 'IN-PERSON', title: '対面レッスン', desc: 'コートで受ける120分レッスン。' + this.lessonFeeSentence() + 'レッスン動画は後日無料で共有。' }
     ];
     const menuCards = menuDefs.map((c) => {
       const pressed = d.menu === c.key;
@@ -1211,8 +1233,9 @@ class Component extends DCLogic {
       confirmRows.push({ k: '第2希望', v: d.date2 ? this.selLine(d.date2) : '(なし)' });
       confirmRows.push({ k: '希望コート', v: (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : '') });
       confirmRows.push({ k: 'ボールレンタル', v: d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし' });
-      estRows.push({ k: '対面レッスン 120分(一律)', v: this.fmtYen(16500) });
-      total = 16500;
+      estRows.push({ k: '対面レッスン 120分' + (this.isGroup() ? '(' + d.people + '人 合計)' : '(1人)'), v: this.fmtYen(this.lessonFee()) });
+      if (this.isGroup()) estRows.push({ k: '1人あたり', v: this.perPersonLabel() });
+      total = this.lessonFee();
       if (d.rental === 'あり') { estRows.push({ k: '練習ボールレンタル 1カゴ', v: this.fmtYen(1200) }); total += 1200; }
       // 移動費は金額を算出・表示しない（第6-2節）。行としては必ず見せる。
       estRows.push({ k: '移動費(お1人分)', v: '別途' });
@@ -1232,6 +1255,13 @@ class Component extends DCLogic {
       steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
       age: d.age,
       onAge: (e) => this.setData({ age: e.target.value }),
+      peopleNote: '※ 120分 ' + this.lessonFeeSentence(),
+      termsFee1: this.PRICING.lesson.group
+        ? '対面レッスンの料金は、120分あたり1名の場合' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)、2名以上の場合は参加人数にかかわらず合計' + this.fmtYen(this.PRICING.lesson.group) + '(税込)とします。'
+        : '対面レッスンの料金は、120分あたり一律' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)とし、マンツーマン・グループを問わず同額とします。',
+      termsFee2: this.PRICING.lesson.group
+        ? '前項の料金は申込時の参加人数で確定します。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。'
+        : '前項の料金は、参加人数の多寡にかかわらず変動しないものとします。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。',
       needsGuardian,
       guardianPressed: d.guardianConsent,
       guardianBg: d.guardianConsent ? '#E9FF00' : '#FFFFFF',

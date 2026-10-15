@@ -271,6 +271,49 @@ test('完了画面にInstagram DMの案内とスクリーンショット例が�
   assert.ok(html.includes('予約はまだ確定していません'), '未確定である旨');
 });
 
+// ---------------------------------------------------------------------------
+// 料金（lib/pricing.js）：2026-10-17 0:00 JST で新料金に切り替わる
+// ---------------------------------------------------------------------------
+
+const pricingWindow = {};
+new Function('window', readFileSync(join(ROOT, 'lib/pricing.js'), 'utf8'))(pricingWindow);
+const PRICING = pricingWindow.DUFFY_PRICING;
+
+test('切り替え時刻は 2026-10-17 0:00（日本時間）', () => {
+  assert.equal(PRICING.SWITCH_AT, Date.parse('2026-10-17T00:00:00+09:00'));
+});
+
+test('切り替え前は旧料金、以後は新料金', () => {
+  const before = PRICING.pricingAt(PRICING.SWITCH_AT - 1);
+  const after = PRICING.pricingAt(PRICING.SWITCH_AT);
+  assert.deepEqual(before.plans.map((p) => p.price), [2400, 3750, 6500]);
+  assert.deepEqual(after.plans.map((p) => p.price), [3300, 4900, 8900]);
+  assert.deepEqual(after.plans.map((p) => p.per), [1100, 980, 890]);
+  assert.equal(before.lesson.group, null);
+  assert.equal(after.lesson.group, 22000);
+});
+
+test('対面：1人16,500円、2人以上は人数にかかわらず22,000円', () => {
+  const n = PRICING.NEW;
+  assert.equal(PRICING.lessonFee(n, 1), 16500);
+  for (const people of [2, 3, 4, 5, 6]) assert.equal(PRICING.lessonFee(n, people), 22000);
+  assert.equal(PRICING.perPersonLabel(n, 2), '1人11,000円');
+  assert.equal(PRICING.perPersonLabel(n, 4), '1人5,500円');
+  assert.equal(PRICING.perPersonLabel(n, 3), '約1人7,334円');
+  // 旧料金は人数にかかわらず一律
+  for (const people of [1, 4]) assert.equal(PRICING.lessonFee(PRICING.OLD, people), 16500);
+});
+
+test('ページ側に金額の直書きが残っていない', () => {
+  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  for (const [name, src] of [['apply.html', html], ['index.html', index]]) {
+    assert.ok(src.includes('lib/pricing.js'), `${name} が lib/pricing.js を読んでいない`);
+    for (const n of ['16500', '16,500', '2,400', '3,750', '6,500', '22,000', '8,900']) {
+      assert.ok(!src.includes(n), `${name} に ${n} の直書きが残っています`);
+    }
+  }
+});
+
 test('料金は「合計(移動費別)」で、移動費は金額を出さない', () => {
   assert.ok(html.includes("'合計(移動費別)'"), '合計ラベル');
   assert.ok(html.includes("estRows.push({ k: '移動費(お1人分)', v: '別途' })"), '移動費は別途と表示');
