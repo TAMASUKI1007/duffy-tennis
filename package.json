@@ -2,13 +2,12 @@
   "name": "duffy-tennis",
   "private": true,
   "version": "1.0.0",
-  "description": "ダッフィー テニスレッスン 予約支援（静的サイト + Vercel Functions）",
+  "description": "ダッフィー テニスレッスン 申込サイト（静的サイト。Node はテスト実行にのみ使用）",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=24.22.1"
   },
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
-    "verify:routes": "node scripts/verify-route-api.mjs"
+    "test": "node --test tests/*.test.mjs"
   }
 }

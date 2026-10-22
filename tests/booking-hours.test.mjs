@@ -314,6 +314,31 @@ test('ページ側に金額の直書きが残っていない', () => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// セキュリティ：外部スクリプトはバージョン固定＋改ざん検知（SRI）
+// ---------------------------------------------------------------------------
+
+test('外部スクリプトはバージョンを固定し、integrity を付けている', () => {
+  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const message = readFileSync(join(ROOT, 'message.html'), 'utf8');
+  for (const [name, src] of [['apply.html', html], ['index.html', index], ['message.html', message]]) {
+    const tags = src.match(/<script[^>]+src="https?:[^"]+"[^>]*>/g) || [];
+    for (const tag of tags) {
+      assert.ok(!/@\d+\/|@latest|@\d+\.\d+\//.test(tag), `${name}: バージョンが浮いています → ${tag}`);
+      assert.ok(/integrity="sha(256|384|512)-/.test(tag), `${name}: integrity がありません → ${tag}`);
+      assert.ok(/crossorigin="anonymous"/.test(tag), `${name}: crossorigin がありません → ${tag}`);
+    }
+  }
+});
+
+test('vercel.json にセキュリティヘッダーがある', () => {
+  const v = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
+  const headers = v.headers.flatMap((h) => h.headers).map((h) => h.key.toLowerCase());
+  for (const k of ['strict-transport-security', 'x-content-type-options', 'x-frame-options', 'referrer-policy', 'permissions-policy']) {
+    assert.ok(headers.includes(k), `${k} がありません`);
+  }
+});
+
 test('料金は「合計(移動費別)」で、移動費は金額を出さない', () => {
   assert.ok(html.includes("'合計(移動費別)'"), '合計ラベル');
   assert.ok(html.includes("estRows.push({ k: '移動費(お1人分)', v: '別途' })"), '移動費は別途と表示');
