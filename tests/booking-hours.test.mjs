@@ -331,6 +331,33 @@ test('外部スクリプトはバージョンを固定し、integrity を付け�
   }
 });
 
+test('検索向けの設定：日本語タイトル・説明・OGP・canonical が各ページにある', () => {
+  const index = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const message = readFileSync(join(ROOT, 'message.html'), 'utf8');
+  for (const [name, src] of [['apply.html', html], ['index.html', index], ['message.html', message]]) {
+    assert.ok(src.includes('<html lang="ja">'), `${name}: lang="ja"`);
+    assert.ok(/<title>[^<]*ダッフィーテニス[^<]*<\/title>/.test(src), `${name}: タイトルに「ダッフィーテニス」`);
+    assert.ok(/<meta name="description" content="[^"]{40,}"/.test(src), `${name}: description`);
+    assert.ok(/<link rel="canonical" href="https:\/\/duffy-tennis\.pages\.dev\//.test(src), `${name}: canonical`);
+    for (const p of ['og:title', 'og:description', 'og:image', 'twitter:card']) {
+      assert.ok(src.includes(`property="${p}"`) || src.includes(`name="${p}"`), `${name}: ${p}`);
+    }
+  }
+  assert.ok(index.includes('application/ld+json'), 'index.html: 構造化データ');
+  assert.ok(index.includes('ダッフィーテニス ／ ダッフィー先生のテニスレッスン'), 'index.html: 本文に屋号');
+});
+
+test('robots.txt / sitemap.xml / _headers がある', () => {
+  const robots = readFileSync(join(ROOT, 'robots.txt'), 'utf8');
+  assert.ok(robots.includes('Sitemap: https://duffy-tennis.pages.dev/sitemap.xml'));
+  const sitemap = readFileSync(join(ROOT, 'sitemap.xml'), 'utf8');
+  for (const p of ['/', '/apply', '/message']) assert.ok(sitemap.includes('https://duffy-tennis.pages.dev' + p + '<'));
+  const headers = readFileSync(join(ROOT, '_headers'), 'utf8');
+  for (const k of ['Strict-Transport-Security', 'X-Content-Type-Options', 'X-Frame-Options', 'Referrer-Policy', 'Permissions-Policy']) {
+    assert.ok(headers.includes(k), `_headers に ${k} がありません`);
+  }
+});
+
 test('vercel.json にセキュリティヘッダーがある', () => {
   const v = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
   const headers = v.headers.flatMap((h) => h.headers).map((h) => h.key.toLowerCase());

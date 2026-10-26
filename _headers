@@ -1,0 +1,14 @@
+# Cloudflare Pages のレスポンスヘッダー（vercel.json と同じ内容）
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# 画像・JSは長めにキャッシュ（ファイルを差し替えたら名前も変えるか、しばらく待つ）
+/uploads/*
+  Cache-Control: public, max-age=86400
+/assets/*
+  Cache-Control: public, max-age=86400

@@ -8,3 +8,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 .claude/
+
+# 公開用に scripts/build.mjs が作るフォルダ
+dist/
+
+# wrangler のローカルキャッシュ
+.wrangler/

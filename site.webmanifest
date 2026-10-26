@@ -1,0 +1,9 @@
+{
+  "name": "ダッフィーテニス | 感覚ゼロ、理屈でコーチング",
+  "short_name": "ダッフィーテニス",
+  "icons": [{ "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" }],
+  "theme_color": "#E9FF00",
+  "background_color": "#FFFFFF",
+  "display": "browser",
+  "start_url": "/"
+}
