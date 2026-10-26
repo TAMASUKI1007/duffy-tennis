@@ -32,7 +32,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
     <div style="position:relative;max-width:760px;margin:0 auto;">
       <div data-appear="-60,30,-3" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(13px,2.6vw,18px);letter-spacing:0.32em;">MESSAGE FROM COACH DUFFY</div>
       <div data-appear="60,30,2" data-delay="0.06s" style="margin-top:10px;"><span style="background:#111111;color:#FFFFFF;font-weight:900;font-size:13px;padding:4px 12px;display:inline-block;transform:rotate(-2deg);">ダッフィー先生からのメッセージ</span></div>
-      <h1 data-appear="0,50,0" data-delay="0.12s" style="margin:18px 0 0;font-weight:900;font-size:clamp(30px,7.6vw,56px);line-height:1.4;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 4px;">テニスに、才能はいらない。</span></h1>
+      <h1 data-appear="0,50,0" data-delay="0.12s" style="margin:18px 0 0;font-weight:900;font-size:clamp(30px,7.6vw,56px);line-height:1.4;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 4px;">{{ heading }}</span></h1>
 
       <div data-appear="0,50,0" data-delay="0.2s" style="margin-top:clamp(28px,5vw,48px);border:3px solid #111111;background:#FFFFFF;box-shadow:12px 12px 0 #E9FF00;padding:clamp(22px,5vw,44px);">
         <sc-for list="{{ bodyParas }}" as="p" hint-placeholder-count="7">
@@ -120,6 +120,7 @@ class Component extends DCLogic {
     const idx = this.state.idx;
     return {
       bodyParas: (msg ? msg.body : []).map((text) => ({ text })),
+      heading: msg ? msg.heading : '',
       signature: msg ? msg.signature : '',
       slides: list.map((s, i) => ({
         before: s.before, after: s.after,
