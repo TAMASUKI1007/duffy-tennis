@@ -358,12 +358,12 @@ test('robots.txt / sitemap.xml / _headers がある', () => {
   }
 });
 
-test('vercel.json にセキュリティヘッダーがある', () => {
+test('vercel.json は Cloudflare へ全ページ転送するだけ（Vercel での公開は停止）', () => {
   const v = JSON.parse(readFileSync(join(ROOT, 'vercel.json'), 'utf8'));
-  const headers = v.headers.flatMap((h) => h.headers).map((h) => h.key.toLowerCase());
-  for (const k of ['strict-transport-security', 'x-content-type-options', 'x-frame-options', 'referrer-policy', 'permissions-policy']) {
-    assert.ok(headers.includes(k), `${k} がありません`);
-  }
+  assert.equal(v.redirects.length, 1);
+  assert.equal(v.redirects[0].source, '/(.*)');
+  assert.equal(v.redirects[0].destination, 'https://duffy-tennis.pages.dev/$1');
+  assert.equal(v.redirects[0].permanent, true);
 });
 
 test('料金は「合計(移動費別)」で、移動費は金額を出さない', () => {
