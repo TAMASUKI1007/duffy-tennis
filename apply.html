@@ -532,7 +532,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
  *   fixedCourts にその曜日とコート名を書きます。
  *   その曜日を選ぶと、希望コートの入力欄とコート予約代行のチェックは表示されず、
  *   コート名が自動で入ります。
- *     例) fixedCourts: { fri: 'グリーンテニスプラザ', wed: '〇〇コート' }
+ *     例) fixedCourts: { fri: '〇〇テニスプラザ', wed: '〇〇コート' }
  *   固定しない場合は fixedCourts: {} にしてください。
  *
  * 【注意】曜日のキーは mon火...ではなく sun/mon/tue/wed/thu/fri/sat です（英語3文字）。
@@ -553,7 +553,7 @@ const BOOKING_CONFIG = {
   blockedDates: [],
 
   // 曜日を固定コートで開催する場合
-  // 2026-10-27 金曜のグリーンテニスプラザ固定をやめた。固定したい曜日があればここに書く
+  // 2026-10-27 金曜の固定コートをやめた。固定したい曜日があればここに書く
   fixedCourts: {},
 
   // レッスンの長さ（分）
