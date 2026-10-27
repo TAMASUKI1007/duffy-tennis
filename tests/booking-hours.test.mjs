@@ -148,39 +148,36 @@ test('受付停止日の初期値は空', () => {
 });
 
 // ---------------------------------------------------------------------------
-// 固定コート（金曜＝グリーンテニスプラザ）
+// 固定コート（現在はなし。設定を足したときの動きを検証する）
 // ---------------------------------------------------------------------------
 
-test('金曜は固定コートが返る', () => {
-  assert.equal(booking.fixedCourtFor(FRI), 'グリーンテニスプラザ');
-});
-
-test('金曜以外は固定コートなし', () => {
-  for (const day of [MON, TUE, WED, THU, SAT, SUN]) {
+test('固定コートは設定していない（どの曜日も希望コートを入力する）', () => {
+  assert.deepEqual(BOOKING_CONFIG.fixedCourts, {});
+  for (const day of [MON, TUE, WED, THU, FRI, SAT, SUN]) {
     assert.equal(booking.fixedCourtFor(day), '', `${day} に固定コートが付いています`);
   }
   assert.equal(booking.fixedCourtFor(''), '');
+  assert.ok(!html.includes('グリーンテニスプラザ'), 'グリーンテニスプラザの文言が残っています');
 });
 
-test('金曜を選ぶとコート名が自動で入り、予約代行は外れる', () => {
-  const data = { date1: { key: FRI, start: 13 * 60 }, court: '', courtReserve: true, courtFixedApplied: false };
-  const out = booking.applyFixedCourt(data);
-  assert.equal(out.court, 'グリーンテニスプラザ');
-  assert.equal(out.courtReserve, false, '固定コートでは予約代行を外す');
-  assert.equal(out.courtFixedApplied, true);
+test('固定コートを設定すると、その曜日はコート名が自動で入り、予約代行は外れる', () => {
+  BOOKING_CONFIG.fixedCourts.fri = 'テストコート';
+  try {
+    assert.equal(booking.fixedCourtFor(FRI), 'テストコート');
+    const out = booking.applyFixedCourt({ date1: { key: FRI, start: 13 * 60 }, court: '', courtReserve: true, courtFixedApplied: false });
+    assert.equal(out.court, 'テストコート');
+    assert.equal(out.courtReserve, false);
+    assert.equal(out.courtFixedApplied, true);
+    // 別の曜日に変えると自動で入れたコート名は消える
+    const back = booking.applyFixedCourt({ ...out, date1: { key: TUE, start: 13 * 60 } });
+    assert.equal(back.court, '');
+    assert.equal(back.courtFixedApplied, false);
+  } finally {
+    delete BOOKING_CONFIG.fixedCourts.fri;
+  }
 });
 
-test('金曜から別の曜日に変えると、自動で入れたコート名は消える', () => {
-  let data = booking.applyFixedCourt({ date1: { key: FRI, start: 13 * 60 }, court: '', courtReserve: false, courtFixedApplied: false });
-  assert.equal(data.court, 'グリーンテニスプラザ');
-
-  data.date1 = { key: TUE, start: 13 * 60 };
-  data = booking.applyFixedCourt(data);
-  assert.equal(data.court, '', '固定コート名が残らない');
-  assert.equal(data.courtFixedApplied, false);
-});
-
-test('自分で入力したコート名は、固定コート以外の日で消されない', () => {
+test('自分で入力したコート名は消されない', () => {
   const data = booking.applyFixedCourt({
     date1: { key: TUE, start: 13 * 60 }, court: '〇〇公園テニスコート', courtReserve: false, courtFixedApplied: false
   });
