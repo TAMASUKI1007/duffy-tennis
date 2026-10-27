@@ -1,4 +1,6 @@
 {
+  "buildCommand": "node scripts/build.mjs",
+  "outputDirectory": "dist",
   "redirects": [
     { "source": "/(.*)", "destination": "https://duffy-tennis.pages.dev/$1", "permanent": true }
   ]
