@@ -10,7 +10,7 @@ const OUT = join(ROOT, 'dist');
 
 // 公開するもの（ここに足せば配信される）
 const PUBLISH = [
-  'index.html', 'apply.html', 'message.html',
+  'index.html', 'apply.html', 'message.html', 'terms.html', 'tokushoho.html', 'privacy.html',
   'support.js', 'image-slot.js',
   'lib', 'uploads', 'assets',
   'robots.txt', 'sitemap.xml', 'site.webmanifest',
