@@ -379,12 +379,12 @@ test('チケット3種類すべてに支払いリンクがある（置き換え�
   }
 });
 
-test('本番モードのときは test_ のリンクが混ざっていない', () => {
-  if (PAY.PAYMENTS.mode === 'live') {
-    for (const k of ['3', '5', '10']) assert.ok(!PAY.PAYMENTS.tickets[k].includes('/test_'), `${k}回が test_ のまま`);
-  } else {
-    for (const k of ['3', '5', '10']) assert.ok(PAY.PAYMENTS.tickets[k].includes('/test_'), `${k}回が test_ ではないのに mode が test`);
+test('本番リンクに test_ が混ざっておらず、テストリンクは test_ で始まる', () => {
+  for (const k of ['3', '5', '10']) {
+    assert.ok(!PAY.PAYMENTS.tickets[k].includes('/test_'), `${k}回の本番リンクが test_`);
+    assert.ok(PAY.PAYMENTS.testTickets[k].includes('/test_'), `${k}回のテストリンクが test_ ではない`);
   }
+  assert.equal(PAY.PAYMENTS.mode, 'live', '公開中は live のはず');
 });
 
 test('支払いURLにメールと氏名が付く', () => {
