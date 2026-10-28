@@ -363,6 +363,45 @@ test('vercel.json は Cloudflare へ全ページ転送するだけ（Vercel で�
   assert.equal(v.redirects[0].permanent, true);
 });
 
+// ---------------------------------------------------------------------------
+// Stripe の支払いリンク（lib/payments.js）
+// ---------------------------------------------------------------------------
+
+const payWindow = {};
+new Function('window', readFileSync(join(ROOT, 'lib/payments.js'), 'utf8'))(payWindow);
+const PAY = payWindow.DUFFY_PAYMENTS;
+
+test('チケット3種類すべてに支払いリンクがある（置き換え忘れなし）', () => {
+  for (const k of ['3', '5', '10']) {
+    const u = PAY.PAYMENTS.tickets[k];
+    assert.ok(/^https:\/\/buy\.stripe\.com\/[A-Za-z0-9_]+$/.test(u), `${k}回: ${u}`);
+    assert.ok(!u.includes('REPLACE'), `${k}回のリンクが未設定`);
+  }
+});
+
+test('本番モードのときは test_ のリンクが混ざっていない', () => {
+  if (PAY.PAYMENTS.mode === 'live') {
+    for (const k of ['3', '5', '10']) assert.ok(!PAY.PAYMENTS.tickets[k].includes('/test_'), `${k}回が test_ のまま`);
+  } else {
+    for (const k of ['3', '5', '10']) assert.ok(PAY.PAYMENTS.tickets[k].includes('/test_'), `${k}回が test_ ではないのに mode が test`);
+  }
+});
+
+test('支払いURLにメールと氏名が付く', () => {
+  const u = PAY.ticketUrl('10', 'taro@example.com', '山田 太郎');
+  assert.ok(u.startsWith(PAY.PAYMENTS.tickets['10'] + '?'));
+  assert.ok(u.includes('prefilled_email=taro%40example.com'));
+  assert.ok(u.includes('client_reference_id='));
+  assert.equal(PAY.ticketUrl('99', 'a@b.c', 'x'), '', '存在しないプランは空');
+  assert.equal(PAY.ticketUrl('10'), PAY.PAYMENTS.tickets['10'], '引数なしならそのまま');
+});
+
+test('申込フォームに Stripe の支払いボタンが組み込まれている', () => {
+  assert.ok(html.includes('lib/payments.js'));
+  assert.ok(html.includes('Stripeで支払う'));
+  assert.ok(html.includes("showPay: st.done && d.menu === 'online'"));
+});
+
 test('料金は「合計(移動費別)」で、移動費は金額を出さない', () => {
   assert.ok(html.includes("'合計(移動費別)'"), '合計ラベル');
   assert.ok(html.includes("estRows.push({ k: '移動費(お1人分)', v: '別途' })"), '移動費は別途と表示');

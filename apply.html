@@ -26,6 +26,7 @@
 <meta name="theme-color" content="#E9FF00">
 <script src="./support.js"></script>
 <script src="./lib/pricing.js"></script>
+<script src="./lib/payments.js"></script>
 </head>
 <body>
 <x-dc>
@@ -472,10 +473,23 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
-      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">お申込みのあと、Instagramの <strong>@duffy_tennis</strong> にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。</p>
+      <sc-if value="{{ showPay }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;border:4px solid #111111;background:#E9FF00;box-shadow:8px 8px 0 #111111;padding:clamp(16px,4vw,22px);">
+          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — PAYMENT</div>
+          <p style="margin:6px 0 0;font-weight:900;font-size:clamp(17px,4.4vw,22px);line-height:1.5;">お支払いを済ませてください</p>
+          <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>カード・Apple Pay・Google Pay が使えます。お支払い後、Stripe から領収書メールが届きます。</p>
+          <sc-if value="{{ payTest }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:10px 0 0;border:3px solid #111111;background:#FFFFFF;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">※ 現在はテスト運用中です。決済ページに「テストモード」と表示され、本物のカードは使えません。お支払いは DM でご案内します。</p>
+          </sc-if>
+          <a href="{{ payUrl }}" target="_blank" rel="noopener" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #FFFFFF;color:#E9FF00;font-weight:900;font-size:clamp(15px,4vw,18px);padding:16px 20px;text-decoration:none;box-sizing:border-box;" style-hover="background:#FFFFFF;color:#111111;">Stripeで支払う →</a>
+          <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;">決済ページが別タブで開きます。メールアドレスは入力済みです。</p>
+        </div>
+      </sc-if>
+
+      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">{{ doneLead }}</p>
 
       <div style="margin-top:20px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
-        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">INSTAGRAM DM</div>
+        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">{{ dmStepLabel }}</div>
         <p style="margin:6px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;">InstagramのDMでご連絡ください。</p>
         <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;align-items:start;">
           <div style="border:3px solid #111111;background:#111111;overflow:hidden;width:100%;max-width:300px;margin:0 auto;box-sizing:border-box;">
@@ -692,7 +706,9 @@ class Component extends DCLogic {
       lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
     } else {
       lines.push('※お申込みを受け付けました。');
-      lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでお支払い方法をご案内します。');
+      const pay = this.payUrl();
+      if (pay) lines.push('※お支払いはこちらから: ' + pay);
+      else lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでお支払い方法をご案内します。');
     }
     return lines.join('\n');
   }
@@ -759,6 +775,13 @@ class Component extends DCLogic {
       }
       return true;
     });
+  }
+
+  /** オンライン動画添削の Stripe 支払いページ URL。対面や未設定なら空。 */
+  payUrl() {
+    const d = this.state.data;
+    if (d.menu !== 'online' || !d.plan) return '';
+    return window.DUFFY_PAYMENTS.ticketUrl(d.plan, d.email, d.name);
   }
 
   /** 対面レッスンの合計金額（人数で決まる）。 */
@@ -1295,6 +1318,14 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
+      showPay: st.done && d.menu === 'online' && !!this.payUrl(),
+      payUrl: this.payUrl(),
+      payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
+      payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
+      dmStepLabel: (d.menu === 'online' && !!this.payUrl()) ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
+      doneLead: d.menu === 'online'
+        ? 'お支払いのあと、Instagramの @duffy_tennis にDMで一言お送りください。動画の送り方をご案内して添削を始めます。'
+        : 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。',
       dmExample: d.menu === 'online' ? 'オンライン動画添削申し込みました！' : '対面レッスン申し込みました！',
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
