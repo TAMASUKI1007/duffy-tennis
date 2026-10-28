@@ -387,13 +387,28 @@ test('本番リンクに test_ が混ざっておらず、テストリンクは 
   assert.equal(PAY.PAYMENTS.mode, 'live', '公開中は live のはず');
 });
 
+test('enabled が false のあいだは支払いURLを返さない（DM案内に戻る）', () => {
+  const saved = PAY.PAYMENTS.enabled;
+  PAY.PAYMENTS.enabled = false;
+  try {
+    assert.equal(PAY.ticketUrl('10', 'taro@example.com', '山田 太郎'), '');
+  } finally {
+    PAY.PAYMENTS.enabled = saved;
+  }
+});
+
 test('支払いURLにメールと氏名が付く', () => {
+  const saved = PAY.PAYMENTS.enabled;
+  PAY.PAYMENTS.enabled = true;
   const u = PAY.ticketUrl('10', 'taro@example.com', '山田 太郎');
+  PAY.PAYMENTS.enabled = saved;
   assert.ok(u.startsWith(PAY.PAYMENTS.tickets['10'] + '?'));
   assert.ok(u.includes('prefilled_email=taro%40example.com'));
   assert.ok(u.includes('client_reference_id='));
+  PAY.PAYMENTS.enabled = true;
   assert.equal(PAY.ticketUrl('99', 'a@b.c', 'x'), '', '存在しないプランは空');
   assert.equal(PAY.ticketUrl('10'), PAY.PAYMENTS.tickets['10'], '引数なしならそのまま');
+  PAY.PAYMENTS.enabled = saved;
 });
 
 test('申込フォームに Stripe の支払いボタンが組み込まれている', () => {

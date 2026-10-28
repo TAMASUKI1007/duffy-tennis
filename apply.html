@@ -1323,9 +1323,11 @@ class Component extends DCLogic {
       payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
       payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
       dmStepLabel: (d.menu === 'online' && !!this.payUrl()) ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
-      doneLead: d.menu === 'online'
+      doneLead: (d.menu === 'online' && !!this.payUrl())
         ? 'お支払いのあと、Instagramの @duffy_tennis にDMで一言お送りください。動画の送り方をご案内して添削を始めます。'
-        : 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。',
+        : d.menu === 'online'
+          ? 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMでお支払い方法と動画の送り方をご案内します。'
+          : 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。',
       dmExample: d.menu === 'online' ? 'オンライン動画添削申し込みました！' : '対面レッスン申し込みました！',
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
