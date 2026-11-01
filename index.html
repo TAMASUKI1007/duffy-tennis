@@ -332,6 +332,38 @@ body.menu-open { overflow: hidden; }
   </div>
 </section>
 
+<section data-screen-label="Voice" style="position:relative;padding:clamp(44px,7vw,80px) 0;overflow:hidden;background:#111111;color:#FFFFFF;">
+  <div aria-hidden="true" style="position:absolute;top:0;left:0;right:0;pointer-events:none;">
+    <div data-parallax="0.08" style="font-family:'Anton',sans-serif;font-size:clamp(110px,28vw,360px);line-height:0.8;color:#111111;-webkit-text-stroke:2px rgba(233,255,0,0.14);white-space:nowrap;">VOICE</div>
+  </div>
+  <div style="position:relative;max-width:1100px;margin:0 auto;padding:0 clamp(16px,4vw,56px);">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(50px,12vw,120px);line-height:0.95;color:#E9FF00;">VOICE</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">お客様の声</span>
+    </div>
+    <p data-appear="0,40,0" data-delay="0.08s" style="margin:14px 0 0;font-weight:700;font-size:clamp(13px,3.2vw,15px);line-height:1.9;color:rgba(255,255,255,0.8);">レッスン後のアンケートから。読みやすいように言い回しだけ整えています。</p>
+  </div>
+
+  <div class="voice-viewport" style="position:relative;margin-top:clamp(24px,4vw,40px);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;">
+    <div class="voice-track" style="display:flex;gap:clamp(14px,2.4vw,22px);width:max-content;padding:8px clamp(16px,4vw,56px);will-change:transform;">
+      <sc-for list="{{ voices }}" as="v" hint-placeholder-count="12">
+        <article style="flex:none;width:clamp(260px,78vw,360px);box-sizing:border-box;border:3px solid #FFFFFF;background:#FFFFFF;color:#111111;padding:clamp(18px,3.4vw,24px);box-shadow:8px 8px 0 #E9FF00;display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <span aria-label="{{ v.starsLabel }}" style="font-size:18px;letter-spacing:0.08em;color:#111111;"><span style="color:#111111;">{{ v.starsOn }}</span><span style="color:#CFCFCF;">{{ v.starsOff }}</span></span>
+            <span style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.2em;font-size:12px;background:#E9FF00;border:2px solid #111111;padding:1px 8px;">REVIEW</span>
+          </div>
+          <p style="margin:0;font-size:clamp(13.5px,3.3vw,15px);font-weight:700;line-height:1.95;text-wrap:pretty;word-break:auto-phrase;flex:1;">{{ v.quote }}</p>
+          <div style="border-top:2px solid #111111;padding-top:10px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <span style="font-weight:900;font-size:14px;">{{ v.name }}</span>
+            <span style="font-weight:700;font-size:11.5px;color:#555555;">{{ v.meta }}</span>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </div>
+  <p aria-hidden="true" style="margin:14px 0 0;text-align:center;font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:12px;color:rgba(255,255,255,0.5);">SWIPE ←→</p>
+</section>
+
 <section data-screen-label="Menu" style="position:relative;padding:clamp(40px,6vw,70px) clamp(16px,4vw,56px);overflow:hidden;">
   <div style="max-width:1100px;margin:0 auto;">
     <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
@@ -485,12 +517,13 @@ const MENU_ITEMS = [
 ];
 
 class Component extends DCLogic {
-  state = { learnings: [], learningsLead: '', learningsNote: '', menuOpen: false };
+  state = { learnings: [], learningsLead: '', learningsNote: '', menuOpen: false, voices: [] };
 
   componentDidMount() {
     this._reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     import('./lib/content.js').then((m) => {
-      this.setState({ learnings: m.learnings || [], learningsLead: m.learningsLead || '', learningsNote: m.learningsNote || '' });
+      this.setState({ learnings: m.learnings || [], learningsLead: m.learningsLead || '', learningsNote: m.learningsNote || '', voices: m.testimonials || [] });
+      setTimeout(() => this.setupVoices(), 60);
       if (!this._reduced && this.props.motion !== false) setTimeout(() => this.setupAppear(), 40);
     });
     this.applyMarquee();
@@ -576,6 +609,7 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     this.applyMarquee();
+    if (this._voice) { this._voice.measure(); const t = document.querySelector('.voice-track'); if (t) t.style.transform = 'translate3d(' + this._voice.x.toFixed(2) + 'px,0,0)'; }
     if (this.props.motion === false) {
       if (this._io) { this._io.disconnect(); this._io = null; }
       if (this._onScroll) { window.removeEventListener('scroll', this._onScroll); this._onScroll = null; }
@@ -587,7 +621,72 @@ class Component extends DCLogic {
     }
   }
 
+  /**
+   * お客様の声のカルーセル。
+   * - 何もしなくても左へゆっくり流れる（1周ぶん進んだら位置を戻して無限に見せる）
+   * - 指やマウスでつかんで左右に動かせる。離すと惰性で少し滑ってから自動で再開
+   * - 動きを減らす設定の人には自動では流さない（スワイプだけ）
+   */
+  setupVoices() {
+    const vp = document.querySelector('.voice-viewport');
+    const track = document.querySelector('.voice-track');
+    if (!vp || !track || this._voice) return;
+    const st = { x: 0, vel: 0, dragging: false, lastX: 0, lastT: 0, idleUntil: 0, raf: 0, half: 0 };
+    this._voice = st;
+    const SPEED = 0.55; // px/frame（約33px/秒）
+    const measure = () => {
+      const gap = parseFloat(getComputedStyle(track).gap) || 0;
+      st.half = (track.scrollWidth - parseFloat(getComputedStyle(track).paddingLeft) - parseFloat(getComputedStyle(track).paddingRight) + gap) / 2;
+    };
+    const wrap = () => {
+      if (st.half <= 0) return;
+      while (st.x <= -st.half) st.x += st.half;
+      while (st.x > 0) st.x -= st.half;
+    };
+    const apply = () => { track.style.transform = 'translate3d(' + st.x.toFixed(2) + 'px,0,0)'; };
+    const auto = !this._reduced && this.props.motion !== false;
+    const tick = (t) => {
+      if (!st.dragging) {
+        if (Math.abs(st.vel) > 0.05) { st.x += st.vel; st.vel *= 0.95; }
+        else if (auto && t > st.idleUntil) { st.x -= SPEED; }
+        wrap(); apply();
+      }
+      st.raf = requestAnimationFrame(tick);
+    };
+    const down = (e) => {
+      st.dragging = true; st.vel = 0; st.lastX = e.clientX; st.lastT = performance.now();
+      vp.style.cursor = 'grabbing';
+      try { vp.setPointerCapture(e.pointerId); } catch (_) {}
+    };
+    const move = (e) => {
+      if (!st.dragging) return;
+      const now = performance.now();
+      const dx = e.clientX - st.lastX;
+      st.x += dx; wrap(); apply();
+      const dt = Math.max(1, now - st.lastT);
+      st.vel = st.vel * 0.5 + (dx / dt) * 16 * 0.5; // px/frame に正規化
+      st.lastX = e.clientX; st.lastT = now;
+    };
+    const up = () => {
+      if (!st.dragging) return;
+      st.dragging = false; vp.style.cursor = 'grab';
+      st.idleUntil = performance.now() + 2500;
+    };
+    vp.addEventListener('pointerdown', down);
+    vp.addEventListener('pointermove', move);
+    vp.addEventListener('pointerup', up);
+    vp.addEventListener('pointercancel', up);
+    vp.addEventListener('pointerleave', up);
+    // カード内のリンクなどを誤って開かないよう、ドラッグ中の click は無視
+    vp.addEventListener('click', (e) => { if (Math.abs(st.vel) > 0.3) e.preventDefault(); }, true);
+    window.addEventListener('resize', measure);
+    st.measure = measure; st.cleanup = () => { cancelAnimationFrame(st.raf); window.removeEventListener('resize', measure); };
+    measure(); apply();
+    st.raf = requestAnimationFrame(tick);
+  }
+
   componentWillUnmount() {
+    if (this._voice && this._voice.cleanup) this._voice.cleanup();
     document.body.classList.remove('menu-open');
     if (this._appearTimer) clearTimeout(this._appearTimer);
     if (this._io) this._io.disconnect();
@@ -627,6 +726,12 @@ class Component extends DCLogic {
       burgerMidOpacity: open ? 0 : 1,
       learningsLead: this.state.learningsLead,
       learningsNote: this.state.learningsNote,
+      // 無限に流すため、同じ並びを2周ぶん描く（半分進んだら先頭に戻す）
+      voices: [0, 1].flatMap((k) => this.state.voices.map((v) => ({
+        quote: v.quote, name: v.name, meta: v.meta,
+        starsOn: '★'.repeat(v.stars), starsOff: '★'.repeat(Math.max(0, 5 - v.stars)),
+        starsLabel: '5段階中' + v.stars
+      }))),
       learnings: this.state.learnings.map((l, i) => ({
         head: l.head, sub: l.sub,
         no: String(i + 1).padStart(2, '0'),
