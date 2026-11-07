@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="CLn8V8nJSkbhD5CLAOo23kaq9ifl_8CuQOeOItDi7f8">
 <title>レッスン申し込み | ダッフィーテニス</title>
-<meta name="description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約3分で仮予約できます。確定はInstagramのDMで。">
+<meta name="description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <link rel="canonical" href="https://duffy-tennis.pages.dev/apply">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ダッフィーテニス">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="レッスン申し込み | ダッフィーテニス">
-<meta property="og:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約3分で仮予約できます。確定はInstagramのDMで。">
+<meta property="og:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <meta property="og:url" content="https://duffy-tennis.pages.dev/apply">
 <meta property="og:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="レッスン申し込み | ダッフィーテニス">
-<meta name="twitter:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約3分で仮予約できます。確定はInstagramのDMで。">
+<meta name="twitter:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <meta name="twitter:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <link rel="icon" href="/assets/icon-512.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/icon-512.png">
@@ -69,48 +69,11 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         <h1 style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(52px,13vw,96px);line-height:0.95;">APPLY</h1>
         <span style="background:#111111;color:#E9FF00;font-weight:900;font-size:13px;padding:5px 12px;transform:rotate(-2deg);display:inline-block;">レッスン申込フォーム</span>
       </div>
-      <p style="margin:10px 0 0;font-size:13px;font-weight:700;">全5ステップ・約3分。入力内容はこの端末に自動保存されます。</p>
+      <p style="margin:10px 0 0;font-size:13px;font-weight:700;">全4ステップ・約2分。入力内容はこの端末に自動保存されます。</p>
 
       <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
           <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">1</span>
-          <h2 style="margin:0;font-weight:900;font-size:20px;">基本情報</h2>
-        </div>
-        <div style="display:grid;gap:20px;">
-          <sc-for list="{{ fields1 }}" as="f" hint-placeholder-count="4">
-            <div>
-              <label for="{{ f.id }}" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">{{ f.label }} <span style="font-weight:900;font-size:11px;background:{{ f.reqBg }};border:2px solid #111111;padding:0 6px;">{{ f.reqText }}</span></label>
-              <input id="{{ f.id }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" autoComplete="{{ f.auto }}" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
-            </div>
-          </sc-for>
-          <div>
-            <label for="f-age" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">年齢 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></label>
-            <div style="display:flex;align-items:center;gap:10px;">
-              <input id="f-age" type="number" inputMode="numeric" min="1" max="120" value="{{ age }}" onChange="{{ onAge }}" placeholder="例:25" autoComplete="off" style="width:120px;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;text-align:right;">
-              <span style="font-weight:900;font-size:15px;">歳</span>
-            </div>
-            <p style="margin:8px 0 0;font-size:12px;font-weight:700;color:#444444;">受講されるご本人の年齢をご記入ください。</p>
-            <sc-if value="{{ needsGuardian }}" hint-placeholder-val="{{ false }}">
-              <button type="button" onClick="{{ onGuardian }}" aria-pressed="{{ guardianPressed }}" style="margin-top:14px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ guardianBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
-                <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ guardianMark }}</span>
-                <span style="font-weight:900;font-size:13.5px;line-height:1.5;">保護者の許可を得ています <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></span>
-              </button>
-            </sc-if>
-          </div>
-          <div>
-            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">どこで知りましたか? <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-              <sc-for list="{{ sourceOpts }}" as="o" hint-placeholder-count="6">
-                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
-              </sc-for>
-            </div>
-          </div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
-          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">2</span>
           <h2 style="margin:0;font-weight:900;font-size:20px;">メニュー選択</h2>
         </div>
         <div style="display:grid;gap:18px;">
@@ -127,10 +90,10 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </sc-if>
 
-      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
-          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">3</span>
-          <h2 style="margin:0;font-weight:900;font-size:20px;">{{ step3Title }}</h2>
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">2</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">{{ step2Title }}</h2>
         </div>
 
         <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
@@ -273,12 +236,64 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </sc-if>
       </sc-if>
 
+      <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
+          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">3</span>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">基本情報</h2>
+        </div>
+        <div style="display:grid;gap:20px;">
+          <sc-for list="{{ fields1 }}" as="f" hint-placeholder-count="4">
+            <div>
+              <label for="{{ f.id }}" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">{{ f.label }} <span style="font-weight:900;font-size:11px;background:{{ f.reqBg }};border:2px solid #111111;padding:0 6px;">{{ f.reqText }}</span></label>
+              <input id="{{ f.id }}" type="{{ f.type }}" value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" autoComplete="{{ f.auto }}" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;">
+            </div>
+          </sc-for>
+          <div>
+            <label for="f-age" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin-bottom:8px;">年齢 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <input id="f-age" type="number" inputMode="numeric" min="1" max="120" value="{{ age }}" onChange="{{ onAge }}" placeholder="例:25" autoComplete="off" style="width:120px;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:700;font-family:inherit;text-align:right;">
+              <span style="font-weight:900;font-size:15px;">歳</span>
+            </div>
+            <p style="margin:8px 0 0;font-size:12px;font-weight:700;color:#444444;">受講されるご本人の年齢。17歳以下の場合は保護者の許可が必要です。</p>
+            <sc-if value="{{ needsGuardian }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ onGuardian }}" aria-pressed="{{ guardianPressed }}" style="margin-top:14px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ guardianBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
+                <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ guardianMark }}</span>
+                <span style="font-weight:900;font-size:13.5px;line-height:1.5;">保護者の許可を得ています <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></span>
+              </button>
+            </sc-if>
+          </div>
+          <div>
+            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">どこで知りましたか? <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;">
+              <sc-for list="{{ sourceOpts }}" as="o" hint-placeholder-count="6">
+                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+              <div style="margin-top:20px;">
+          <label for="q" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">質問・ご要望 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
+          <textarea id="q" value="{{ question }}" onChange="{{ onQuestion }}" rows="5" placeholder="気になること・伝えておきたいことがあればご記入ください" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:500;font-family:inherit;resize:vertical;"></textarea>
+        </div>
+      </sc-if>
+
       <sc-if value="{{ isStep4 }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
           <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">4</span>
-          <h2 style="margin:0;font-weight:900;font-size:20px;">規約・質問</h2>
+          <h2 style="margin:0;font-weight:900;font-size:20px;">規約の確認と送信</h2>
         </div>
-        <div style="border:3px solid #111111;padding:18px 20px;max-height:340px;overflow:auto;font-size:12.5px;font-weight:500;line-height:1.95;background:#FFFFFF;">
+        <div style="border:3px solid #111111;background:#FFFFFF;padding:16px 18px;">
+          <p style="margin:0;font-weight:900;font-size:14px;">レッスン利用規約の要点</p>
+          <ul style="margin:10px 0 0;padding-left:18px;display:grid;gap:8px;font-size:13px;font-weight:700;line-height:1.8;">
+            <li>予約は、InstagramのDMで日程とお支払いが確定した時点で確定します。</li>
+            <li>対面レッスンのキャンセル料は、実施日の3日前まで無料、前日まで50%、当日100%です。</li>
+            <li>オンライン動画添削のチケットは購入日から5ヶ月有効で、原則返金はありません。</li>
+            <li>コート代・移動費は実費です。レッスン動画の広報利用を希望しない場合はお申し出ください。</li>
+          </ul>
+          <button type="button" onClick="{{ onToggleTerms }}" aria-expanded="{{ termsOpen }}" style="margin-top:12px;font-family:inherit;cursor:pointer;border:2px solid #111111;background:#FFFFFF;color:#111111;font-weight:900;font-size:12.5px;padding:8px 14px;">{{ termsToggleLabel }}</button>
+          <sc-if value="{{ termsOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:12px;">
+        <div style="border:3px solid #111111;padding:18px 20px;max-height:420px;overflow:auto;font-size:12.5px;font-weight:500;line-height:1.95;background:#FFFFFF;">
           <p style="margin:0;font-weight:900;font-size:15px;">レッスン利用規約</p>
           <p style="margin:12px 0 0;">本規約は、ダッフィー先生(@duffy_tennis、以下「主催者」といいます)が提供するテニスレッスン(対面レッスンおよびオンライン動画添削を含み、以下「本レッスン」といいます)の利用条件を定めるものです。本レッスンにお申込みいただいた方(以下「お客様」といいます)は、本規約のすべての条項に同意したものとみなします。</p>
 
@@ -386,10 +401,14 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             <li>本レッスンに関して本規約に定めのない事項、または本規約の解釈に疑義が生じた場合は、お客様と主催者が誠実に協議のうえ、これを解決するものとします。</li>
           </ol>
         </div>
+            </div>
+          </sc-if>
+        </div>
         <button type="button" onClick="{{ onAgree }}" aria-pressed="{{ agreePressed }}" style="margin-top:16px;display:flex;align-items:center;gap:12px;font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ agreeBg }};padding:14px 16px;width:100%;box-sizing:border-box;text-align:left;min-height:56px;">
           <span aria-hidden="true" style="width:26px;height:26px;border:3px solid #111111;background:#FFFFFF;display:grid;place-items:center;font-weight:900;font-size:16px;flex:none;">{{ agreeMark }}</span>
           <span style="font-weight:900;font-size:14px;">規約に同意します</span>
         </button>
+        <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
         <div style="margin-top:24px;">
           <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin:0 0 10px;">お支払い方法 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
           <div style="display:flex;flex-wrap:wrap;gap:10px;">
@@ -399,16 +418,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           </div>
           <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ お支払いの詳細は申込後、InstagramのDMにてご案内します。</p>
         </div>
-        <div style="margin-top:24px;">
-          <label for="q" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">質問・ご要望 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
-          <textarea id="q" value="{{ question }}" onChange="{{ onQuestion }}" rows="5" placeholder="気になること・伝えておきたいことがあればご記入ください" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:500;font-family:inherit;resize:vertical;"></textarea>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ isStep5 }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;margin:34px 0 20px;">
-          <span style="font-family:'Anton',sans-serif;font-size:28px;line-height:1;background:#E9FF00;border:3px solid #111111;padding:4px 12px;">5</span>
-          <h2 style="margin:0;font-weight:900;font-size:20px;">入力内容の確認</h2>
+        </sc-if>
+        <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払いはカード決済（Stripe）です。送信後の画面からお支払いいただけます。</p>
+        </sc-if>
+              <div style="display:flex;align-items:center;gap:10px;margin:28px 0 14px;">
+          <h3 style="margin:0;font-weight:900;font-size:17px;">入力内容の確認</h3>
         </div>
         <div style="border:3px solid #111111;">
           <sc-for list="{{ confirmRows }}" as="r" hint-placeholder-count="7">
@@ -433,7 +448,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           </div>
           <p style="margin:12px 0 0;font-size:11.5px;font-weight:500;line-height:1.9;color:rgba(255,255,255,0.85);">{{ estNote }}</p>
         </div>
-      </sc-if>
+            </sc-if>
 
       <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}">
         <div role="alert" style="border:3px solid #111111;background:#E9FF00;font-weight:900;font-size:14px;padding:12px 16px;margin-top:26px;transform:rotate(-0.4deg);">{{ err }}</div>
@@ -473,9 +488,26 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
+      <div style="margin-top:22px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
+        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — INSTAGRAM DM</div>
+        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(18px,4.8vw,24px);line-height:1.45;">InstagramのDMで「申込完了」とお名前を送ってください</p>
+        <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">こちらからは先にご連絡できません。DMをいただいてから、{{ dmNextText }}</p>
+        <a href="{{ dmUrl }}" target="_blank" rel="noopener" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #E9FF00;color:#E9FF00;font-weight:900;font-size:clamp(17px,4.6vw,21px);padding:20px 22px;text-decoration:none;box-sizing:border-box;min-height:68px;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
+        <div style="margin-top:14px;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;">
+          <div style="font-weight:900;font-size:12px;color:#555555;">送る文面（コピーして貼り付け）</div>
+          <div style="margin-top:6px;font-size:14px;font-weight:900;line-height:1.8;">{{ dmShortMessage }}</div>
+          <button type="button" onClick="{{ onCopyDm }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyDmBg }};color:#111111;font-weight:900;font-size:13px;padding:10px 16px;min-height:44px;">{{ copyDmLabel }}</button>
+        </div>
+        <details style="margin-top:12px;">
+          <summary style="cursor:pointer;font-weight:900;font-size:12.5px;">DMの送り方の例を見る</summary>
+          <img src="uploads/dm-example.jpg" alt="InstagramのDMで申込完了と名前を送る例" loading="lazy" style="display:block;margin-top:10px;width:100%;max-width:300px;border:3px solid #111111;">
+        </details>
+        <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップすると @duffy_tennis のDM画面が開きます。</p>
+      </div>
+
       <sc-if value="{{ showPay }}" hint-placeholder-val="{{ false }}">
         <div style="margin-top:22px;border:4px solid #111111;background:#E9FF00;box-shadow:8px 8px 0 #111111;padding:clamp(16px,4vw,22px);">
-          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — PAYMENT</div>
+          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 2 — PAYMENT</div>
           <p style="margin:6px 0 0;font-weight:900;font-size:clamp(17px,4.4vw,22px);line-height:1.5;">お支払いを済ませてください</p>
           <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>カード・Apple Pay・Google Pay が使えます。お支払い後、Stripe から領収書メールが届きます。</p>
           <sc-if value="{{ payTest }}" hint-placeholder-val="{{ false }}">
@@ -486,26 +518,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </sc-if>
 
-      <p style="font-size:14px;font-weight:500;line-height:2.1;margin:22px 0 0;">{{ doneLead }}</p>
-
-      <div style="margin-top:20px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
-        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">{{ dmStepLabel }}</div>
-        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(16px,4.2vw,20px);line-height:1.5;">InstagramのDMでご連絡ください。</p>
-        <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:16px;align-items:start;">
-          <div style="border:3px solid #111111;background:#111111;overflow:hidden;width:100%;max-width:300px;margin:0 auto;box-sizing:border-box;">
-            <img src="uploads/dm-example.jpg" alt="InstagramのDM画面。「対面レッスン申し込みました！よろしくお願いいたします」と送っている例" style="display:block;width:100%;height:auto;">
-          </div>
-          <div style="display:grid;gap:12px;">
-            <p style="margin:0;font-size:13.5px;font-weight:700;line-height:1.95;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">@duffy_tennis</span> のDMに、この画像のように一言お送りください。申込内容は届いているので、文面は短くて大丈夫です。</p>
-            <div style="border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:13px;font-weight:700;line-height:1.9;">{{ dmExample }}<br>よろしくお願いいたします</div>
-            <a href="{{ dmUrl }}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #111111;color:#E9FF00;font-weight:900;font-size:clamp(15px,4vw,17px);padding:16px 20px;text-decoration:none;box-sizing:border-box;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
-            <p style="margin:0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップすると @duffy_tennis のDM画面が開きます。</p>
-          </div>
-        </div>
-      </div>
-
       <div style="margin-top:18px;border:3px solid #111111;background:#FFFFFF;padding:14px 16px;">
-        <p style="margin:0;font-weight:900;font-size:13px;">申込内容も一緒に送りたい方は、こちらをコピーしてDMに貼り付けてください。</p>
+        <p style="margin:0;font-weight:900;font-size:13px;">申込内容の控え。DMに貼り付けてもらえると照合が早くなります。</p>
         <pre style="margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:12.5px;font-weight:700;line-height:1.9;background:#F4F4F4;border:2px solid #111111;padding:12px;">{{ lineMessage }}</pre>
         <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:13px;padding:11px 18px;min-height:46px;">{{ copyLabel }}</button>
       </div>
@@ -583,7 +597,7 @@ const BOOKING_CONFIG = {
 /* ----------------------------------------------------------------------------
  * Instagram
  *   INSTAGRAM_ID … アカウント名（@から始まるもの）
- *   申込後の連絡はInstagramのDMで行う（LINEは運用開始まで使わない）。
+ *   申込後の連絡はInstagramのDMで行う（お客様からの連絡は Instagram の DM に限る）。
  * -------------------------------------------------------------------------- */
 const INSTAGRAM_ID = '@duffy_tennis';
 const INSTAGRAM_DM_URL = 'https://ig.me/m/' + INSTAGRAM_ID.replace(/^@/, '');
@@ -673,7 +687,7 @@ class Component extends DCLogic {
     const yen = (n) => '¥' + n.toLocaleString('ja-JP');
     const lines = [];
     lines.push('■お名前:' + d.name);
-    lines.push('■SNS:' + (d.sns || '(未記入)'));
+    lines.push('■Instagram:' + (d.sns || '(未記入)'));
     lines.push('■メール:' + d.email);
     lines.push('■電話番号:' + d.phone);
     lines.push('■年齢:' + this.ageLabel());
@@ -837,6 +851,28 @@ class Component extends DCLogic {
   }
 
   /** DMに貼り付けてもらう本文。申込内容の要約。 */
+  /**
+   * テキストをクリップボードにコピーし、2秒だけ「コピーしました」を出す。
+   * clipboard API が使えない・拒否されたときは execCommand('copy') で試す。
+   */
+  copyText(text, flag) {
+    const mark = () => {
+      const on = {}; on[flag] = true; this.setState(on);
+      setTimeout(() => { const off = {}; off[flag] = false; this.setState(off); }, 2000);
+    };
+    const legacy = () => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        const ok = document.execCommand('copy'); document.body.removeChild(ta);
+        if (ok) mark();
+      } catch (e) {}
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(mark).catch(legacy);
+    else legacy();
+  }
+
   buildLineMessage() {
     const d = this.state.data;
     const lines = ['お申込みの内容をお送りします。', ''];
@@ -1109,34 +1145,36 @@ class Component extends DCLogic {
 
   validate(step) {
     const d = this.state.data;
-    if (step === 1) {
-      if (!d.name.trim()) return '氏名を入力してください。';
-      if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
-      if (!d.phone.trim()) return '電話番号を入力してください。';
-      if (!d.sns.trim()) return 'SNSアカウントを入力してください。';
-      const age = this.ageNumber();
-      if (age === null) return '年齢を1〜120の数字で入力してください。';
-      if (age < 18 && !d.guardianConsent) return '保護者の許可を得ているかご確認ください。';
-      if (!d.source) return 'どこで知ったかを選択してください。';
-    }
-    if (step === 2 && !d.menu) return 'メニューを選択してください。';
-    if (step === 3) {
+    if (step === 1 && !d.menu) return 'メニューを選択してください。';
+    if (step === 2) {
       if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
       if (d.menu === 'offline') {
         if (!d.date1) return '第1希望の日程を選択してください。';
         if (d.date2 && d.date1 && d.date2.key === d.date1.key && d.date2.start === d.date1.start) {
           return '第1希望と第2希望が同じ日時です。';
         }
-        // 固定コートの曜日（金曜など）は court が自動で入るため、この分岐には来ない
+        // 固定コートの曜日は court が自動で入るため、この分岐には来ない
         if (!this.fixedCourtFor(d.date1.key) && !d.courtReserve && !d.court.trim()) {
           return '希望コートを入力するか、コート予約代行を選択してください。';
         }
         if (!d.rental) return '練習ボールレンタルの有無を選択してください。';
       }
     }
+    if (step === 3) {
+      if (!d.name.trim()) return '氏名を入力してください。';
+      if (!d.sns.trim()) return 'Instagramのユーザー名を入力してください。';
+      if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
+      if (!d.phone.trim()) return '電話番号を入力してください。';
+      // 年齢は任意。入れた場合だけ範囲を見る。17歳以下は保護者の許可が必要
+      if (String(d.age).trim() !== '') {
+        const age = this.ageNumber();
+        if (age === null) return '年齢は1〜120の数字で入力してください。';
+        if (age < 18 && !d.guardianConsent) return '保護者の許可を得ているかご確認ください。';
+      }
+    }
     if (step === 4) {
       if (!d.agree) return '規約への同意が必要です。';
-      if (!d.payment) return 'お支払い方法を選択してください。';
+      if (d.menu === 'offline' && !d.payment) return 'お支払い方法を選択してください。';
     }
     return '';
   }
@@ -1144,7 +1182,7 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     const d = st.data;
-    const labels = ['基本情報', 'メニュー', '詳細', '規約・質問', '確認'];
+    const labels = ['メニュー', 'プラン・日程', '基本情報', '確認'];
 
     const steps = labels.map((label, idx) => {
       const n = idx + 1;
@@ -1164,7 +1202,7 @@ class Component extends DCLogic {
 
     const fieldDefs = [
       { id: 'f-name', key: 'name', label: '氏名', type: 'text', placeholder: '例:山田 太郎', auto: 'name', req: true },
-      { id: 'f-sns', key: 'sns', label: 'SNSアカウント', type: 'text', placeholder: '例:@your_account(Instagram等)', auto: 'off', req: true },
+      { id: 'f-sns', key: 'sns', label: 'Instagramユーザー名', type: 'text', placeholder: '例:@duffy_tennis', auto: 'off', req: true },
       { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true },
       { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: true }
     ];
@@ -1199,7 +1237,7 @@ class Component extends DCLogic {
         mark: pressed ? '✓ 選択中' : '選ぶ',
         markBg: pressed ? '#111111' : '#FFFFFF',
         markFg: pressed ? '#E9FF00' : '#111111',
-        onPick: () => this.setData({ menu: c.key })
+        onPick: () => this.setData({ menu: c.key, payment: c.key === 'online' ? 'クレジットカード(Stripe)' : (d.payment === 'クレジットカード(Stripe)' ? '' : d.payment) })
       };
     });
 
@@ -1254,7 +1292,7 @@ class Component extends DCLogic {
       { k: '氏名', v: d.name },
       { k: 'メール', v: d.email },
       { k: '電話番号', v: d.phone },
-      { k: 'SNSアカウント', v: d.sns || '(未記入)' },
+      { k: 'Instagram', v: d.sns || '(未記入)' },
       { k: '年齢', v: this.ageLabel() },
       { k: '知ったきっかけ', v: d.source || '(未選択)' },
       { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
@@ -1291,9 +1329,12 @@ class Component extends DCLogic {
       done: st.done,
       notDone: !st.done,
       isStep1: st.step === 1, isStep2: st.step === 2, isStep3: st.step === 3,
-      isStep4: st.step === 4, isStep5: st.step === 5,
+      isStep4: st.step === 4,
+      termsOpen: !!st.termsOpen,
+      termsToggleLabel: st.termsOpen ? '全文を閉じる' : '全文を読む（第1〜14条）',
+      onToggleTerms: () => this.setState({ termsOpen: !st.termsOpen }),
       isOnline: d.menu === 'online', isOffline: d.menu === 'offline',
-      step3Title: d.menu === 'online' ? '詳細(オンライン動画添削)' : d.menu === 'offline' ? '詳細(対面レッスン)' : '詳細',
+      step2Title: d.menu === 'online' ? 'プラン(オンライン動画添削)' : d.menu === 'offline' ? '日程・コート(対面レッスン)' : 'プラン・日程',
       err: st.err, hasErr: !!st.err,
       steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
       age: d.age,
@@ -1318,37 +1359,24 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
+      dmShortMessage: '申込完了 ' + (d.name || ''),
+      dmNextText: (d.menu === 'online' && !!this.payUrl())
+        ? 'お支払いの確認と動画の送り方をご案内して添削を始めます。'
+        : d.menu === 'online'
+          ? 'お支払い方法と動画の送り方をご案内します。'
+          : '日程・コートを確認して予約を確定し、移動費・お支払い方法をご案内します。',
+      copyDmLabel: st.copiedDm ? 'コピーしました ✓' : '文面をコピー',
+      copyDmBg: st.copiedDm ? '#E9FF00' : '#FFFFFF',
+      onCopyDm: () => this.copyText('申込完了 ' + (d.name || ''), 'copiedDm'),
       showPay: st.done && d.menu === 'online' && !!this.payUrl(),
       payUrl: this.payUrl(),
       payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
       payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
-      dmStepLabel: (d.menu === 'online' && !!this.payUrl()) ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
-      doneLead: (d.menu === 'online' && !!this.payUrl())
-        ? 'お支払いのあと、Instagramの @duffy_tennis にDMで一言お送りください。動画の送り方をご案内して添削を始めます。'
-        : d.menu === 'online'
-          ? 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMでお支払い方法と動画の送り方をご案内します。'
-          : 'お申込みのあと、Instagramの @duffy_tennis にDMで一言お送りください。DMで日程・コートを確認して予約を確定し、移動費・お支払い方法もご案内します。',
-      dmExample: d.menu === 'online' ? 'オンライン動画添削申し込みました！' : '対面レッスン申し込みました！',
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
       copyLabel: st.copied ? 'コピーしました ✓' : '内容をコピー',
       copyBg: st.copied ? '#E9FF00' : '#FFFFFF',
-      onCopyLine: () => {
-        const text = this.state.lineMessage || '';
-        const mark = () => {
-          this.setState({ copied: true });
-          setTimeout(() => this.setState({ copied: false }), 2000);
-        };
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(mark).catch(() => {});
-        } else {
-          try {
-            const ta = document.createElement('textarea');
-            ta.value = text; document.body.appendChild(ta); ta.select();
-            document.execCommand('copy'); document.body.removeChild(ta); mark();
-          } catch (e) {}
-        }
-      },
+      onCopyLine: () => this.copyText(this.state.lineMessage || '', 'copied'),
       courtOptional: d.courtReserve,
       courtRequired: !d.courtReserve,
       courtReservePressed: d.courtReserve,
@@ -1367,12 +1395,12 @@ class Component extends DCLogic {
       estNote,
       showBack: st.step > 1,
       onBack: () => this.go(st.step - 1),
-      nextLabel: st.step === 5 ? (st.sending ? '送信中…' : '送信する →') : '次へ →',
+      nextLabel: st.step === 4 ? (st.sending ? '送信中…' : '送信する →') : '次へ →',
       onNext: () => {
         if (st.sending) return;
         const msg = this.validate(st.step);
         if (msg) { this.setState({ err: msg }); return; }
-        if (st.step === 5) {
+        if (st.step === 4) {
           this.setState({ sending: true, err: '' });
 
           const summary = this.buildSummary();
@@ -1430,7 +1458,7 @@ class Component extends DCLogic {
         }
         const nextStep = st.step + 1;
         const patch = { step: nextStep, err: '' };
-        if (nextStep === 3 && d.menu === 'offline' && !d.date1) patch.open1 = true;
+        if (nextStep === 2 && d.menu === 'offline' && !d.date1) patch.open1 = true;
         this.setState(patch);
         this.save({ step: nextStep });
         window.scrollTo(0, 0);

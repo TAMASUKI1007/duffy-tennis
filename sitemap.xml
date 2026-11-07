@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://duffy-tennis.pages.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
   <url><loc>https://duffy-tennis.pages.dev/apply</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://duffy-tennis.pages.dev/guide</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://duffy-tennis.pages.dev/message</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://duffy-tennis.pages.dev/tokushoho</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
   <url><loc>https://duffy-tennis.pages.dev/terms</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>

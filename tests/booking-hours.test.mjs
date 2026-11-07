@@ -259,8 +259,13 @@ test('LINE公式の導線が残っていない（運用開始まで使わない�
   }
 });
 
-test('完了画面にInstagram DMの案内とスクリーンショット例がある', () => {
-  assert.ok(html.includes('INSTAGRAM DM'), 'DMブロックの見出し');
+test('完了画面はDMが最初、Stripeがその下', () => {
+  assert.ok(html.includes('STEP 1 — INSTAGRAM DM'), 'DMが STEP 1');
+  assert.ok(html.includes('STEP 2 — PAYMENT'), 'Stripe が STEP 2');
+  assert.ok(html.indexOf('STEP 1 — INSTAGRAM DM') < html.indexOf('STEP 2 — PAYMENT'), 'DM ブロックが先に出る');
+  assert.ok(html.includes('「申込完了」とお名前を送ってください'), 'DMで送る内容の指示');
+  assert.ok(html.includes("dmShortMessage: '申込完了 ' + (d.name || '')"), 'コピー用の短い文面');
+  assert.ok(html.includes('onCopyDm'), 'コピーボタン');
   assert.ok(html.includes('uploads/dm-example.jpg'), 'DMのスクリーンショット例');
   assert.ok(html.includes('InstagramでDMを送る'), 'DMボタンの文言');
   assert.ok(html.includes('href="{{ dmUrl }}"'), 'DMリンクが差し込まれる');
@@ -422,4 +427,74 @@ test('料金は「合計(移動費別)」で、移動費は金額を出さない
   assert.ok(html.includes("estRows.push({ k: '移動費(お1人分)', v: '別途' })"), '移動費は別途と表示');
   // 移動費に金額を添えていないこと
   assert.ok(!/移動費[^\n]{0,20}[0-9][0-9,]*円/.test(html), '移動費に金額が書かれていない');
+});
+
+// ---------------------------------------------------------------------------
+// 申込導線（2026-11-08）：4ステップ、年齢・きっかけは任意、Instagram 必須、規約は要点＋全文
+// ---------------------------------------------------------------------------
+
+test('申込フォームは4ステップ（メニュー→プラン・日程→基本情報→確認）', () => {
+  assert.ok(html.includes("const labels = ['メニュー', 'プラン・日程', '基本情報', '確認'];"), 'ステップ名');
+  assert.ok(html.includes('全4ステップ・約2分'), 'トップの案内文');
+  assert.ok(!html.includes('isStep5'), '5ステップ目が残っていない');
+  assert.ok(html.includes("nextLabel: st.step === 4 ? (st.sending ? '送信中…' : '送信する →') : '次へ →'"), '4ステップ目で送信');
+  assert.ok(/if \(st\.step === 4\) \{\s*this\.setState\(\{ sending: true/.test(html), '送信は4ステップ目');
+  // メニュー → プラン・日程 → 基本情報 → 確認 の順で markup が並ぶ
+  const i1 = html.indexOf('<sc-if value="{{ isStep1 }}"'), i2 = html.indexOf('<sc-if value="{{ isStep2 }}"');
+  const i3 = html.indexOf('<sc-if value="{{ isStep3 }}"'), i4 = html.indexOf('<sc-if value="{{ isStep4 }}"');
+  assert.ok(i1 < i2 && i2 < i3 && i3 < i4, 'ステップの並び');
+  assert.ok(html.slice(i1, i2).includes('menuCards'), '1はメニュー');
+  assert.ok(html.slice(i2, i3).includes('planCards') && html.slice(i2, i3).includes('rentalOpts'), '2はプラン・日程・ボール');
+  assert.ok(html.slice(i3, i4).includes('fields1') && html.slice(i3, i4).includes('id="q"'), '3は基本情報＋質問');
+  assert.ok(html.slice(i4).includes('confirmRows') && html.slice(i4).includes('onAgree'), '4は規約＋確認');
+});
+
+test('年齢・きっかけは任意、Instagram ユーザー名は必須', () => {
+  assert.ok(html.includes("label: 'Instagramユーザー名'") && html.includes("key: 'sns'") && /key: 'sns'[^\n]*req: true/.test(html), 'Instagram 必須');
+  assert.ok(html.includes("if (!d.sns.trim()) return 'Instagramのユーザー名を入力してください。';"), 'Instagram の検証');
+  assert.ok(html.includes("if (String(d.age).trim() !== '') {"), '年齢は入力があるときだけ検証');
+  assert.ok(!html.includes("return '年齢を入力してください。';"), '年齢必須の文言が消えている');
+  assert.ok(!html.includes("return 'どこで知ったかを選択してください。';") && !html.includes("if (!d.source)"), 'きっかけ必須が消えている');
+  assert.ok(html.includes("source: d.source") || html.includes('source:'), 'きっかけは保存される');
+  assert.ok(html.includes("if (age < 18 && !d.guardianConsent)"), '17歳以下だけ保護者確認');
+});
+
+test('規約は要点4行＋全文の折りたたみ、同意は必須のまま', () => {
+  assert.ok(html.includes('レッスン利用規約の要点'), '要点の見出し');
+  assert.ok(html.includes('実施日の3日前まで無料、前日まで50%、当日100%'), 'キャンセル料');
+  assert.ok(html.includes('購入日から5ヶ月有効で、原則返金はありません'), 'チケット有効期限');
+  assert.ok(html.includes("'全文を読む（第1〜14条）'"), '全文トグル');
+  assert.ok(html.includes('第14条(準拠法および協議)') && html.includes('第1条(本規約への同意)'), '全文が残っている');
+  assert.ok(html.includes("if (!d.agree) return '規約への同意が必要です。';"), '同意必須');
+});
+
+test('支払い方法の質問はオンラインでは出ない（カード決済に固定）、対面では出る', () => {
+  assert.ok(html.includes("payment: c.key === 'online' ? 'クレジットカード(Stripe)'"), 'オンライン選択でカードに固定');
+  assert.ok(html.includes("if (d.menu === 'offline' && !d.payment) return 'お支払い方法を選択してください。';"), '対面だけ必須');
+  const i4 = html.indexOf('<sc-if value="{{ isStep4 }}"');
+  const seg = html.slice(i4);
+  const pay = seg.indexOf('paymentOpts');
+  const off = seg.lastIndexOf('<sc-if value="{{ isOffline }}"', pay);
+  assert.ok(off >= 0 && off < pay, '支払い方法は isOffline の中');
+});
+
+test('トップに料金1行と「申込はこちら」、旧い5ステップ・3分の表記がない', () => {
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.ok(idx.includes('申込はこちら →'), '申込ボタン');
+  assert.ok(idx.includes("heroPrice: 'オンライン動画添削 ' + P.plans[0].key + '回 '"), '料金1行は lib/pricing.js から');
+  assert.ok(idx.includes('{{ heroPrice }}'), '料金1行の差し込み');
+  for (const m of ['5ステップ', '5 STEPS', '約3分', 'line.me']) assert.ok(!idx.includes(m), `${m} が残っています`);
+  assert.ok(!/(^|[^A-Z])LINE([^A-Z]|$)/.test(idx), 'LINE（単語）が残っています');
+  assert.ok(idx.includes("href: 'guide.html'"), 'メニューにガイド');
+});
+
+test('/guide（料金と申込方法）がある：料金表・流れ・FAQ、公開リストと sitemap に入っている', () => {
+  const g = readFileSync(join(ROOT, 'guide.html'), 'utf8');
+  for (const m of ['3,300', '4,900', '8,900', '16,500', '22,000', '申込完了', 'ig.me/m/duffy_tennis', 'よくある質問', 'apply.html']) {
+    assert.ok(g.includes(m), `${m} がガイドにない`);
+  }
+  for (const m of ['line.me', '感覚']) assert.ok(!g.includes(m), `${m} がガイドに残っています`);
+  assert.ok(!/(^|[^A-Z])LINE([^A-Z]|$)/.test(g), 'LINE（単語）がガイドに残っています');
+  assert.ok(readFileSync(join(ROOT, 'scripts/build.mjs'), 'utf8').includes("'guide.html'"), 'build の公開リスト');
+  assert.ok(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').includes('/guide</loc>'), 'sitemap');
 });
