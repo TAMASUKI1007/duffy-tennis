@@ -588,3 +588,8 @@ test('解析：トークン1か所の定数。空なら読み込まない。3ペ
   assert.ok(pv.includes('Cloudflare Web Analytics'), 'プライバシーに解析の記載');
   assert.ok(!pv.includes('電話番号'), 'プライバシーの取得情報から電話番号を削除');
 });
+
+test('申込フォームのロゴ（MatchUp）は常にトップへのリンク', () => {
+  const head = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
+  assert.ok(/<a href="index\.html"[^>]*>MatchUp<\/a>/.test(head), 'ロゴがリンク');
+});
