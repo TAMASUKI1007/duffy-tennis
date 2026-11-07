@@ -90,17 +90,18 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 .site-menu-item:active, .site-menu-item:hover { color: #E9FF00; }
 .site-menu-item:hover .site-menu-arrow { transform: translateX(4px); }
 body.menu-open { overflow: hidden; }
+html { scroll-padding-top: 64px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </helmet>
 
-<section data-screen-label="Hero" style="position:relative;padding:18px clamp(16px,4vw,56px) 28px;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;">
+<section data-screen-label="Hero" style="position:relative;padding:82px clamp(16px,4vw,56px) 28px;overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;">
   <div aria-hidden="true" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; left: -24px; top: -7px">
     <div data-parallax="0.14" style="position:absolute;top:1%;left:-2%;font-family:'Anton',sans-serif;font-size:clamp(110px,26vw,360px);line-height:0.85;color:#FFFFFF;-webkit-text-stroke:2px rgba(17,17,17,0.09);letter-spacing:0;white-space:nowrap;">DUFFY<br>TENNIS</div>
   </div>
 
-  <header style="position:relative;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;">
-    <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:clamp(18px,4vw,24px);letter-spacing:-0.01em;">MatchUp</div>
+  <header class="site-header" style="position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;align-items:center;gap:12px;height:64px;padding:0 clamp(16px,4vw,56px);box-sizing:border-box;background:#111111;color:#FFFFFF;">
+    <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:clamp(18px,4vw,24px);letter-spacing:-0.01em;color:#FFFFFF;">MatchUp</div>
     <button type="button" class="hero-burger" onClick="{{ toggleMenu }}" aria-label="メニュー" aria-expanded="{{ menuOpen }}" style="position:relative;z-index:21;display:inline-flex;width:48px;height:48px;align-items:center;justify-content:center;flex-direction:column;gap:6px;background:transparent;border:none;cursor:pointer;padding:0;">
       <span aria-hidden="true" style="display:block;width:28px;height:3px;background:{{ burgerBar }};transition:transform 0.2s ease;transform:{{ burgerTop }};"></span>
       <span aria-hidden="true" style="display:block;width:28px;height:3px;background:{{ burgerBar }};opacity:{{ burgerMidOpacity }};"></span>
@@ -108,7 +109,7 @@ body.menu-open { overflow: hidden; }
     </button>
     <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
       <div aria-hidden="true" onClick="{{ toggleMenu }}" style="position:fixed;inset:0;z-index:19;background:rgba(17,17,17,0.45);"></div>
-      <div class="site-menu" role="dialog" aria-label="メニュー" style="position:fixed;left:0;right:0;top:0;z-index:20;background:#111111;color:#FFFFFF;border-bottom:4px solid #E9FF00;padding:78px clamp(16px,4vw,56px) 14px;box-sizing:border-box;max-height:min(60vh,520px);overflow:auto;">
+      <div class="site-menu" role="dialog" aria-label="メニュー" style="position:fixed;left:0;right:0;top:0;z-index:20;background:#111111;color:#FFFFFF;border-bottom:4px solid #E9FF00;padding:78px clamp(16px,4vw,56px) 14px;box-sizing:border-box;max-height:min(70vh,560px);overflow:auto;">
         <div aria-hidden="true" style="position:absolute;right:clamp(8px,3vw,40px);top:66px;font-family:'Anton',sans-serif;font-size:clamp(80px,16vw,150px);line-height:0.85;color:#111111;-webkit-text-stroke:2px rgba(233,255,0,0.16);white-space:nowrap;pointer-events:none;">MENU</div>
         <nav style="position:relative;max-width:1100px;margin:0 auto;display:grid;">
           <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="3">
@@ -730,7 +731,7 @@ class Component extends DCLogic {
         document.body.classList.toggle('menu-open', next);
         return { menuOpen: next };
       }),
-      burgerBar: open ? '#FFFFFF' : '#111111',
+      burgerBar: '#FFFFFF',
       menuItems: MENU_ITEMS.map((m, i) => ({
         ...m,
         target: m.target || '_self',

@@ -593,3 +593,12 @@ test('申込フォームのロゴ（MatchUp）は常にトップへのリンク'
   const head = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
   assert.ok(/<a href="index\.html"[^>]*>MatchUp<\/a>/.test(head), 'ロゴがリンク');
 });
+
+test('トップのヘッダー（MatchUp＋三本線）は固定で追従し、黒背景・白文字・白い三本線。申込フォームには付けない', () => {
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  const head = idx.slice(idx.indexOf('<header class="site-header"'), idx.indexOf('</header>'));
+  assert.ok(/position:fixed;top:0;left:0;right:0/.test(head), '固定表示');
+  assert.ok(head.includes('background:#111111') && head.includes('color:#FFFFFF'), '黒背景・白文字');
+  assert.ok(idx.includes("burgerBar: '#FFFFFF'"), '三本線は白');
+  assert.ok(!html.includes('site-header') && !html.includes('position:fixed;top:0;left:0;right:0'), '申込フォームは固定ヘッダーなし');
+});
