@@ -409,15 +409,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <span style="font-weight:900;font-size:14px;">規約に同意します</span>
         </button>
         <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:24px;">
-          <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin:0 0 10px;">お支払い方法 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <sc-for list="{{ paymentOpts }}" as="o" hint-placeholder-count="3">
-              <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
-            </sc-for>
-          </div>
-          <p style="margin:10px 0 0;font-size:12px;font-weight:700;">※ お支払いの詳細は申込後、InstagramのDMにてご案内します。</p>
-        </div>
+          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払いは Stripe（カード・PayPay）です。日程と金額が決まったら、DMで支払いリンクをお送りします。</p>
         </sc-if>
         <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
           <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払いはカード決済（Stripe）です。送信後の画面からお支払いいただけます。</p>
@@ -490,18 +482,19 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 
       <div style="margin-top:22px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
         <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — INSTAGRAM DM</div>
-        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(18px,4.8vw,24px);line-height:1.45;">InstagramのDMで「申込完了」とお名前を送ってください</p>
+        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(18px,4.8vw,24px);line-height:1.45;">InstagramのDMで「申込完了」と申込内容を送ってください</p>
         <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">こちらからは先にご連絡できません。DMをいただいてから、{{ dmNextText }}</p>
-        <a href="{{ dmUrl }}" target="_blank" rel="noopener" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #E9FF00;color:#E9FF00;font-weight:900;font-size:clamp(17px,4.6vw,21px);padding:20px 22px;text-decoration:none;box-sizing:border-box;min-height:68px;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
         <div style="margin-top:14px;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;">
-          <div style="font-weight:900;font-size:12px;color:#555555;">送る文面（コピーして貼り付け）</div>
-          <div style="margin-top:6px;font-size:14px;font-weight:900;line-height:1.8;">{{ dmShortMessage }}</div>
-          <button type="button" onClick="{{ onCopyDm }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyDmBg }};color:#111111;font-weight:900;font-size:13px;padding:10px 16px;min-height:44px;">{{ copyDmLabel }}</button>
+          <div style="font-weight:900;font-size:12px;color:#555555;">① この文面をコピー</div>
+          <pre style="margin:8px 0 0;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:13px;font-weight:700;line-height:1.85;background:#FFFFFF;border:2px solid #111111;padding:12px;">{{ lineMessage }}</pre>
+          <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;width:100%;">{{ copyLabel }}</button>
         </div>
-        <details style="margin-top:12px;">
-          <summary style="cursor:pointer;font-weight:900;font-size:12.5px;">DMの送り方の例を見る</summary>
-          <img src="uploads/dm-example.jpg" alt="InstagramのDMで申込完了と名前を送る例" loading="lazy" style="display:block;margin-top:10px;width:100%;max-width:300px;border:3px solid #111111;">
-        </details>
+        <div style="margin-top:14px;font-weight:900;font-size:12px;color:#555555;">② DMを開いて貼り付けて送信</div>
+        <a href="{{ dmUrl }}" target="_blank" rel="noopener" style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #E9FF00;color:#E9FF00;font-weight:900;font-size:clamp(17px,4.6vw,21px);padding:20px 22px;text-decoration:none;box-sizing:border-box;min-height:68px;" style-hover="background:#E9FF00;color:#111111;">InstagramでDMを送る →</a>
+        <div style="margin-top:14px;">
+          <div style="font-weight:900;font-size:12px;color:#555555;">送ったDMの例</div>
+          <img src="uploads/dm-example.jpg" alt="InstagramのDMで申込完了を送った例" loading="lazy" style="display:block;margin-top:8px;width:100%;max-width:300px;border:3px solid #111111;">
+        </div>
         <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップすると @duffy_tennis のDM画面が開きます。</p>
       </div>
 
@@ -518,12 +511,10 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </sc-if>
 
-      <div style="margin-top:18px;border:3px solid #111111;background:#FFFFFF;padding:14px 16px;">
-        <p style="margin:0;font-weight:900;font-size:13px;">申込内容の控え。DMに貼り付けてもらえると照合が早くなります。</p>
-        <pre style="margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:inherit;font-size:12.5px;font-weight:700;line-height:1.9;background:#F4F4F4;border:2px solid #111111;padding:12px;">{{ lineMessage }}</pre>
-        <button type="button" onClick="{{ onCopyLine }}" style="margin-top:10px;font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ copyBg }};color:#111111;font-weight:900;font-size:13px;padding:11px 18px;min-height:46px;">{{ copyLabel }}</button>
-      </div>
 
+      <sc-if value="{{ mailSent }}" hint-placeholder-val="{{ false }}">
+        <p role="status" style="margin:16px 0 0;border:3px solid #111111;background:#FFFFFF;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">同じ内容の確認メールを {{ mailTo }} にお送りしました。メールでもご確認ください。届かない場合は迷惑メールフォルダもご確認ください。</p>
+      </sc-if>
       <sc-if value="{{ mailWarning }}" hint-placeholder-val="{{ false }}">
         <p role="status" style="margin:16px 0 0;border:3px solid #111111;background:#FFFDE7;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ mailWarning }}</p>
       </sc-if>
@@ -689,7 +680,7 @@ class Component extends DCLogic {
     lines.push('■お名前:' + d.name);
     lines.push('■Instagram:' + (d.sns || '(未記入)'));
     lines.push('■メール:' + d.email);
-    lines.push('■電話番号:' + d.phone);
+    lines.push('■電話番号:' + (d.phone || '(未記入)'));
     lines.push('■年齢:' + this.ageLabel());
     lines.push('■知ったきっかけ:' + (d.source || '(未選択)'));
     lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? '対面レッスン' : '(未選択)'));
@@ -705,7 +696,7 @@ class Component extends DCLogic {
       lines.push('■希望コート:' + (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : ''));
       lines.push('■ボールレンタル:' + (d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし'));
       total = this.lessonFee();
-      if (this.isGroup()) lines.push('■レッスン料:' + yen(total) + '(' + d.people + '人 合計・' + this.perPersonLabel() + ')');
+      if (this.isGroup()) lines.push('■レッスン料:' + yen(total) + '(' + d.people + '人・' + this.perPersonLabel() + ')');
       if (d.rental === 'あり') total += 1200;
     }
     lines.push('■お支払い方法:' + (d.payment || '(未選択)'));
@@ -798,7 +789,7 @@ class Component extends DCLogic {
     return window.DUFFY_PAYMENTS.ticketUrl(d.plan, d.email, d.name);
   }
 
-  /** 対面レッスンの合計金額（人数で決まる）。 */
+  /** 対面レッスンの料金（人数で決まる）。 */
   lessonFee() {
     return window.DUFFY_PRICING.lessonFee(this.PRICING, this.state.data.people);
   }
@@ -817,7 +808,7 @@ class Component extends DCLogic {
   lessonFeeSentence() {
     const L = this.PRICING.lesson;
     if (!L.group) return 'マンツーマン・グループ共通で一律' + this.fmtYen(L.solo) + '。';
-    return '1人' + this.fmtYen(L.solo) + '、2人以上は人数にかかわらず合計' + this.fmtYen(L.group) + '(2人なら1人' + this.fmtYen(L.group / 2) + ')。';
+    return '1人' + this.fmtYen(L.solo) + '、2人以上は人数にかかわらず' + this.fmtYen(L.group) + '(2人なら1人' + this.fmtYen(L.group / 2) + ')。';
   }
 
   /** 年齢を数値で返す。未入力や不正なら null。 */
@@ -874,22 +865,9 @@ class Component extends DCLogic {
   }
 
   buildLineMessage() {
-    const d = this.state.data;
-    const lines = ['お申込みの内容をお送りします。', ''];
-    lines.push('お名前：' + d.name);
-    lines.push('メニュー：' + (d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン'));
-    if (d.menu === 'online') {
-      const p = this.PLANS.find((x) => x.key === d.plan);
-      if (p) lines.push('チケット：' + p.key + '回');
-    } else {
-      lines.push('第1希望：' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
-      if (d.date2) lines.push('第2希望：' + this.selLine(d.date2));
-      lines.push('コート：' + (d.court || '(未指定)') + (d.courtReserve ? '(予約代行を希望)' : ''));
-      lines.push('ボールレンタル：' + (d.rental || '(未選択)'));
-    }
-    lines.push('');
-    lines.push('よろしくお願いします。');
-    return lines.join('\n');
+    // 確認メールとほぼ同じ内容を DM でも受け取れるようにする（照合しやすいように先頭は「申込完了」）
+    // メール末尾のお客様向けの注意書き（---- 以降）は DM には入れない
+    return ['申込完了しました。', '', this.buildSummary().split('\n----')[0].trim(), '', 'よろしくお願いします。'].join('\n');
   }
 
   /**
@@ -1162,9 +1140,7 @@ class Component extends DCLogic {
     }
     if (step === 3) {
       if (!d.name.trim()) return '氏名を入力してください。';
-      if (!d.sns.trim()) return 'Instagramのユーザー名を入力してください。';
       if (!d.email.trim() || d.email.indexOf('@') < 0) return 'メールアドレスを正しく入力してください。';
-      if (!d.phone.trim()) return '電話番号を入力してください。';
       // 年齢は任意。入れた場合だけ範囲を見る。17歳以下は保護者の許可が必要
       if (String(d.age).trim() !== '') {
         const age = this.ageNumber();
@@ -1174,7 +1150,6 @@ class Component extends DCLogic {
     }
     if (step === 4) {
       if (!d.agree) return '規約への同意が必要です。';
-      if (d.menu === 'offline' && !d.payment) return 'お支払い方法を選択してください。';
     }
     return '';
   }
@@ -1202,9 +1177,9 @@ class Component extends DCLogic {
 
     const fieldDefs = [
       { id: 'f-name', key: 'name', label: '氏名', type: 'text', placeholder: '例:山田 太郎', auto: 'name', req: true },
-      { id: 'f-sns', key: 'sns', label: 'Instagramユーザー名', type: 'text', placeholder: '例:@duffy_tennis', auto: 'off', req: true },
+      { id: 'f-sns', key: 'sns', label: 'Instagramユーザー名', type: 'text', placeholder: '例:@duffy_tennis', auto: 'off', req: false },
       { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true },
-      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: true }
+      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: false }
     ];
     const fields1 = fieldDefs.map((f) => ({
       ...f,
@@ -1237,7 +1212,7 @@ class Component extends DCLogic {
         mark: pressed ? '✓ 選択中' : '選ぶ',
         markBg: pressed ? '#111111' : '#FFFFFF',
         markFg: pressed ? '#E9FF00' : '#111111',
-        onPick: () => this.setData({ menu: c.key, payment: c.key === 'online' ? 'クレジットカード(Stripe)' : (d.payment === 'クレジットカード(Stripe)' ? '' : d.payment) })
+        onPick: () => this.setData({ menu: c.key, payment: c.key === 'online' ? 'クレジットカード(Stripe)' : 'Stripe(カード・PayPay)' })
       };
     });
 
@@ -1278,12 +1253,6 @@ class Component extends DCLogic {
 
     const pickers = [this.buildPicker(1), this.buildPicker(2)];
 
-    const paymentOpts = ['クレジットカード', 'PayPay', '口座振り込み'].map((v) => ({
-      label: v,
-      pressed: d.payment === v,
-      bg: d.payment === v ? '#E9FF00' : '#FFFFFF',
-      onPick: () => this.setData({ payment: v })
-    }));
 
     // --- 固定コートの曜日かどうか（金曜など。BOOKING_CONFIG.fixedCourts で設定） ---
     const fixedCourtName = d.menu === 'offline' ? this.fixedCourtFor(d.date1 ? d.date1.key : '') : '';
@@ -1314,7 +1283,7 @@ class Component extends DCLogic {
       confirmRows.push({ k: '第2希望', v: d.date2 ? this.selLine(d.date2) : '(なし)' });
       confirmRows.push({ k: '希望コート', v: (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : '') });
       confirmRows.push({ k: 'ボールレンタル', v: d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし' });
-      estRows.push({ k: '対面レッスン 120分' + (this.isGroup() ? '(' + d.people + '人 合計)' : '(1人)'), v: this.fmtYen(this.lessonFee()) });
+      estRows.push({ k: '対面レッスン 120分' + (this.isGroup() ? '(' + d.people + '人)' : '(1人)'), v: this.fmtYen(this.lessonFee()) });
       if (this.isGroup()) estRows.push({ k: '1人あたり', v: this.perPersonLabel() });
       total = this.lessonFee();
       if (d.rental === 'あり') { estRows.push({ k: '練習ボールレンタル 1カゴ', v: this.fmtYen(1200) }); total += 1200; }
@@ -1336,7 +1305,7 @@ class Component extends DCLogic {
       isOnline: d.menu === 'online', isOffline: d.menu === 'offline',
       step2Title: d.menu === 'online' ? 'プラン(オンライン動画添削)' : d.menu === 'offline' ? '日程・コート(対面レッスン)' : 'プラン・日程',
       err: st.err, hasErr: !!st.err,
-      steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers, paymentOpts,
+      steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers,
       age: d.age,
       onAge: (e) => this.setData({ age: e.target.value }),
       peopleNote: '※ 120分 ' + this.lessonFeeSentence(),
@@ -1359,22 +1328,20 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
-      dmShortMessage: '申込完了 ' + (d.name || ''),
       dmNextText: (d.menu === 'online' && !!this.payUrl())
         ? 'お支払いの確認と動画の送り方をご案内して添削を始めます。'
         : d.menu === 'online'
           ? 'お支払い方法と動画の送り方をご案内します。'
           : '日程・コートを確認して予約を確定し、移動費・お支払い方法をご案内します。',
-      copyDmLabel: st.copiedDm ? 'コピーしました ✓' : '文面をコピー',
-      copyDmBg: st.copiedDm ? '#E9FF00' : '#FFFFFF',
-      onCopyDm: () => this.copyText('申込完了 ' + (d.name || ''), 'copiedDm'),
       showPay: st.done && d.menu === 'online' && !!this.payUrl(),
       payUrl: this.payUrl(),
       payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
       payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
-      copyLabel: st.copied ? 'コピーしました ✓' : '内容をコピー',
+      mailSent: st.done && !st.mailWarning,
+      mailTo: d.email,
+      copyLabel: st.copied ? 'コピーしました ✓' : '文面をコピー',
       copyBg: st.copied ? '#E9FF00' : '#FFFFFF',
       onCopyLine: () => this.copyText(this.state.lineMessage || '', 'copied'),
       courtOptional: d.courtReserve,
@@ -1391,7 +1358,7 @@ class Component extends DCLogic {
       onQuestion: (e) => this.setData({ question: e.target.value }),
       confirmRows, estRows,
       estTotal: this.fmtYen(total),
-      estTotalLabel: d.menu === 'offline' ? '合計(移動費別)' : '合計(概算)',
+      estTotalLabel: d.menu === 'offline' ? 'お支払い金額(移動費別)' : 'お支払い金額',
       estNote,
       showBack: st.step > 1,
       onBack: () => this.go(st.step - 1),
@@ -1438,9 +1405,9 @@ class Component extends DCLogic {
               }
 
               // 片方でも成功していれば完了扱い。ただし届いていない経路は記録に残す。
+              // 保存に失敗してもメールが届いていればお客様には何も出さない（運営者はメールで受け取れている）
               let warn = '';
-              if (!saved) warn = '確認用の控えを保存できませんでしたが、お申込みは受け付けています。念のためInstagramのDMでもご連絡ください。';
-              else if (!mailed) warn = '確認メールをお送りできませんでしたが、お申込みは受け付けています。InstagramのDMでもご連絡ください。';
+              if (!mailed) warn = '確認メールをお送りできませんでしたが、お申込みは受け付けています。上の文面をInstagramのDMで送ってください。';
 
               if (!saved) console.error('[apply] 保存に失敗:', results[0].error);
               if (!mailed) console.error('[apply] メール送信に失敗:', results[1].error);
