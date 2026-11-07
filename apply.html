@@ -26,6 +26,8 @@
 <meta name="theme-color" content="#E9FF00">
 <script src="./support.js"></script>
 <script src="./lib/pricing.js"></script>
+<script src="./lib/availability.js"></script>
+<script src="./lib/analytics.js"></script>
 <script src="./lib/payments.js"></script>
 </head>
 <body>
@@ -46,7 +48,9 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 
 <div style="min-height:100svh;background:#FFFFFF;color:#111111;" data-screen-label="申込フォーム">
   <header style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px clamp(16px,4vw,40px);border-bottom:3px solid #111111;background:#FFFFFF;">
-    <a href="index.html" style="font-weight:900;font-size:13px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;" style-hover="background:#111111;color:#E9FF00;">← MatchUpへ戻る</a>
+    <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+      <a href="index.html" style="font-weight:900;font-size:13px;text-decoration:none;color:#111111;border:2px solid #111111;padding:6px 12px;" style-hover="background:#111111;color:#E9FF00;">← MatchUpへ戻る</a>
+    </sc-if>
     <div style="font-family:'Noto Sans JP',sans-serif;font-weight:900;font-size:20px;letter-spacing:-0.01em;">MatchUp</div>
   </header>
 
@@ -97,6 +101,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
 
         <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ showRemaining }}" hint-placeholder-val="{{ false }}">
+            <p style="display:inline-block;margin:0 0 14px;background:#111111;color:#E9FF00;font-weight:900;font-size:14px;padding:6px 14px;">{{ remainingText }}</p>
+          </sc-if>
+          <sc-if value="{{ waitlist }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:0 0 14px;border:3px solid #111111;background:#E9FF00;padding:12px 14px;font-size:13px;font-weight:900;line-height:1.85;">今月のオンライン枠は埋まりました。このまま申し込むとウェイティングリストに登録され、空きが出たら順番にご案内します。お支払いは今は必要ありません。</p>
+          </sc-if>
           <p style="font-weight:900;font-size:14px;margin:0 0 14px;">チケットプランを選択 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:14px;">
             <sc-for list="{{ planCards }}" as="p" hint-placeholder-count="3">
@@ -124,8 +134,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
             </div>
 
             <div>
-              <p style="font-weight:900;font-size:14px;margin:0 0 4px;">希望日程(1レッスン = 2時間固定)</p>
-              <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">受付できる曜日と時間帯のなかから、2時間のレッスンが収まる開始時刻をご案内します。</p>
+              <p style="font-weight:900;font-size:14px;margin:0 0 4px;">希望日程（1レッスン = 2時間）</p>
+              <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">日にちだけ選んでください。時間は、選んだ日の受付区分（終日／午後から）のなかで、申込後のDMで決めます。</p>
               <div style="display:grid;gap:16px;">
                 <sc-for list="{{ pickers }}" as="p" hint-placeholder-count="2">
                   <div style="border:3px solid #111111;background:#FFFFFF;">
@@ -171,25 +181,6 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
                           </sc-for>
                         </div>
                         <p style="margin:0;font-size:11px;font-weight:700;color:#666666;">{{ p.legend }}</p>
-                        <sc-if value="{{ p.hasTimes }}" hint-placeholder-val="{{ false }}">
-                          <div style="border-top:3px solid #111111;padding-top:14px;">
-                            <p style="margin:0 0 10px;font-weight:900;font-size:14px;">{{ p.tempTitle }}</p>
-                            <sc-if value="{{ p.tempFixedCourt }}" hint-placeholder-val="{{ false }}">
-                              <p style="margin:0 0 10px;border:3px solid #111111;background:#E9FF00;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">{{ p.tempFixedCourtNote }}</p>
-                            </sc-if>
-                            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;">
-                              <sc-for list="{{ p.times }}" as="t" hint-placeholder-count="6">
-                                <button type="button" onClick="{{ t.onPick }}" aria-pressed="{{ t.pressed }}" aria-label="{{ t.aria }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ t.bg }};padding:10px 6px;display:grid;gap:2px;justify-items:center;min-height:58px;">
-                                  <span style="font-family:'Anton',sans-serif;font-size:20px;line-height:1;">{{ t.label }}</span>
-                                  <span style="font-weight:700;font-size:11px;">{{ t.sub }}</span>
-                                </button>
-                              </sc-for>
-                            </div>
-                          </div>
-                        </sc-if>
-                        <sc-if value="{{ p.emptyDay }}" hint-placeholder-val="{{ false }}">
-                          <p style="margin:0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ p.emptyDayText }}</p>
-                        </sc-if>
                       </div>
                     </sc-if>
                   </div>
@@ -262,13 +253,6 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
               </button>
             </sc-if>
           </div>
-          <div>
-            <p style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:13px;margin:0 0 10px;">どこで知りましたか? <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></p>
-            <div style="display:flex;flex-wrap:wrap;gap:10px;">
-              <sc-for list="{{ sourceOpts }}" as="o" hint-placeholder-count="6">
-                <button type="button" onClick="{{ o.onPick }}" aria-pressed="{{ o.pressed }}" style="font-family:inherit;cursor:pointer;border:3px solid #111111;background:{{ o.bg }};color:#111111;font-weight:900;font-size:14px;padding:12px 18px;min-height:48px;">{{ o.label }}</button>
-              </sc-for>
-            </div>
           </div>
         </div>
               <div style="margin-top:20px;">
@@ -409,10 +393,10 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <span style="font-weight:900;font-size:14px;">規約に同意します</span>
         </button>
         <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払いは Stripe（カード・PayPay）です。日程と金額が決まったら、DMで支払いリンクをお送りします。</p>
+          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。日程と金額が決まったら、DMで支払いリンクをお送りします。</p>
         </sc-if>
         <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払いはカード決済（Stripe）です。送信後の画面からお支払いいただけます。</p>
+          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ onlinePayNote }}</p>
         </sc-if>
               <div style="display:flex;align-items:center;gap:10px;margin:28px 0 14px;">
           <h3 style="margin:0;font-weight:900;font-size:17px;">入力内容の確認</h3>
@@ -467,8 +451,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
-      <p style="font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:20px 0 0;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">仮予約を受け付けました。</span></p>
-      <p style="font-weight:900;font-size:clamp(15px,3.8vw,18px);margin:10px 0 0;line-height:1.7;">予約はまだ確定していません。</p>
+      <p style="font-weight:900;font-size:clamp(18px,4.6vw,24px);margin:20px 0 0;"><span style="background:linear-gradient(transparent 62%, #E9FF00 62%);padding:0 3px;">{{ doneTitle }}</span></p>
+      <p style="font-weight:900;font-size:clamp(15px,3.8vw,18px);margin:10px 0 0;line-height:1.7;">{{ doneNote }}</p>
 
       <div style="margin-top:20px;border:4px solid #111111;background:#111111;color:#FFFFFF;padding:clamp(18px,4vw,26px);box-shadow:10px 10px 0 #E9FF00;">
         <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;color:#E9FF00;">YOUR REQUEST</div>
@@ -502,7 +486,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         <div style="margin-top:22px;border:4px solid #111111;background:#E9FF00;box-shadow:8px 8px 0 #111111;padding:clamp(16px,4vw,22px);">
           <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 2 — PAYMENT</div>
           <p style="margin:6px 0 0;font-weight:900;font-size:clamp(17px,4.4vw,22px);line-height:1.5;">お支払いを済ませてください</p>
-          <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>カード・Apple Pay・Google Pay が使えます。お支払い後、Stripe から領収書メールが届きます。</p>
+          <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。お支払い後、Stripe から領収書メールが届きます。</p>
           <sc-if value="{{ payTest }}" hint-placeholder-val="{{ false }}">
             <p style="margin:10px 0 0;border:3px solid #111111;background:#FFFFFF;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">※ 現在はテスト運用中です。決済ページに「テストモード」と表示され、本物のカードは使えません。お支払いは DM でご案内します。</p>
           </sc-if>
@@ -535,13 +519,12 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
  * 受付設定  ★ 受付時間・休みの日・固定コートは、この BOOKING_CONFIG だけ直せばOKです
  * ============================================================================
  *
- * 【受付時間の書き方】
- *   hours の各曜日に { from: '開始', to: '終了' } を書きます。時刻は 'H:MM' 形式。
- *   受付をしない曜日は null にしてください。
- *
- *   レッスンは2時間なので、「終了時刻の2時間前」が最後に選べる開始時刻になります。
- *     例) 月 8:00〜12:00  → 選べる開始時刻は 8:00 / 8:30 / 9:00 / 9:30 / 10:00
- *     例) 金 13:00〜16:00 → 選べる開始時刻は 13:00 / 13:30 / 14:00
+ * 【受付の書き方】
+ *   hours の各曜日に、次のどれかを書きます。時間の選択肢は出さず、日にちだけを選んでもらいます。
+ *     'all'  … 終日（カレンダーのマスに「終日」と出る）
+ *     'pm'   … 午後から（カレンダーのマスに「午後から」と出る）
+ *     null   … 受付しない（選べない。マスに「-」と出る）
+ *   具体的な開始時刻は、申込後のDMで決めます。
  *
  * 【お休み・大会などで受付を止める日】
  *   blockedDates に 'YYYY-MM-DD' の形式で足してください。カレンダー上で選べなくなります。
@@ -557,16 +540,19 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
  * 【注意】曜日のキーは mon火...ではなく sun/mon/tue/wed/thu/fri/sat です（英語3文字）。
  * ========================================================================== */
 const BOOKING_CONFIG = {
-  // 基本ルール：日曜午前・月曜午前・水曜終日は受付しない
+  // 曜日ごとの受付：'all' = 終日 / 'pm' = 午後から / null = なし（2026-11-08 設定）
   hours: {
-    sun: { from: '12:00', to: '20:00' },  // 午前は受付なし
-    mon: { from: '12:00', to: '20:00' },  // 午前は受付なし
-    tue: { from: '12:00', to: '20:00' },
-    wed: null,                            // 終日受付なし
-    thu: null,
-    fri: { from: '13:00', to: '16:00' },
-    sat: { from: '12:00', to: '20:00' }
+    sun: 'pm',    // 日曜：午後から
+    mon: 'pm',    // 月曜：午後から
+    tue: 'all',   // 火曜：終日
+    wed: null,    // 水曜：なし
+    thu: 'all',   // 木曜：終日
+    fri: 'all',   // 金曜：終日
+    sat: 'all'    // 土曜：終日
   },
+
+  // カレンダーのマス・確認画面に出す言葉
+  bandLabels: { all: '終日', pm: '午後から' },
 
   // 受付を止める日（'YYYY-MM-DD'）。初期値は空です。
   blockedDates: [],
@@ -574,12 +560,6 @@ const BOOKING_CONFIG = {
   // 曜日を固定コートで開催する場合
   // 2026-10-27 金曜の固定コートをやめた。固定したい曜日があればここに書く
   fixedCourts: {},
-
-  // レッスンの長さ（分）
-  lessonMinutes: 120,
-
-  // 開始時刻の刻み（分）
-  stepMinutes: 30,
 
   // 何日先まで申し込めるようにするか
   monthsAhead: 2
@@ -620,7 +600,10 @@ class Component extends DCLogic {
     super(props);
     // v4: 区分 → 年齢の数値入力に変更。古い保存データ（category）は読み込まない
     this.STORE_KEY = 'duffy-tennis-apply-v4';
-    this.SOURCES = ['Instagram', 'TikTok', 'Facebook', 'YouTube', '知人の紹介', 'その他'];
+    // お支払い（オンライン・対面とも Stripe）。表記は全ページでこの形にそろえる
+    this.PAY_LABEL = 'Stripe(カード/Apple Pay/Google Pay/PayPay)';
+    // オンラインの今月の受付状況（lib/availability.js）
+    this.AVAIL = window.DUFFY_AVAILABILITY.status('online');
     // 料金は lib/pricing.js で決まる（日付で新旧が切り替わる）
     this.PRICING = window.DUFFY_PRICING.current();
     this.PLANS = this.PRICING.plans;
@@ -629,7 +612,7 @@ class Component extends DCLogic {
       step: 1,
       done: false,
       data: {
-        name: '', email: '', phone: '', sns: '', age: '', source: '', guardianConsent: false,
+        name: '', email: '', sns: '', age: '', guardianConsent: false,
         menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
         // 固定コートの日を選んで court を自動で入れたかどうか
         courtFixedApplied: false,
@@ -657,10 +640,21 @@ class Component extends DCLogic {
         if (s && s.data) {
           this.state = {
             ...this.state,
-            data: { ...this.state.data, ...s.data },
+            data: { ...this.state.data, ...this.stripLegacy(s.data) },
             step: s.step || 1
           };
         }
+      }
+    } catch (e) {}
+    // ?menu=online / ?menu=inperson：トップのボタンから来たとき、メニューを選択済みで始める
+    try {
+      const q = new URLSearchParams(window.location.search).get('menu');
+      const menu = { online: 'online', inperson: 'offline', offline: 'offline' }[q];
+      if (menu) {
+        this.state = {
+          ...this.state, step: 1,
+          data: { ...this.state.data, menu, payment: this.PAY_LABEL }
+        };
       }
     } catch (e) {}
   }
@@ -680,10 +674,9 @@ class Component extends DCLogic {
     lines.push('■お名前:' + d.name);
     lines.push('■Instagram:' + (d.sns || '(未記入)'));
     lines.push('■メール:' + d.email);
-    lines.push('■電話番号:' + (d.phone || '(未記入)'));
     lines.push('■年齢:' + this.ageLabel());
-    lines.push('■知ったきっかけ:' + (d.source || '(未選択)'));
     lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? '対面レッスン' : '(未選択)'));
+    if (this.isWaitlist()) lines.push('■受付状況:ウェイティングリスト登録(今月のオンライン枠は満席)');
 
     let total = 0;
     if (d.menu === 'online') {
@@ -709,6 +702,9 @@ class Component extends DCLogic {
     if (d.menu === 'offline') {
       lines.push('※こちらは仮予約の受付です。予約はまだ確定していません。');
       lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
+    } else if (this.isWaitlist()) {
+      lines.push('※今月のオンライン動画添削は満席のため、ウェイティングリストへの登録です。');
+      lines.push('※空きが出たら、Instagram(' + INSTAGRAM_ID + ')のDMで順番にご案内します。お支払いはそのときです。');
     } else {
       lines.push('※お申込みを受け付けました。');
       const pay = this.payUrl();
@@ -734,10 +730,10 @@ class Component extends DCLogic {
       estimate = this.lessonFee() + (d.rental === 'あり' ? 1200 : 0);
     }
     const row = {
-      name: d.name, sns: d.sns, email: d.email, phone: d.phone,
+      name: d.name, sns: d.sns, email: d.email,
       // category 列は以前の「区分」用。既存の一覧でも年齢が読めるように文字列で入れておく
       category: this.ageLabel(),
-      age: this.ageNumber(), source: d.source || null,
+      age: this.ageNumber(),
       guardian_consent: !!d.guardianConsent,
       menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
       plan: d.menu === 'online' ? d.plan : null,
@@ -747,17 +743,16 @@ class Component extends DCLogic {
       rental: d.menu === 'offline' ? d.rental : null,
       date1: d.date1 ? this.selLine(d.date1) : null,
       date2: d.date2 ? this.selLine(d.date2) : null,
-      payment: d.payment, question: d.question, estimate: estimate
+      payment: d.payment, question: this.isWaitlist() ? '[ウェイティングリスト登録]' + (d.question ? '\n' + d.question : '') : d.question, estimate: estimate
     };
     return this.postApplication(row).catch((e) => {
-      // age / source 列がまだ作られていない（db/003 未実行）ときは、
-      // その2項目を質問欄の先頭に書き足して、列なしで保存し直す。
+      // age 列がまだ作られていない（db/003 未実行）ときは、
+      // 年齢を質問欄の先頭に書き足して、列なしで保存し直す。
       if (!/column|PGRST204/i.test(String(e && e.message))) throw e;
       const fallback = { ...row };
       delete fallback.age;
-      delete fallback.source;
-      fallback.question = '[年齢:' + this.ageLabel() + ' / 知ったきっかけ:' + (d.source || '(未選択)') + ']\n' + (d.question || '');
-      console.warn('[apply] age/source 列が見つからないため、質問欄に含めて保存します。db/003 のSQLを実行してください。');
+      fallback.question = '[年齢:' + this.ageLabel() + ']\n' + row.question;
+      console.warn('[apply] age 列が見つからないため、質問欄に含めて保存します。db/003 のSQLを実行してください。');
       return this.postApplication(fallback);
     });
   }
@@ -783,9 +778,14 @@ class Component extends DCLogic {
   }
 
   /** オンライン動画添削の Stripe 支払いページ URL。対面や未設定なら空。 */
+  /** 今月のオンライン枠が満席か（満席ならウェイティングリスト登録になる） */
+  isWaitlist() {
+    return this.state.data.menu === 'online' && !!this.AVAIL && this.AVAIL.full;
+  }
+
   payUrl() {
     const d = this.state.data;
-    if (d.menu !== 'online' || !d.plan) return '';
+    if (d.menu !== 'online' || !d.plan || this.isWaitlist()) return '';
     return window.DUFFY_PAYMENTS.ticketUrl(d.plan, d.email, d.name);
   }
 
@@ -882,11 +882,19 @@ class Component extends DCLogic {
       .then(() => window.emailjs.send(cfg.serviceId, cfg.customerTemplate, params, opts));
   }
 
+  /** 廃止した項目を端末内の保存データに残さない（古い保存データに入っていても読み込まない）。 */
+  stripLegacy(data) {
+    const copy = { ...data };
+    delete copy.phone;
+    delete copy.source;
+    return copy;
+  }
+
   save(patch) {
     try {
       // 完了状態と受付番号は保存しない。再読込で「仮予約済み」に見えるのを避ける。
       localStorage.setItem(this.STORE_KEY, JSON.stringify({
-        data: patch.data !== undefined ? patch.data : this.state.data,
+        data: this.stripLegacy(patch.data !== undefined ? patch.data : this.state.data),
         step: patch.step !== undefined ? patch.step : this.state.step
       }));
     } catch (e) {}
@@ -913,40 +921,25 @@ class Component extends DCLogic {
     return { m: p[1], d: p[2], dow: dt.getDay(), wd: '日月火水木金土'[dt.getDay()] };
   }
   shortDate(key) { const p = this.parseKey(key); return p.m + '/' + p.d + '(' + p.wd + ')'; }
-  selLine(sel) { return sel ? (this.shortDate(sel.key) + ' ' + minToHm(sel.start) + '〜' + minToHm(sel.start + BOOKING_CONFIG.lessonMinutes) + '(2時間)') : ''; }
+  // 選んだ日程の表示（日にち＋受付区分）。例：11/23(月) 午後から
+  selLine(sel) { return sel ? (this.shortDate(sel.key) + ' ' + this.bandLabelFor(sel.key)) : ''; }
 
   monthKey(y, m) { return y + '-' + String(m).padStart(2, '0'); }
 
   /**
-   * 指定日の候補時刻をサーバーから取得する（第5-3節：日付を選んだ後、その日だけ計算する）。
-   * 失敗を「空き無し」と混同しないよう、slots=null のまま slotErr を立てる。
+   * その日の受付区分を返す：'all'（終日）/ 'pm'（午後から）/ null（受付なし）。
+   * 受付なしの曜日・受付停止日は null。
    */
-  /**
-   * その日に選べるレッスン開始時刻を返す（BOOKING_CONFIG から計算する）。
-   * レッスンの終了が受付終了時刻を超えないものだけを返す。
-   * 受付なしの曜日・受付停止日は空配列になる。
-   */
-  startTimesFor(dateKey) {
-    if (BOOKING_CONFIG.blockedDates.indexOf(dateKey) >= 0) return [];
-
+  bandFor(dateKey) {
+    if (BOOKING_CONFIG.blockedDates.indexOf(dateKey) >= 0) return null;
     const p = dateKey.split('-').map(Number);
     const dow = new Date(p[0], p[1] - 1, p[2]).getDay();
-    const band = BOOKING_CONFIG.hours[DOW_KEYS[dow]];
-    if (!band) return [];
-
-    const from = hmToMin(band.from);
-    const to = hmToMin(band.to);
-    const lesson = BOOKING_CONFIG.lessonMinutes;
-    const step = BOOKING_CONFIG.stepMinutes;
-
-    const out = [];
-    for (let m = from; m + lesson <= to; m += step) out.push(m);
-    return out;
+    return BOOKING_CONFIG.hours[DOW_KEYS[dow]] || null;
   }
 
-  /** その日が受付対象か（過去・期間外・受付なしの曜日・受付停止日でないか）。 */
+  /** その日が受付対象か（受付なしの曜日・受付停止日でないか）。過去・期間外はカレンダー側で除く。 */
   isOpenDay(dateKey) {
-    return this.startTimesFor(dateKey).length > 0;
+    return this.bandFor(dateKey) !== null;
   }
 
   /** その曜日に固定コートがあれば名前を返す。無ければ ''。 */
@@ -957,16 +950,11 @@ class Component extends DCLogic {
     return BOOKING_CONFIG.fixedCourts[DOW_KEYS[dow]] || '';
   }
 
-  /** 受付時間帯の短い表示（カレンダーのマス下に出す）。 */
+  /** 受付区分の表示（カレンダーのマス下・確認画面に出す）。 */
   bandLabelFor(dateKey) {
     if (BOOKING_CONFIG.blockedDates.indexOf(dateKey) >= 0) return '休み';
-    const p = dateKey.split('-').map(Number);
-    const dow = new Date(p[0], p[1] - 1, p[2]).getDay();
-    const band = BOOKING_CONFIG.hours[DOW_KEYS[dow]];
-    if (!band) return '-';
-    // '8:00' → '8'、'12:30' → '12:30'
-    const trim = (hm) => hm.replace(/:00$/, '');
-    return trim(band.from) + '-' + trim(band.to);
+    const band = this.bandFor(dateKey);
+    return band ? BOOKING_CONFIG.bandLabels[band] : '-';
   }
 
   /**
@@ -1033,8 +1021,21 @@ class Component extends DCLogic {
           fg: disabled ? '#BBBBBB' : pickedHere ? '#FFFFFF' : '#111111',
           condColor: disabled ? '#CCCCCC' : weekend ? '#111111' : '#666666',
           aria: view.y + '年' + view.m + '月' + day + '日 ' + '日月火水木金土'[dow] + '曜日'
-            + (disabled ? ' 受付不可' : ' 受付時間 ' + this.bandLabelFor(key)),
-          onPick: () => { if (!disabled) this.setState({ ['temp' + i]: key }); }
+            + (disabled ? ' 受付不可' : ' ' + this.bandLabelFor(key)),
+          onPick: () => {
+            if (disabled) return;
+            const other = d['date' + (i === 1 ? 2 : 1)];
+            if (other && other.key === key) {
+              this.setState({ err: '第1希望と第2希望が同じ日です。別の日をお選びください。' });
+              return;
+            }
+            let data = { ...this.state.data, ['date' + i]: { key: key } };
+            data = this.applyFixedCourt(data);
+            const stx = { data: data, ['open' + i]: false, ['temp' + i]: '', err: '' };
+            if (i === 1 && !data.date2) { stx.open2 = true; stx.temp2 = ''; }
+            this.setState(stx);
+            this.save({ data: data });
+          }
         });
       }
       while (cells.length % 7 !== 0) cells.push({ empty: true });
@@ -1047,39 +1048,6 @@ class Component extends DCLogic {
       if (delta < 0 && (next.y < curMonth.y || (next.y === curMonth.y && next.m < curMonth.m))) return;
       this.setState({ ['cur' + i]: next });
     };
-
-    // 選択中の日付の開始時刻ボタン
-    let times = [];
-    if (open && temp) {
-      times = this.startTimesFor(temp).map((min) => {
-        const pressed = !!(sel && sel.key === temp && sel.start === min);
-        const endHm = minToHm(min + BOOKING_CONFIG.lessonMinutes);
-        return {
-          label: minToHm(min),
-          sub: '〜' + endHm,
-          aria: minToHm(min) + 'から' + endHm + 'まで',
-          pressed: pressed,
-          bg: pressed ? '#E9FF00' : '#FFFFFF',
-          onPick: () => {
-            const picked = { key: temp, start: min };
-            const other = d['date' + (i === 1 ? 2 : 1)];
-            if (other && other.key === picked.key && other.start === picked.start) {
-              this.setState({ err: '第1希望と第2希望が同じ日時です。別の日時をお選びください。' });
-              return;
-            }
-            let data = { ...this.state.data, ['date' + i]: picked };
-            data = this.applyFixedCourt(data);
-            const stx = { data: data, ['open' + i]: false, ['temp' + i]: '', err: '' };
-            if (i === 1 && !data.date2) { stx.open2 = true; stx.temp2 = ''; }
-            this.setState(stx);
-            this.save({ data: data });
-          }
-        };
-      });
-    }
-
-    const tempFixed = temp ? this.fixedCourtFor(temp) : '';
-    const tempTimes = temp ? this.startTimesFor(temp) : [];
 
     return {
       idx: i,
@@ -1110,14 +1078,7 @@ class Component extends DCLogic {
       prevOpacity: atCurMonth ? '0.35' : '1',
       onPrev: () => shiftMonth(-1),
       onNext: () => shiftMonth(1),
-      legend: '数字の下は受付時間です。受付のない日は選べません。',
-      hasTimes: !!(temp && tempTimes.length),
-      emptyDay: !!(temp && !tempTimes.length),
-      emptyDayText: 'この日は受付していません。別の日をお選びください。',
-      tempTitle: temp ? this.shortDate(temp) + ' の開始時刻を選ぶ(1レッスン = 2時間)' : '',
-      tempFixedCourt: !!tempFixed,
-      tempFixedCourtNote: tempFixed ? ('この日は ' + tempFixed + ' で開催します。') : '',
-      times: times
+      legend: '数字の下は受付区分（終日／午後から）です。受付のない日は選べません。'
     };
   }
 
@@ -1128,8 +1089,8 @@ class Component extends DCLogic {
       if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
       if (d.menu === 'offline') {
         if (!d.date1) return '第1希望の日程を選択してください。';
-        if (d.date2 && d.date1 && d.date2.key === d.date1.key && d.date2.start === d.date1.start) {
-          return '第1希望と第2希望が同じ日時です。';
+        if (d.date2 && d.date1 && d.date2.key === d.date1.key) {
+          return '第1希望と第2希望が同じ日です。';
         }
         // 固定コートの曜日は court が自動で入るため、この分岐には来ない
         if (!this.fixedCourtFor(d.date1.key) && !d.courtReserve && !d.court.trim()) {
@@ -1178,8 +1139,7 @@ class Component extends DCLogic {
     const fieldDefs = [
       { id: 'f-name', key: 'name', label: '氏名', type: 'text', placeholder: '例:山田 太郎', auto: 'name', req: true },
       { id: 'f-sns', key: 'sns', label: 'Instagramユーザー名', type: 'text', placeholder: '例:@duffy_tennis', auto: 'off', req: false },
-      { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true },
-      { id: 'f-phone', key: 'phone', label: '電話番号', type: 'tel', placeholder: '例:090-1234-5678', auto: 'tel', req: false }
+      { id: 'f-email', key: 'email', label: 'メールアドレス', type: 'email', placeholder: '例:you@example.com', auto: 'email', req: true }
     ];
     const fields1 = fieldDefs.map((f) => ({
       ...f,
@@ -1192,12 +1152,6 @@ class Component extends DCLogic {
     const ageNum = this.ageNumber();
     const needsGuardian = ageNum !== null && ageNum < 18;
 
-    const sourceOpts = this.SOURCES.map((v) => ({
-      label: v,
-      pressed: d.source === v,
-      bg: d.source === v ? '#E9FF00' : '#FFFFFF',
-      onPick: () => this.setData({ source: v })
-    }));
 
     const menuDefs = [
       { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
@@ -1212,7 +1166,7 @@ class Component extends DCLogic {
         mark: pressed ? '✓ 選択中' : '選ぶ',
         markBg: pressed ? '#111111' : '#FFFFFF',
         markFg: pressed ? '#E9FF00' : '#111111',
-        onPick: () => this.setData({ menu: c.key, payment: c.key === 'online' ? 'クレジットカード(Stripe)' : 'Stripe(カード・PayPay)' })
+        onPick: () => this.setData({ menu: c.key, payment: this.PAY_LABEL })
       };
     });
 
@@ -1260,10 +1214,8 @@ class Component extends DCLogic {
     const confirmRows = [
       { k: '氏名', v: d.name },
       { k: 'メール', v: d.email },
-      { k: '電話番号', v: d.phone },
       { k: 'Instagram', v: d.sns || '(未記入)' },
       { k: '年齢', v: this.ageLabel() },
-      { k: '知ったきっかけ', v: d.source || '(未選択)' },
       { k: 'メニュー', v: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン' }
     ];
     const estRows = [];
@@ -1305,7 +1257,7 @@ class Component extends DCLogic {
       isOnline: d.menu === 'online', isOffline: d.menu === 'offline',
       step2Title: d.menu === 'online' ? 'プラン(オンライン動画添削)' : d.menu === 'offline' ? '日程・コート(対面レッスン)' : 'プラン・日程',
       err: st.err, hasErr: !!st.err,
-      steps, fields1, sourceOpts, menuCards, planCards, peopleOpts, rentalOpts, pickers,
+      steps, fields1, menuCards, planCards, peopleOpts, rentalOpts, pickers,
       age: d.age,
       onAge: (e) => this.setData({ age: e.target.value }),
       peopleNote: '※ 120分 ' + this.lessonFeeSentence(),
@@ -1328,7 +1280,9 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
-      dmNextText: (d.menu === 'online' && !!this.payUrl())
+      dmNextText: this.isWaitlist()
+        ? '今月のオンライン枠に空きが出たら、そのDMで順番にご案内します。'
+        : (d.menu === 'online' && !!this.payUrl())
         ? 'お支払いの確認と動画の送り方をご案内して添削を始めます。'
         : d.menu === 'online'
           ? 'お支払い方法と動画の送り方をご案内します。'
@@ -1362,7 +1316,15 @@ class Component extends DCLogic {
       estNote,
       showBack: st.step > 1,
       onBack: () => this.go(st.step - 1),
-      nextLabel: st.step === 4 ? (st.sending ? '送信中…' : '送信する →') : '次へ →',
+      nextLabel: st.step === 4 ? (st.sending ? '送信中…' : (this.isWaitlist() ? 'ウェイティングリストに登録する' : '送信する →')) : '次へ →',
+      waitlist: this.isWaitlist(),
+      showRemaining: this.AVAIL.active && !this.AVAIL.full,
+      remainingText: '今月 残り' + this.AVAIL.remaining + '名',
+      onlinePayNote: this.isWaitlist()
+        ? '今月のオンライン枠は満席のため、ウェイティングリストへの登録になります。お支払いは空きが出てからです。'
+        : 'お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。送信後の画面からお支払いいただけます。',
+      doneTitle: this.isWaitlist() ? 'ウェイティングリストに登録しました。' : '仮予約を受け付けました。',
+      doneNote: this.isWaitlist() ? '順番が来るまで、予約もお支払いも確定しません。' : '予約はまだ確定していません。',
       onNext: () => {
         if (st.sending) return;
         const msg = this.validate(st.step);
@@ -1375,13 +1337,11 @@ class Component extends DCLogic {
             name: d.name,
             customer_email: d.email,
             email: d.email,
-            phone: d.phone,
             sns: d.sns || '(未記入)',
             // メールテンプレートの {{category}} はそのまま使えるように年齢を入れる
             category: this.ageLabel(),
             age: this.ageLabel(),
-            source: d.source || '(未選択)',
-            menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+            menu: d.menu === 'online' ? (this.isWaitlist() ? 'オンライン動画添削(ウェイティングリスト)' : 'オンライン動画添削') : '対面レッスン',
             message: summary
           };
 
@@ -1435,7 +1395,7 @@ class Component extends DCLogic {
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
           lineMessage: '', doneSummary: [], mailWarning: '', copied: false,
-          data: { name: '', email: '', phone: '', sns: '', age: '', source: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
+          data: { name: '', email: '', sns: '', age: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
       }

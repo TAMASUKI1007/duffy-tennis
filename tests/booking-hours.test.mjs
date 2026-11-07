@@ -28,7 +28,7 @@ function section(startMarker, endMarker) {
 const configSrc = section('const BOOKING_CONFIG = {', '/* ---------');
 const helperSrc = section('const DOW_KEYS =', 'class Component');
 // クラス本体から、判定に関わるメソッドだけを取り出す
-const methodsSrc = section('  startTimesFor(dateKey) {', '  buildPicker(i) {');
+const methodsSrc = section('  bandFor(dateKey) {', '  buildPicker(i) {');
 
 const factory = new Function(`
   ${configSrc}
@@ -41,8 +41,8 @@ const factory = new Function(`
 
 const { BOOKING_CONFIG, minToHm, booking } = factory();
 
-/** その日付の開始時刻を 'HH:MM' の配列で得る。 */
-const startsOf = (dateKey) => booking.startTimesFor(dateKey).map(minToHm);
+/** その日付の受付区分（all / pm / null）。 */
+const bandOf = (dateKey) => booking.bandFor(dateKey);
 
 // 2026年10月のカレンダー（曜日を固定して検証する）
 const MON = '2026-10-05';
@@ -64,62 +64,32 @@ test('検証に使う日付の曜日が想定どおり', () => {
 // 曜日ごとの受付時間
 // ---------------------------------------------------------------------------
 
-test('月曜は午前受付なし。12:00〜20:00 → 12:00〜18:00開始', () => {
-  const t = startsOf(MON);
-  assert.equal(t[0], '12:00');
-  assert.equal(t[t.length - 1], '18:00');
-  assert.equal(t.length, 13);
-  assert.ok(!t.some((hm) => hm < '12:00'), '午前の枠が出ている');
+test('曜日ごとの受付：月=午後から / 火=終日 / 水=なし / 木=終日 / 金=終日 / 土=終日 / 日=午後から', () => {
+  assert.equal(bandOf(MON), 'pm');
+  assert.equal(bandOf(TUE), 'all');
+  assert.equal(bandOf(WED), null);
+  assert.equal(bandOf(THU), 'all');
+  assert.equal(bandOf(FRI), 'all');
+  assert.equal(bandOf(SAT), 'all');
+  assert.equal(bandOf(SUN), 'pm');
+  assert.deepEqual(BOOKING_CONFIG.hours, { sun: 'pm', mon: 'pm', tue: 'all', wed: null, thu: 'all', fri: 'all', sat: 'all' });
 });
 
-test('火曜 12:00〜20:00 → 12:00〜18:00開始', () => {
-  const t = startsOf(TUE);
-  assert.equal(t[0], '12:00');
-  assert.equal(t[t.length - 1], '18:00');
-  assert.equal(t.length, 13);
-});
-
-test('水曜は終日受付なし', () => {
-  assert.deepEqual(startsOf(WED), []);
+test('水曜だけ選べない。ほかの曜日は選べる', () => {
   assert.equal(booking.isOpenDay(WED), false);
+  for (const day of [MON, TUE, THU, FRI, SAT, SUN]) assert.equal(booking.isOpenDay(day), true, `${day} が選べない`);
 });
 
-test('木曜は受付なし', () => {
-  assert.deepEqual(startsOf(THU), []);
-  assert.equal(booking.isOpenDay(THU), false);
-});
-
-test('金曜 13:00〜16:00 → 13:00/13:30/14:00 の3枠だけ', () => {
-  assert.deepEqual(startsOf(FRI), ['13:00', '13:30', '14:00']);
-});
-
-test('土曜・日曜 12:00〜20:00 → 12:00〜18:00開始（日曜午前は受付なし）', () => {
-  for (const day of [SAT, SUN]) {
-    const t = startsOf(day);
-    assert.equal(t[0], '12:00');
-    assert.equal(t[t.length - 1], '18:00');
+test('時間の選択肢は作らない（開始時刻ボタン・刻み・レッスン長の設定が残っていない）', () => {
+  for (const m of ['startTimesFor', 'stepMinutes', 'lessonMinutes', 'hasTimes', 'tempTitle', 'times: times', '開始時刻を選ぶ', 'emptyDay']) {
+    assert.ok(!html.includes(m), `${m} が残っています`);
   }
-  assert.ok(!startsOf(SUN).some((hm) => hm < '12:00'), '日曜に午前の枠が出ている');
+  assert.ok(!/\{ from: '/.test(html), '時刻の範囲（from/to）の設定が残っていない');
 });
 
-test('レッスン終了が受付終了を超える開始時刻は出さない', () => {
-  // 月曜は20:00終了なので、18:30開始（20:30終了）は出てはいけない
-  assert.ok(!startsOf(MON).includes('18:30'));
-  // 金曜は16:00終了なので、14:30開始（16:30終了）は出てはいけない
-  assert.ok(!startsOf(FRI).includes('14:30'));
-  // すべての枠で「開始＋2時間 <= 受付終了」が成り立つこと
-  for (const [day, endHm] of [[MON, '20:00'], [TUE, '20:00'], [FRI, '16:00'], [SAT, '20:00'], [SUN, '20:00']]) {
-    const endMin = Number(endHm.split(':')[0]) * 60;
-    for (const m of booking.startTimesFor(day)) {
-      assert.ok(m + BOOKING_CONFIG.lessonMinutes <= endMin, `${day} ${minToHm(m)} が受付時間を超えています`);
-    }
-  }
-});
-
-test('開始時刻は30分刻み', () => {
-  for (const m of booking.startTimesFor(TUE)) {
-    assert.equal(m % BOOKING_CONFIG.stepMinutes, 0);
-  }
+test('日にちをタップした時点で確定する（時間は選ばない）。選択値は { key } だけ', () => {
+  assert.ok(html.includes("['date' + i]: { key: key }"), '日付だけを保存');
+  assert.ok(html.includes('第1希望と第2希望が同じ日です'), '同じ日の重複を防ぐ');
 });
 
 // ---------------------------------------------------------------------------
@@ -127,16 +97,15 @@ test('開始時刻は30分刻み', () => {
 // ---------------------------------------------------------------------------
 
 test('受付停止日に入れた日付は選べなくなる', () => {
-  const before = startsOf(TUE);
-  assert.ok(before.length > 0, '停止前は受付できる');
+  assert.equal(booking.isOpenDay(TUE), true, '停止前は受付できる');
 
   BOOKING_CONFIG.blockedDates.push(TUE);
   try {
-    assert.deepEqual(startsOf(TUE), [], '停止日は0枠');
+    assert.equal(bandOf(TUE), null, '停止日は受付なし');
     assert.equal(booking.isOpenDay(TUE), false);
     assert.equal(booking.bandLabelFor(TUE), '休み');
     // 他の日には影響しない
-    assert.ok(startsOf(SAT).length > 0);
+    assert.equal(booking.isOpenDay(SAT), true);
   } finally {
     BOOKING_CONFIG.blockedDates.length = 0;
   }
@@ -188,11 +157,13 @@ test('自分で入力したコート名は消されない', () => {
 // カレンダーのマス下に出る表示
 // ---------------------------------------------------------------------------
 
-test('受付時間の短縮表示', () => {
-  assert.equal(booking.bandLabelFor(MON), '12-20');
-  assert.equal(booking.bandLabelFor(FRI), '13-16');
-  assert.equal(booking.bandLabelFor(THU), '-');
+test('カレンダーのマス下の表示は「終日」「午後から」「-」。選んだ日程の表記は日にち＋区分', () => {
+  assert.equal(booking.bandLabelFor(MON), '午後から');
+  assert.equal(booking.bandLabelFor(TUE), '終日');
   assert.equal(booking.bandLabelFor(WED), '-');
+  assert.equal(booking.bandLabelFor(SUN), '午後から');
+  assert.equal(booking.bandLabelFor(SAT), '終日');
+  assert.ok(html.includes("selLine(sel) { return sel ? (this.shortDate(sel.key) + ' ' + this.bandLabelFor(sel.key)) : ''; }"), '確認・メールの表記');
 });
 
 // ---------------------------------------------------------------------------
@@ -208,12 +179,19 @@ test('区分の選択肢が残っておらず、年齢は数字入力になっ�
     assert.ok(!html.includes(old), `旧い区分「${old}」が残っています`);
   }
   assert.ok(html.includes('id="f-age" type="number"'), '年齢の数字入力欄');
-  assert.ok(html.includes("age: '', source: ''"), 'state に age / source がある');
+  assert.ok(html.includes("sns: '', age: ''"), 'state に age がある');
 });
 
-test('知ったきっかけの選択肢', () => {
-  assert.ok(html.includes("this.SOURCES = ['Instagram', 'TikTok', 'Facebook', 'YouTube', '知人の紹介', 'その他'];"));
-  assert.ok(html.includes('どこで知りましたか?'));
+test('「どこで知りましたか？」と電話番号は廃止（入力欄・保存・メール・確認画面・自動保存のどこにもない）', () => {
+  for (const m of ['SOURCES', 'sourceOpts', 'どこで知りましたか', '知ったきっかけ', 'f-phone', '電話番号', 'd.phone', 'd.source']) {
+    assert.ok(!html.includes(m), `${m} が残っています`);
+  }
+  // 端末内の自動保存からも外す（古い保存データに残っていても読み込まない）
+  assert.ok(html.includes('stripLegacy(data)') && html.includes('delete copy.phone;') && html.includes('delete copy.source;'), '自動保存から除外');
+  assert.ok(html.includes('...this.stripLegacy(s.data)') && html.includes('data: this.stripLegacy(patch.data'), '読み込みと保存の両方で除外');
+  // メールの変数にも入れない
+  const mailParams = section('const emailParams = {', 'message: summary');
+  assert.ok(!/phone|source/.test(mailParams), 'メールの変数に phone / source がない');
 });
 
 test('年齢の判定（18歳未満は保護者の許可が必要）', () => {
@@ -232,9 +210,14 @@ test('年齢の判定（18歳未満は保護者の許可が必要）', () => {
   assert.equal(new A('', false).ageLabel(), '(未記入)');
 });
 
-test('保存する行に age / source が入り、category にも年齢の文字列が入る', () => {
-  assert.ok(html.includes('age: this.ageNumber(), source: d.source || null,'));
+test('保存する行に age が入り、category にも年齢の文字列が入る。phone / source は送らない', () => {
+  assert.ok(html.includes('age: this.ageNumber(),'));
   assert.ok(html.includes('category: this.ageLabel(),'));
+  const row = section('const row = {', 'estimate: estimate');
+  assert.ok(!/phone|source/.test(row), '保存する行に phone / source がない');
+  // 列がない場合の保存し直し（フォールバック）は残す
+  assert.ok(html.includes("if (!/column|PGRST204/i.test(String(e && e.message))) throw e;"), 'フォールバックの条件');
+  assert.ok(html.includes("delete fallback.age;") && html.includes("fallback.question = '[年齢:'"), '年齢を質問欄へ');
 });
 
 test('旧 hoursFor（曜日別の固定値）が残っていない', () => {
@@ -444,7 +427,7 @@ test('申込フォームは4ステップ（メニュー→プラン・日程→�
   assert.ok(html.includes("const labels = ['メニュー', 'プラン・日程', '基本情報', '確認'];"), 'ステップ名');
   assert.ok(html.includes('全4ステップ・約2分'), 'トップの案内文');
   assert.ok(!html.includes('isStep5'), '5ステップ目が残っていない');
-  assert.ok(html.includes("nextLabel: st.step === 4 ? (st.sending ? '送信中…' : '送信する →') : '次へ →'"), '4ステップ目で送信');
+  assert.ok(html.includes("nextLabel: st.step === 4 ? (st.sending ? '送信中…' : (this.isWaitlist() ? 'ウェイティングリストに登録する' : '送信する →')) : '次へ →'"), '4ステップ目で送信');
   assert.ok(/if \(st\.step === 4\) \{\s*this\.setState\(\{ sending: true/.test(html), '送信は4ステップ目');
   // メニュー → プラン・日程 → 基本情報 → 確認 の順で markup が並ぶ
   const i1 = html.indexOf('<sc-if value="{{ isStep1 }}"'), i2 = html.indexOf('<sc-if value="{{ isStep2 }}"');
@@ -458,9 +441,9 @@ test('申込フォームは4ステップ（メニュー→プラン・日程→�
 
 test('必須は氏名とメールだけ（Instagram・電話・年齢・きっかけは任意）', () => {
   assert.ok(/key: 'name'[^\n]*req: true/.test(html) && /key: 'email'[^\n]*req: true/.test(html), '氏名・メールは必須');
-  assert.ok(/key: 'sns'[^\n]*req: false/.test(html) && /key: 'phone'[^\n]*req: false/.test(html), 'Instagram・電話は任意');
+  assert.ok(/key: 'sns'[^\n]*req: false/.test(html), 'Instagramは任意');
   assert.ok(html.includes("if (!d.name.trim()) return '氏名を入力してください。';"), '氏名の検証');
-  assert.ok(!html.includes("if (!d.sns.trim())") && !html.includes("if (!d.phone.trim())"), 'Instagram・電話の必須チェックがない');
+  assert.ok(!html.includes("if (!d.sns.trim())"), 'Instagramの必須チェックがない');
   assert.ok(html.includes("if (String(d.age).trim() !== '') {"), '年齢は入力があるときだけ検証');
   assert.ok(!html.includes("return 'どこで知ったかを選択してください。';") && !html.includes("if (!d.source)"), 'きっかけ必須が消えている');
   assert.ok(html.includes("if (age < 18 && !d.guardianConsent)"), '17歳以下だけ保護者確認');
@@ -476,17 +459,20 @@ test('規約は要点4行＋全文の折りたたみ、同意は必須のまま'
 });
 
 test('支払い方法の質問は出さない（オンライン・対面とも Stripe）', () => {
-  assert.ok(html.includes("payment: c.key === 'online' ? 'クレジットカード(Stripe)' : 'Stripe(カード・PayPay)'"), 'メニューで支払い方法が決まる');
+  assert.ok(html.includes("this.setData({ menu: c.key, payment: this.PAY_LABEL })"), 'メニューで支払い方法が決まる');
   assert.ok(!html.includes('paymentOpts') && !html.includes('お支払い方法を選択してください'), '支払い方法の選択がない');
   assert.ok(html.includes("if (!d.agree) return '規約への同意が必要です。';"), '規約の同意は必須');
 });
 
-test('トップに料金1行と「申込はこちら」、旧い5ステップ・3分の表記がない', () => {
+test('トップのヒーローは申込ボタン2つ（?menu= 付き）。金額は lib/pricing.js から描画。旧い表記がない', () => {
   const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
-  assert.ok(idx.includes('申込はこちら →'), '申込ボタン');
-  assert.ok(idx.includes("heroPrice: 'オンライン動画添削 ' + P.plans[0].key + '回 '"), '料金1行は lib/pricing.js から');
-  assert.ok(idx.includes('{{ heroPrice }}'), '料金1行の差し込み');
-  for (const m of ['5ステップ', '5 STEPS', '約3分', 'line.me']) assert.ok(!idx.includes(m), `${m} が残っています`);
+  assert.ok(idx.includes('href="apply.html?menu=online"') && idx.includes('{{ heroOnlineLabel }}'), '主ボタン（オンライン）');
+  assert.ok(idx.includes('href="apply.html?menu=inperson"') && idx.includes('{{ heroOfflineLabel }}'), '副ボタン（対面）');
+  assert.ok(idx.includes("heroOnlineLabel: 'オンライン動画添削を申し込む（' + P.plans[0].key + '回 ' + yen(P.plans[0].price) + '円〜）'"), 'オンラインの金額は pricing から');
+  assert.ok(idx.includes("heroOfflineLabel: '対面レッスンを申し込む（120分 ' + yen(P.lesson.solo) + '円）'"), '対面の金額は pricing から');
+  // 2ボタンの下にテキストリンク
+  assert.ok(idx.indexOf('{{ heroOfflineLabel }}') < idx.indexOf('料金と申込方法 →'), '料金と申込方法のリンクは2ボタンの下');
+  for (const m of ['5ステップ', '5 STEPS', '約3分', 'line.me', '申込はこちら →']) assert.ok(!idx.includes(m), `${m} が残っています`);
   assert.ok(!/(^|[^A-Z])LINE([^A-Z]|$)/.test(idx), 'LINE（単語）が残っています');
   assert.ok(idx.includes("href: 'guide.html'"), 'メニューにガイド');
 });
@@ -507,4 +493,98 @@ test('5回チケットに「一番人気」', () => {
   const src = readFileSync(join(ROOT, 'lib/pricing.js'), 'utf8');
   assert.ok(src.includes("{ key: '5', price: 4900, per: 980, badge: '一番人気', popular: true }"), 'pricing.js');
   assert.ok(readFileSync(join(ROOT, 'index.html'), 'utf8').includes('{{ p.popular }}'), 'トップの料金表');
+});
+
+// ---------------------------------------------------------------------------
+// 2026-11-08 改修：?menu= の事前選択、受付枠（残り◯名／ウェイティング）、支払い表記の統一、戻るリンク、解析
+// ---------------------------------------------------------------------------
+
+test('?menu=online / ?menu=inperson でメニューを選択済みにして1ステップ目から始める', () => {
+  assert.ok(html.includes("new URLSearchParams(window.location.search).get('menu')"), 'クエリを読む');
+  assert.ok(html.includes("{ online: 'online', inperson: 'offline', offline: 'offline' }[q]"), 'inperson → 内部の offline');
+  assert.ok(/step: 1,\s*\n\s*data: \{ \.\.\.this\.state\.data, menu, payment: this\.PAY_LABEL \}/.test(html), '選択済み・1ステップ目');
+});
+
+const availWindow = {};
+new Function('window', readFileSync(join(ROOT, 'lib/availability.js'), 'utf8'))(availWindow);
+const AV = availWindow.DUFFY_AVAILABILITY;
+const NOV = Date.parse('2026-11-15T12:00:00+09:00');
+
+test('受付枠：残り = capacity - accepted。設定は1か所', () => {
+  assert.deepEqual(Object.keys(AV.AVAILABILITY), ['online'], '管理するのはオンラインだけ');
+  assert.deepEqual(Object.keys(AV.AVAILABILITY.online).sort(), ['accepted', 'capacity', 'month']);
+  AV.AVAILABILITY.online = { capacity: 10, accepted: 3, month: '2026-11' };
+  const st = AV.status('online', NOV);
+  assert.equal(st.remaining, 7); assert.equal(st.active, true); assert.equal(st.full, false);
+  AV.AVAILABILITY.online = { capacity: 10, accepted: 10, month: '2026-11' };
+  const full = AV.status('online', NOV);
+  assert.equal(full.remaining, 0); assert.equal(full.full, true);
+  AV.AVAILABILITY.online = { capacity: 10, accepted: 12, month: '2026-11' };
+  assert.equal(AV.status('online', NOV).remaining, 0, '超過しても 0 止まり');
+});
+
+test('受付枠：月が違うと表示も満席判定もしない（古い数字を出さない）。月は日本時間で判定', () => {
+  AV.AVAILABILITY.online = { capacity: 10, accepted: 10, month: '2026-11' };
+  const dec = AV.status('online', Date.parse('2026-12-01T00:00:00+09:00'));
+  assert.equal(dec.active, false); assert.equal(dec.full, false);
+  assert.equal(AV.status('online', Date.parse('2026-11-30T23:59:00+09:00')).full, true, '日本時間の月末はまだ11月');
+  assert.equal(AV.status('event', NOV).active, false, '設定のないメニューは対象外');
+});
+
+test('残枠表示：トップ（ONLINE）と申込フォーム（プラン選択）に出る。対面には出さない', () => {
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.ok(idx.includes("window.DUFFY_AVAILABILITY.status('online')") && idx.includes("'今月 残り' + A.remaining + '名'"), 'トップの表示');
+  assert.ok(idx.includes('{{ onlineRemaining }}'), 'トップの差し込み');
+  assert.ok(html.includes("remainingText: '今月 残り' + this.AVAIL.remaining + '名'"), '申込フォームの表示');
+  const i2 = html.indexOf('<sc-if value="{{ isStep2 }}"');
+  const online = html.indexOf('<sc-if value="{{ isOnline }}"', i2);
+  const offline = html.indexOf('<sc-if value="{{ isOffline }}"', online);
+  assert.ok(html.indexOf('{{ remainingText }}') > online && html.indexOf('{{ remainingText }}') < offline, '残枠はオンラインのプラン選択の中');
+  assert.ok(!/AVAIL[^\n]*offline|status\('offline'\)|status\('inperson'\)/.test(html), '対面の受付数は管理しない');
+});
+
+test('満席のとき：ボタンはウェイティングリスト登録、完了画面は順番待ち、決済ボタンは出ない', () => {
+  assert.ok(html.includes("'ウェイティングリストに登録する'"), '送信ボタン');
+  assert.ok(html.includes("this.isWaitlist() ? 'ウェイティングリストに登録しました。' : '仮予約を受け付けました。'"), '完了画面の見出し');
+  assert.ok(html.includes('順番が来るまで、予約もお支払いも確定しません。'), '完了画面の説明');
+  assert.ok(/if \(d\.menu !== 'online' \|\| !d\.plan \|\| this\.isWaitlist\(\)\) return '';/.test(html), '満席なら支払いURLを返さない（決済ボタン・メールのリンクが消える）');
+  assert.ok(html.includes("showPay: st.done && d.menu === 'online' && !!this.payUrl()"), '決済ボタンは payUrl があるときだけ');
+  assert.ok(html.includes("'オンライン動画添削(ウェイティングリスト)'"), '通知メールの件名側でも分かる');
+  assert.ok(html.includes("question: this.isWaitlist() ? '[ウェイティングリスト登録]' + (d.question ? '\\n' + d.question : '') : d.question"), '保存データにも印を残す');
+});
+
+test('支払い表記は「お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）」に統一', () => {
+  const PAY = 'お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）';
+  const g = readFileSync(join(ROOT, 'guide.html'), 'utf8');
+  const t = readFileSync(join(ROOT, 'tokushoho.html'), 'utf8');
+  assert.ok(html.includes(PAY) && g.includes(PAY), '申込フォームとガイドに同じ表記');
+  assert.ok(t.includes('Stripe（カード／Apple Pay／Google Pay／PayPay）'), '特商法表記');
+  for (const [name, src] of [['apply.html', html], ['guide.html', g]]) {
+    for (const old of ['カード決済（Stripe）', 'Stripe（カード・PayPay）', 'クレジットカード(Stripe)', 'カード・Apple Pay・Google Pay が使えます']) {
+      assert.ok(!src.includes(old), `${name} に旧い表記「${old}」が残っています`);
+    }
+    assert.ok(!/口座振り込み|銀行振込による支払/.test(src.replace(/お支払いを銀行振込により行う場合、振込手数料はお客様のご負担とします。/g, '')), `${name} に銀行振込の案内がない`);
+  }
+});
+
+test('申込フォーム冒頭の「戻る」リンクは申込完了後だけ。ガイドは残し、料金表の前に申込ボタン', () => {
+  const head = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
+  assert.ok(/<sc-if value="\{\{ done \}\}"[^>]*>\s*<a href="index\.html"[^>]*>← MatchUpへ戻る<\/a>\s*<\/sc-if>/.test(head), '完了後だけ表示');
+  const g = readFileSync(join(ROOT, 'guide.html'), 'utf8');
+  assert.ok(g.includes('<header><a href="index.html">← MatchUpへ戻る</a>'), 'ガイドの戻るリンクは残す');
+  const price = g.indexOf('<h2>料金表</h2>');
+  const firstTable = g.indexOf('<div class="tbl">', price);
+  const btn = g.indexOf('href="apply.html">申込フォームへ →</a>', price);
+  assert.ok(btn > price && btn < firstTable, '料金表の直前に申込ボタン');
+});
+
+test('解析：トークン1か所の定数。空なら読み込まない。3ページから読み込み、プライバシーに明記', () => {
+  const src = readFileSync(join(ROOT, 'lib/analytics.js'), 'utf8');
+  assert.equal((src.match(/var CF_ANALYTICS_TOKEN = /g) || []).length, 1, 'トークンの定義は1か所');
+  assert.ok(src.includes('if (!CF_ANALYTICS_TOKEN') && src.includes('https://static.cloudflareinsights.com/beacon.min.js'), '空なら何もしない／Cloudflare のビーコン');
+  assert.ok(!/email|name|phone|sns/i.test(src.replace(/\/\/.*$/gm, '')), '個人情報を渡す記述がない');
+  for (const f of ['index.html', 'apply.html', 'guide.html']) assert.ok(/lib\/analytics\.js/.test(readFileSync(join(ROOT, f), 'utf8')), `${f} が読み込む`);
+  const pv = readFileSync(join(ROOT, 'privacy.html'), 'utf8');
+  assert.ok(pv.includes('Cloudflare Web Analytics'), 'プライバシーに解析の記載');
+  assert.ok(!pv.includes('電話番号'), 'プライバシーの取得情報から電話番号を削除');
 });

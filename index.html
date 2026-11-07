@@ -63,6 +63,8 @@
 </script>
 <script src="./support.js"></script>
 <script src="./lib/pricing.js"></script>
+<script src="./lib/availability.js"></script>
+<script src="./lib/analytics.js"></script>
 </head>
 <body>
 <x-dc>
@@ -138,9 +140,12 @@ body.menu-open { overflow: hidden; }
 
       <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:24px;align-items:center;">
         <div data-appear="-50,30,-5" data-delay="0.34s" style="background:#111111;color:#E9FF00;font-weight:900;font-size:clamp(13px,3.1vw,17px);padding:10px 16px;transform:rotate(-2deg);">オンライン動画添削 × 対面レッスン</div>
-        <a href="apply.html" data-appear="50,30,5" data-delay="0.42s" style="background:#E9FF00;color:#111111;border:3px solid #111111;font-weight:900;font-size:clamp(13px,3.1vw,17px);padding:9px 16px;transform:rotate(1.6deg);text-decoration:none;display:inline-block;" style-hover="background:#111111;color:#E9FF00;">申込はこちら →</a>
       </div>
-      <p data-appear="0,30,0" data-delay="0.48s" style="margin:14px 0 0;font-weight:900;font-size:clamp(13px,3.2vw,16px);line-height:1.8;">{{ heroPrice }}<a href="guide.html" style="margin-left:8px;color:#111111;font-weight:900;font-size:0.9em;">料金と申込方法 →</a></p>
+      <div data-appear="0,30,0" data-delay="0.42s" style="display:grid;gap:12px;margin-top:18px;max-width:520px;">
+        <a href="apply.html?menu=online" style="display:block;background:#E9FF00;color:#111111;border:3px solid #111111;box-shadow:5px 5px 0 #111111;font-weight:900;font-size:clamp(14px,3.8vw,18px);line-height:1.5;padding:15px 18px;text-decoration:none;text-align:center;" style-hover="background:#111111;color:#E9FF00;">{{ heroOnlineLabel }}</a>
+        <a href="apply.html?menu=inperson" style="display:block;background:#FFFFFF;color:#111111;border:3px solid #111111;box-shadow:5px 5px 0 #E9FF00;font-weight:900;font-size:clamp(14px,3.8vw,18px);line-height:1.5;padding:15px 18px;text-decoration:none;text-align:center;" style-hover="background:#111111;color:#E9FF00;">{{ heroOfflineLabel }}</a>
+        <a href="guide.html" style="justify-self:start;color:#111111;font-weight:900;font-size:13px;">料金と申込方法 →</a>
+      </div>
 
       <div data-appear="0,40,0" data-delay="0.55s" style="display:flex;align-items:center;gap:10px;margin-top:clamp(20px,4vh,40px);">
         <span style="font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.4em;">SCROLL</span>
@@ -384,6 +389,9 @@ body.menu-open { overflow: hidden; }
           <li style="border-top:2px solid #111111;padding-top:8px;">1往復 = 1pt 消費</li>
           <li style="border-top:2px solid #111111;padding-top:8px;">チケット有効期限 5ヶ月</li>
         </ul>
+        <sc-if value="{{ showOnlineRemaining }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:14px 0 0;align-self:flex-start;background:#111111;color:#E9FF00;font-weight:900;font-size:14px;line-height:1.6;padding:6px 14px;">{{ onlineRemaining }}</p>
+        </sc-if>
         <div style="margin-top:auto;padding-top:clamp(18px,3vw,24px);">
           <div style="font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.14em;color:#111111;">TICKET PLANS</div>
           <div style="margin-top:8px;display:grid;gap:8px;">
@@ -701,10 +709,15 @@ class Component extends DCLogic {
     const P = window.DUFFY_PRICING.current();
     const yen = (n) => n.toLocaleString('ja-JP');
     const hasGroup = !!P.lesson.group;
+    const A = window.DUFFY_AVAILABILITY.status('online');
     return {
       plans: P.plans.map((p) => ({ count: p.key, price: yen(p.price), per: yen(p.per), best: !!p.best, popular: !!p.popular })),
       hasGroup,
-      heroPrice: 'オンライン動画添削 ' + P.plans[0].key + '回 ' + yen(P.plans[0].price) + '円〜 ／ 対面レッスン ' + yen(P.lesson.solo) + '円（2時間・コート代別）',
+      heroOnlineLabel: 'オンライン動画添削を申し込む（' + P.plans[0].key + '回 ' + yen(P.plans[0].price) + '円〜）',
+      heroOfflineLabel: '対面レッスンを申し込む（120分 ' + yen(P.lesson.solo) + '円）',
+      onlineRemaining: A.active ? (A.full ? '今月のオンライン枠は満席（ウェイティングリスト受付中）' : '今月 残り' + A.remaining + '名') : '',
+      showOnlineRemaining: A.active,
+      onlineFull: A.full,
       lessonSolo: yen(P.lesson.solo),
       lessonSoloLabel: hasGroup ? '1人' : '一律料金',
       lessonGroup: hasGroup ? yen(P.lesson.group) : '',
