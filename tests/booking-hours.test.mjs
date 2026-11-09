@@ -567,15 +567,20 @@ test('支払い表記は「お支払い：Stripe（カード／Apple Pay／Googl
   }
 });
 
-test('申込フォーム冒頭の「戻る」リンクは申込完了後だけ。ガイドは残し、料金表の前に申込ボタン', () => {
-  const head = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
-  assert.ok(/<sc-if value="\{\{ done \}\}"[^>]*>\s*<a href="index\.html"[^>]*>← MatchUpへ戻る<\/a>\s*<\/sc-if>/.test(head), '完了後だけ表示');
+test('全ページのヘッダーは左上の「MatchUp」だけ（「戻る」ボタンなし。MatchUp はトップへのリンク）', () => {
+  for (const f of ['apply.html', 'guide.html', 'terms.html', 'privacy.html', 'tokushoho.html', 'message.html']) {
+    const src = readFileSync(join(ROOT, f), 'utf8');
+    const head = src.slice(src.indexOf('<header'), src.indexOf('</header>'));
+    assert.ok(!head.includes('戻る') || /aria-label="MatchUp トップへ戻る"/.test(head.replace(/aria-label="MatchUp トップへ戻る"/, 'X') ) === false, `${f}`);
+    assert.ok(!/>\s*←/.test(head), `${f} に「←」の戻るボタンが残っています`);
+    assert.equal((head.match(/MatchUp<\/a>/g) || []).length, 1, `${f} のロゴは1つだけ`);
+    assert.ok(/<a href="index\.html"[^>]*>MatchUp<\/a>/.test(head), `${f} のロゴがトップへのリンク`);
+  }
   const g = readFileSync(join(ROOT, 'guide.html'), 'utf8');
-  assert.ok(g.includes('<header><a href="index.html">← MatchUpへ戻る</a>'), 'ガイドの戻るリンクは残す');
   const price = g.indexOf('<h2>料金表</h2>');
   const firstTable = g.indexOf('<div class="tbl">', price);
   const btn = g.indexOf('href="apply.html">申込フォームへ →</a>', price);
-  assert.ok(btn > price && btn < firstTable, '料金表の直前に申込ボタン');
+  assert.ok(btn > price && btn < firstTable, 'ガイド：料金表の直前に申込ボタン');
 });
 
 test('解析：トークン1か所の定数。空なら読み込まない。3ページから読み込み、プライバシーに明記', () => {
