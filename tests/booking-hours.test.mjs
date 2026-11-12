@@ -242,11 +242,11 @@ test('LINE公式の導線が残っていない（運用開始まで使わない�
   }
 });
 
-test('完了画面はDMが最初、Stripeがその下。送る文面は申込内容（メールと同じ）1つだけ', () => {
-  assert.ok(html.includes('STEP 1 — INSTAGRAM DM'), 'DMが STEP 1');
-  assert.ok(html.includes('STEP 2 — PAYMENT'), 'Stripe が STEP 2');
-  assert.ok(html.indexOf('STEP 1 — INSTAGRAM DM') < html.indexOf('STEP 2 — PAYMENT'), 'DM ブロックが先に出る');
-  assert.ok(html.includes('「申込完了」と申込内容を送ってください'), 'DMで送る内容の指示');
+test('完了画面：オンラインは支払い（STEP 1）が先、DM（STEP 2）が後。送る文面は申込内容（メールと同じ）1つだけ', () => {
+  assert.ok(html.includes('STEP 1 — PAYMENT'), '支払いが STEP 1');
+  assert.ok(html.includes('{{ dmStepLabel }}') && html.includes("'STEP 2 — INSTAGRAM DM'"), 'DM は STEP 2（支払いがないときは見出しだけ）');
+  assert.ok(html.indexOf('STEP 1 — PAYMENT') < html.indexOf('{{ dmStepLabel }}'), '支払いブロックが先に出る');
+  assert.ok(html.includes('お支払いのあと、InstagramのDMで「支払い完了」と申込内容を送ってください') && html.includes('InstagramのDMで「申込完了」と申込内容を送ってください'), 'DMで送る内容の指示（オンライン／それ以外）');
   assert.ok(html.includes("return ['申込完了しました。', '', this.buildSummary().split('\\n----')[0].trim(), '', 'よろしくお願いします。'].join('\\n');"), 'DMの文面はメールと同じ申込内容');
   assert.ok(!html.includes('申込内容の控え') && !html.includes('dmShortMessage'), '控えの箱と短い文面は1つにまとめた');
   assert.equal((html.match(/\{\{ lineMessage \}\}/g) || []).length, 1, '文面の表示は1か所');
@@ -606,4 +606,46 @@ test('トップのヘッダー（MatchUp＋三本線）は固定で追従し、�
   assert.ok(head.includes('background:#111111') && head.includes('color:#FFFFFF'), '黒背景・白文字');
   assert.ok(idx.includes("burgerBar: '#FFFFFF'"), '三本線は白');
   assert.ok(!html.includes('site-header') && !html.includes('position:fixed;top:0;left:0;right:0'), '申込フォームは固定ヘッダーなし');
+});
+
+// ---------------------------------------------------------------------------
+// 2026-11-12：オンラインの申込は、送信するとそのまま Stripe の支払い画面へ移動する
+// ---------------------------------------------------------------------------
+
+test('オンライン送信後は自動で支払い画面へ移動（カウントダウン付き・中止できる）', () => {
+  assert.ok(html.includes('if (this.payUrl()) this.startPayRedirect();'), '送信成功後に自動遷移を開始');
+  assert.ok(html.includes('this.PAY_REDIRECT_SECONDS = 4;'), '4秒');
+  assert.ok(/window\.location\.href = url;/.test(html), '支払いURLへ移動');
+  assert.ok(html.includes('あと {{ redirectIn }} 秒で、お支払い画面（Stripe）に移動します') && html.includes('onCancelRedirect'), 'カウントダウン表示と中止');
+  assert.ok(html.includes('href="{{ payUrl }}" onClick="{{ onPayNow }}"') && !/href="\{\{ payUrl \}\}" target="_blank"/.test(html), '同じタブで移動（ボタンでも即移動）');
+  // 満席・対面は自動遷移しない（payUrl が空）
+  assert.ok(/if \(d\.menu !== 'online' \|\| !d\.plan \|\| this\.isWaitlist\(\)\) return '';/.test(html), '満席・対面は支払いURLなし');
+});
+
+test('支払い画面から戻っても続きから再開できる（?pending=1 と一時保存）', () => {
+  assert.ok(html.includes("get('pending') === '1'") && html.includes("this.DONE_KEY = 'duffy-tennis-apply-done'"), '復元');
+  assert.ok(html.includes("history.replaceState(null, '', window.location.pathname + '?pending=1')"), '戻る先を ?pending=1 にしてから移動');
+  assert.ok(html.includes('3 * 24 * 3600 * 1000'), '保存は3日だけ有効');
+  assert.ok(html.includes("localStorage.removeItem(this.DONE_KEY)"), '「新しく申込む」で消える');
+  const persist = html.slice(html.indexOf('  persistDone() {'), html.indexOf('  /** 支払い画面に移る直前'));
+  assert.ok(!/phone|source/.test(persist), '電話番号・きっかけは保存しない');
+});
+
+test('thanks.html：支払い後に戻るページ。noindex。DMで「支払い完了」を送る案内とコピー、公開リスト入り', () => {
+  const th = readFileSync(join(ROOT, 'thanks.html'), 'utf8');
+  assert.ok(th.includes('<meta name="robots" content="noindex">'), 'noindex');
+  assert.ok(th.includes('お支払いありがとうございます') && th.includes('支払い完了しました。'), '文言');
+  assert.ok(th.includes("localStorage.getItem('duffy-tennis-apply-done')") && th.includes('https://ig.me/m/duffy_tennis'), '保存内容から文面／DMリンク');
+  assert.ok(th.includes('lib/analytics.js'), '解析');
+  assert.ok(readFileSync(join(ROOT, 'scripts/build.mjs'), 'utf8').includes("'thanks.html'"), 'build の公開リスト');
+  assert.ok(!readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').includes('thanks'), 'sitemap には入れない');
+});
+
+test('申込フォーム（main）の div の開きと閉じが一致している（余分な </div> で質問欄・次へボタンが外にはみ出さない）', () => {
+  const a = html.indexOf('<main style="max-width:760px;margin:0 auto;padding:clamp(24px');
+  const b = html.indexOf('</main>', a);
+  const seg = html.slice(a, b);
+  const opens = (seg.match(/<div[\s>]/g) || []).length;
+  const closes = (seg.match(/<\/div>/g) || []).length;
+  assert.equal(opens, closes, `div の数が合っていません（開き ${opens} / 閉じ ${closes}）`);
 });

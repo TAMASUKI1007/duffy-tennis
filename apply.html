@@ -250,9 +250,8 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
               </button>
             </sc-if>
           </div>
-          </div>
         </div>
-              <div style="margin-top:20px;">
+        <div style="margin-top:20px;">
           <label for="q" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:14px;margin-bottom:8px;">質問・ご要望 <span style="font-weight:900;font-size:11px;background:#EEEEEE;border:2px solid #111111;padding:0 6px;">任意</span></label>
           <textarea id="q" value="{{ question }}" onChange="{{ onQuestion }}" rows="5" placeholder="気になること・伝えておきたいことがあればご記入ください" style="width:100%;box-sizing:border-box;border:3px solid #111111;border-radius:0;background:#FFFFFF;padding:14px 16px;font-size:16px;font-weight:500;font-family:inherit;resize:vertical;"></textarea>
         </div>
@@ -461,9 +460,25 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         </div>
       </div>
 
+      <sc-if value="{{ showPay }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:22px;border:4px solid #111111;background:#E9FF00;box-shadow:8px 8px 0 #111111;padding:clamp(16px,4vw,22px);">
+          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — PAYMENT</div>
+          <p style="margin:6px 0 0;font-weight:900;font-size:clamp(17px,4.4vw,22px);line-height:1.5;">お支払いを済ませてください</p>
+          <sc-if value="{{ redirecting }}" hint-placeholder-val="{{ false }}">
+            <p role="status" style="margin:10px 0 0;border:3px solid #111111;background:#FFFFFF;padding:12px 14px;font-size:14px;font-weight:900;line-height:1.7;">あと {{ redirectIn }} 秒で、お支払い画面（Stripe）に移動します。<br><button type="button" onClick="{{ onCancelRedirect }}" style="margin-top:8px;font-family:inherit;cursor:pointer;border:2px solid #111111;background:#FFFFFF;color:#111111;font-weight:900;font-size:12px;padding:6px 12px;">移動しない</button></p>
+          </sc-if>
+          <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。お支払い後、Stripe から領収書メールが届きます。</p>
+          <sc-if value="{{ payTest }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:10px 0 0;border:3px solid #111111;background:#FFFFFF;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">※ 現在はテスト運用中です。決済ページに「テストモード」と表示され、本物のカードは使えません。お支払いは DM でご案内します。</p>
+          </sc-if>
+          <a href="{{ payUrl }}" onClick="{{ onPayNow }}" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #FFFFFF;color:#E9FF00;font-weight:900;font-size:clamp(15px,4vw,18px);padding:16px 20px;text-decoration:none;box-sizing:border-box;" style-hover="background:#FFFFFF;color:#111111;">Stripeで支払う →</a>
+          <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;">お支払い画面に移動します。メールアドレスは入力済みです。お支払いのあと、InstagramのDMで「支払い完了」をお送りください。</p>
+        </div>
+      </sc-if>
+
       <div style="margin-top:22px;border:4px solid #111111;background:#FFFFFF;box-shadow:8px 8px 0 #E9FF00;padding:clamp(16px,4vw,22px);">
-        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 1 — INSTAGRAM DM</div>
-        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(18px,4.8vw,24px);line-height:1.45;">InstagramのDMで「申込完了」と申込内容を送ってください</p>
+        <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">{{ dmStepLabel }}</div>
+        <p style="margin:6px 0 0;font-weight:900;font-size:clamp(18px,4.8vw,24px);line-height:1.45;">{{ dmHeading }}</p>
         <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">こちらからは先にご連絡できません。DMをいただいてから、{{ dmNextText }}</p>
         <div style="margin-top:14px;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;">
           <div style="font-weight:900;font-size:12px;color:#555555;">① この文面をコピー</div>
@@ -479,18 +494,6 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
         <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;color:#444444;">タップすると @duffy_tennis のDM画面が開きます。</p>
       </div>
 
-      <sc-if value="{{ showPay }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:22px;border:4px solid #111111;background:#E9FF00;box-shadow:8px 8px 0 #111111;padding:clamp(16px,4vw,22px);">
-          <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.28em;font-size:13px;">STEP 2 — PAYMENT</div>
-          <p style="margin:6px 0 0;font-weight:900;font-size:clamp(17px,4.4vw,22px);line-height:1.5;">お支払いを済ませてください</p>
-          <p style="margin:10px 0 0;font-size:13.5px;font-weight:700;line-height:1.9;">{{ payLabel }}<br>お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。お支払い後、Stripe から領収書メールが届きます。</p>
-          <sc-if value="{{ payTest }}" hint-placeholder-val="{{ false }}">
-            <p style="margin:10px 0 0;border:3px solid #111111;background:#FFFFFF;padding:10px 12px;font-size:12.5px;font-weight:900;line-height:1.8;">※ 現在はテスト運用中です。決済ページに「テストモード」と表示され、本物のカードは使えません。お支払いは DM でご案内します。</p>
-          </sc-if>
-          <a href="{{ payUrl }}" target="_blank" rel="noopener" style="margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;background:#111111;border:4px solid #111111;box-shadow:6px 6px 0 #FFFFFF;color:#E9FF00;font-weight:900;font-size:clamp(15px,4vw,18px);padding:16px 20px;text-decoration:none;box-sizing:border-box;" style-hover="background:#FFFFFF;color:#111111;">Stripeで支払う →</a>
-          <p style="margin:10px 0 0;font-size:12px;font-weight:700;line-height:1.85;">決済ページが別タブで開きます。メールアドレスは入力済みです。</p>
-        </div>
-      </sc-if>
 
 
       <sc-if value="{{ mailSent }}" hint-placeholder-val="{{ false }}">
@@ -601,6 +604,10 @@ class Component extends DCLogic {
     this.PAY_LABEL = 'Stripe(カード/Apple Pay/Google Pay/PayPay)';
     // オンラインの今月の受付状況（lib/availability.js）
     this.AVAIL = window.DUFFY_AVAILABILITY.status('online');
+    // 申込完了後に Stripe の支払い画面へ自動で移動する。戻ってきたときに続きから再開できるよう、
+    // 申込内容をこの端末に一時保存する（thanks.html も同じキーを読む）
+    this.DONE_KEY = 'duffy-tennis-apply-done';
+    this.PAY_REDIRECT_SECONDS = 4;
     // 料金は lib/pricing.js で決まる（日付で新旧が切り替わる）
     this.PRICING = window.DUFFY_PRICING.current();
     this.PLANS = this.PRICING.plans;
@@ -618,7 +625,7 @@ class Component extends DCLogic {
       },
       open1: false, open2: false, temp1: '', temp2: '', err: '', sending: false,
       // 送信結果
-      lineMessage: '', doneSummary: [], mailWarning: '', copied: false
+      lineMessage: '', doneSummary: [], mailWarning: '', copied: false, redirectIn: 0
     };
     this.SUPABASE = {
       url: 'https://gnzymfqsffzqmwvajnnw.supabase.co',
@@ -643,6 +650,19 @@ class Component extends DCLogic {
         }
       }
     } catch (e) {}
+    // ?pending=1：Stripe の支払い画面から「戻る」で戻ってきたとき。支払いがまだなら、完了画面の続きを出す
+    try {
+      if (new URLSearchParams(window.location.search).get('pending') === '1') {
+        const r = JSON.parse(localStorage.getItem(this.DONE_KEY) || 'null');
+        if (r && r.menu === 'online' && r.plan && Date.now() - r.ts < 3 * 24 * 3600 * 1000) {
+          this.state = {
+            ...this.state, done: true, redirectIn: 0,
+            data: { ...this.state.data, name: r.name, email: r.email, menu: 'online', plan: r.plan, payment: this.PAY_LABEL },
+            lineMessage: r.lineMessage, doneSummary: r.doneSummary || [], mailWarning: ''
+          };
+        }
+      }
+    } catch (e) {}
     // ?menu=online / ?menu=inperson：トップのボタンから来たとき、メニューを選択済みで始める
     try {
       const q = new URLSearchParams(window.location.search).get('menu');
@@ -654,6 +674,54 @@ class Component extends DCLogic {
         };
       }
     } catch (e) {}
+  }
+
+  componentWillUnmount() {
+    if (this._payTimer) clearInterval(this._payTimer);
+  }
+
+  /** 申込内容を一時保存する（支払い画面から戻ったとき・thanks.html の DM 文面に使う）。 */
+  persistDone() {
+    const d = this.state.data;
+    const p = this.PLANS.find((x) => x.key === d.plan);
+    try {
+      localStorage.setItem(this.DONE_KEY, JSON.stringify({
+        ts: Date.now(), name: d.name, email: d.email, menu: d.menu, plan: d.plan,
+        ticket: p ? p.key + '回 ' + this.fmtYen(p.price) : '',
+        lineMessage: this.state.lineMessage, doneSummary: this.state.doneSummary
+      }));
+    } catch (e) {}
+  }
+
+  /** 支払い画面に移る直前の準備：ブラウザの戻るで、この画面の続きに戻れるようにする。 */
+  markPending() {
+    try { history.replaceState(null, '', window.location.pathname + '?pending=1'); } catch (e) {}
+  }
+
+  /** 申込完了後、数秒のカウントダウンのあと Stripe の支払い画面へ自動で移動する。 */
+  startPayRedirect() {
+    const url = this.payUrl();
+    if (!url) return;
+    this.persistDone();
+    this.setState({ redirectIn: this.PAY_REDIRECT_SECONDS });
+    if (this._payTimer) clearInterval(this._payTimer);
+    this._payTimer = setInterval(() => {
+      const n = this.state.redirectIn - 1;
+      if (n <= 0) {
+        clearInterval(this._payTimer);
+        this._payTimer = null;
+        this.setState({ redirectIn: 0 });
+        this.markPending();
+        window.location.href = url;
+      } else {
+        this.setState({ redirectIn: n });
+      }
+    }, 1000);
+  }
+
+  cancelPayRedirect() {
+    if (this._payTimer) { clearInterval(this._payTimer); this._payTimer = null; }
+    this.setState({ redirectIn: 0 });
   }
 
   componentDidMount() {
@@ -1277,6 +1345,7 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
+      dmHeading: (d.menu === 'online' && !!this.payUrl()) ? 'お支払いのあと、InstagramのDMで「支払い完了」と申込内容を送ってください' : 'InstagramのDMで「申込完了」と申込内容を送ってください',
       dmNextText: this.isWaitlist()
         ? '今月のオンライン枠に空きが出たら、そのDMで順番にご案内します。'
         : (d.menu === 'online' && !!this.payUrl())
@@ -1286,6 +1355,11 @@ class Component extends DCLogic {
           : '日程・コートを確認して予約を確定し、移動費・お支払い方法をご案内します。',
       showPay: st.done && d.menu === 'online' && !!this.payUrl(),
       payUrl: this.payUrl(),
+      redirecting: !!st.redirectIn && st.redirectIn > 0,
+      redirectIn: st.redirectIn || 0,
+      onCancelRedirect: () => this.cancelPayRedirect(),
+      onPayNow: () => { this.cancelPayRedirect(); this.persistDone(); this.markPending(); },
+      dmStepLabel: (d.menu === 'online' && !!this.payUrl()) ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
       payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
       payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
@@ -1377,6 +1451,8 @@ class Component extends DCLogic {
               });
               try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
               window.scrollTo(0, 0);
+              // オンライン（満席でない）なら、そのまま支払い画面へ。リンクを押してもらうのを待たない
+              if (this.payUrl()) this.startPayRedirect();
             });
           return;
         }
@@ -1388,10 +1464,12 @@ class Component extends DCLogic {
         window.scrollTo(0, 0);
       },
       resetAll: () => {
-        try { localStorage.removeItem(this.STORE_KEY); } catch (e) {}
+        try { localStorage.removeItem(this.STORE_KEY); localStorage.removeItem(this.DONE_KEY); } catch (e) {}
+        if (this._payTimer) { clearInterval(this._payTimer); this._payTimer = null; }
+        try { history.replaceState(null, '', window.location.pathname); } catch (e) {}
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
-          lineMessage: '', doneSummary: [], mailWarning: '', copied: false,
+          lineMessage: '', doneSummary: [], mailWarning: '', copied: false, redirectIn: 0,
           data: { name: '', email: '', sns: '', age: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
