@@ -92,6 +92,19 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 body.menu-open { overflow: hidden; }
 html { scroll-padding-top: 64px; }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+.faq-item { border: 3px solid #111111; background: #FFFFFF; }
+.faq-item + .faq-item { margin-top: 10px; }
+.faq-item summary { cursor: pointer; list-style: none; padding: 14px 16px; min-height: 24px; font-weight: 900; font-size: 14.5px; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::before { content: 'Q'; flex: none; font-family: 'Anton', sans-serif; font-size: 20px; line-height: 1; background: #E9FF00; border: 2px solid #111111; padding: 2px 7px; }
+.faq-item[open] summary { border-bottom: 2px solid #EEEEEE; }
+.faq-item p { margin: 0; padding: 12px 16px 16px; font-size: 13.5px; font-weight: 500; line-height: 1.95; }
+.sticky-apply { display: none; }
+@media (max-width: 640px) {
+  .sticky-apply { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 25; min-height: 56px; box-sizing: border-box; padding-bottom: env(safe-area-inset-bottom); align-items: center; justify-content: center; background: #111111; color: #E9FF00; border-top: 3px solid #E9FF00; font-weight: 900; font-size: 16px; text-decoration: none; transition: transform 0.2s ease, visibility 0.2s; }
+  .sticky-apply:not(.show) { transform: translateY(100%); visibility: hidden; }
+  body.menu-open .sticky-apply { display: none; }
+}
 </style>
 </helmet>
 
@@ -303,6 +316,11 @@ html { scroll-padding-top: 64px; }
         <span style="background:#111111;color:#FFFFFF;font-weight:900;font-size:13px;padding:4px 12px;transform:rotate(-2deg);">ダッフィー先生とは</span>
       </div>
       <h2 data-appear="60,40,0" data-delay="0.08s" style="margin:14px 0 0;font-weight:900;font-size:clamp(24px,5.6vw,40px);line-height:1.45;">「なんとなく」を<br>言葉にするコーチ。</h2>
+      <div data-appear="60,40,0" data-delay="0.12s" style="margin:18px 0 0;border:3px solid #111111;background:#FFFFFF;box-shadow:6px 6px 0 #E9FF00;padding:clamp(16px,3.2vw,22px) clamp(16px,3.4vw,24px);">
+        <div style="font-weight:900;font-size:clamp(16px,4vw,20px);line-height:1.6;">教えるのは、センスで負けた元ジュニアです</div>
+        <p style="margin:8px 0 0;font-size:clamp(13px,3.2vw,14.5px);font-weight:500;line-height:1.95;text-wrap:pretty;word-break:auto-phrase;">ジュニアの頃、月曜から日曜まで毎日3時間以上練習していました。それでも、センスのある友達にはどんどん離されていく。差を埋めたのは、気合でも練習量でもなく「考え方」でした。</p>
+        <a href="message.html" style="display:inline-block;margin-top:6px;padding:10px 0;font-weight:900;font-size:14px;color:#111111;">先生の想いを全部読む →</a>
+      </div>
       <ul data-appear="60,40,0" data-delay="0.16s" style="margin:16px 0 0;padding:0;list-style:none;display:grid;gap:10px;">
         <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>指導実績 1,000名以上</li>
         <li style="display:flex;gap:10px;align-items:flex-start;font-size:clamp(13.5px,3.4vw,15.5px);font-weight:700;line-height:1.8;border-top:2px solid #111111;padding-top:10px;"><span aria-hidden="true" style="flex:none;width:10px;height:10px;border-radius:50%;background:#E9FF00;border:2px solid #111111;margin-top:6px;"></span>小学生からベテランまで対応</li>
@@ -371,12 +389,20 @@ html { scroll-padding-top: 64px; }
   <p aria-hidden="true" style="margin:14px 0 0;text-align:center;font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:12px;color:rgba(255,255,255,0.5);">SWIPE ←→</p>
 </section>
 
-<section data-screen-label="Menu" style="position:relative;padding:clamp(40px,6vw,70px) clamp(16px,4vw,56px);overflow:hidden;">
+<section id="menu" data-screen-label="Menu" style="position:relative;padding:clamp(40px,6vw,70px) clamp(16px,4vw,56px);overflow:hidden;">
   <div style="max-width:1100px;margin:0 auto;">
     <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
       <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">MENU</h2>
       <span data-appear="40,30,3" data-delay="0.06s" aria-hidden="true" style="width:clamp(20px,4vw,40px);height:clamp(20px,4vw,40px);border-radius:50%;background:#E9FF00;border:3px solid #111111;align-self:center;"></span>
       <span data-appear="60,30,0" data-delay="0.12s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">レッスン内容</span>
+    </div>
+    <div data-appear="0,30,0" style="margin-top:clamp(20px,3.5vw,32px);border:3px solid #111111;background:#F4F4F0;padding:clamp(14px,3vw,20px) clamp(16px,3.4vw,24px);">
+      <div style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.3em;font-size:13px;">WHICH ONE?</div>
+      <div style="margin-top:6px;font-weight:900;font-size:clamp(15px,3.8vw,18px);">どちらを選べばいい？</div>
+      <ul style="margin:10px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:clamp(13px,3.3vw,14.5px);font-weight:700;line-height:1.8;">
+        <li style="border-top:2px solid #111111;padding-top:8px;">自分のスイングを見てほしい、遠方で通えない → <b>オンライン動画添削</b></li>
+        <li style="border-top:2px solid #111111;padding-top:8px;">その場で打ち方を直してほしい → <b>対面レッスン</b></li>
+      </ul>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:clamp(22px,4vw,40px);margin-top:clamp(28px,5vw,54px);align-items:stretch;">
       <article data-appear="-60,50,-3" style="position:relative;transform:rotate(-1deg);border:3px solid #111111;background:#FFFFFF;box-shadow:10px 10px 0 #E9FF00;padding:clamp(20px,4vw,34px);display:flex;flex-direction:column;">
@@ -435,17 +461,33 @@ html { scroll-padding-top: 64px; }
   </div>
 </section>
 
-<section id="event" data-screen-label="Event" style="position:relative;padding:0 clamp(16px,4vw,56px) clamp(40px,6vw,70px);overflow:hidden;">
+<section id="lesson" data-screen-label="Lesson" style="position:relative;padding:clamp(20px,4vw,40px) clamp(16px,4vw,56px) clamp(40px,6vw,70px);overflow:hidden;">
   <div style="max-width:1100px;margin:0 auto;">
     <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
-      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">EVENT</h2>
-      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">イベント</span>
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">LESSON</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">対面レッスンの流れ</span>
     </div>
-    <div data-appear="0,50,0" style="margin-top:clamp(24px,4vw,40px);border:3px solid #111111;background:#FFFFFF;box-shadow:10px 10px 0 #E9FF00;padding:clamp(24px,5vw,44px);text-align:center;">
-      <span style="display:inline-block;background:#111111;color:#E9FF00;font-weight:900;font-size:13px;padding:4px 12px;transform:rotate(-2deg);">COMING SOON</span>
-      <p style="margin:14px 0 0;font-weight:900;font-size:clamp(22px,5vw,34px);line-height:1.5;">近日公開</p>
-      <p style="margin:8px 0 0;font-size:14px;font-weight:500;line-height:2;">イベントを準備中です。決まりしだい、ここでお知らせします。</p>
+    <div style="margin-top:clamp(24px,4vw,40px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:clamp(14px,3vw,24px);">
+      <div data-appear="0,40,0" style="border:3px solid #111111;background:#FFFFFF;padding:clamp(16px,3.2vw,22px);"><div style="font-family:'Anton',sans-serif;font-size:34px;line-height:1;">01</div><div style="margin-top:8px;font-weight:900;font-size:16px;">その日の課題を見立てる</div><p style="margin:6px 0 0;font-size:13px;font-weight:500;line-height:1.9;">直すのは1つか2つだけ。全部を同時には言いません。</p></div>
+      <div data-appear="0,40,0" data-delay="0.1s" style="border:3px solid #111111;background:#FFFFFF;padding:clamp(16px,3.2vw,22px);"><div style="font-family:'Anton',sans-serif;font-size:34px;line-height:1;">02</div><div style="margin-top:8px;font-weight:900;font-size:16px;">体の仕組みから説明して、打つ</div><p style="margin:6px 0 0;font-size:13px;font-weight:500;line-height:1.9;">理由が分かってから打つので、その場で変わります。</p></div>
+      <div data-appear="0,40,0" data-delay="0.2s" style="border:3px solid #111111;background:#E9FF00;padding:clamp(16px,3.2vw,22px);"><div style="font-family:'Anton',sans-serif;font-size:34px;line-height:1;">03</div><div style="margin-top:8px;font-weight:900;font-size:16px;">動画で見返す</div><p style="margin:6px 0 0;font-size:13px;font-weight:500;line-height:1.9;">レッスン動画は後日無料で共有。家でも再現できます。</p></div>
     </div>
+    <p style="margin:16px 0 0;font-size:12.5px;font-weight:700;line-height:1.85;">オンラインは、動画を送ると、動画と文章で添削が返ってきます（原則3日以内）。</p>
+  </div>
+</section>
+
+<section id="news" data-screen-label="News" style="position:relative;padding:0 clamp(16px,4vw,56px) clamp(40px,6vw,70px);overflow:hidden;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">NEWS</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">お知らせ</span>
+    </div>
+    <a href="saas.html" data-appear="0,50,0" style="margin-top:clamp(24px,4vw,40px);max-width:640px;border:3px solid #111111;background:#111111;color:#FFFFFF;box-shadow:10px 10px 0 #E9FF00;padding:clamp(20px,4vw,32px);display:flex;flex-direction:column;gap:10px;text-decoration:none;" style-hover="background:#E9FF00;color:#111111;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;"><span style="display:flex;align-items:center;gap:10px;font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,6vw,38px);letter-spacing:0.04em;"><img src="assets/formlab-icon-192.png" alt="" width="36" height="36" style="width:36px;height:36px;border-radius:8px;display:block;">FORMLAB</span><span style="display:inline-block;background:#E9FF00;color:#111111;border:2px solid #111111;font-weight:900;font-size:12px;padding:2px 10px;transform:rotate(2deg);">近日公開</span></div>
+      <div style="font-weight:900;font-size:clamp(17px,4.2vw,22px);line-height:1.5;">フォーム解析アプリ「FormLab」</div>
+      <p style="margin:0;font-size:14px;font-weight:500;line-height:2;">スマホで撮った動画の上に、体の骨組みと角度が重なります。株式会社ワタコンと一緒に作っています。</p>
+      <span style="font-weight:900;font-size:14px;">くわしく見る →</span>
+    </a>
   </div>
 </section>
 
@@ -492,6 +534,23 @@ html { scroll-padding-top: 64px; }
   </div>
 </section>
 
+<section id="faq" data-screen-label="FAQ" style="position:relative;padding:clamp(20px,4vw,40px) clamp(16px,4vw,56px) clamp(36px,6vw,64px);overflow:hidden;">
+  <div style="max-width:800px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:clamp(10px,2.5vw,18px);flex-wrap:wrap;">
+      <h2 data-appear="-60,30,-2" style="margin:0;font-family:'Anton',sans-serif;font-size:clamp(58px,14vw,140px);line-height:0.95;">FAQ</h2>
+      <span data-appear="60,30,0" data-delay="0.1s" style="font-weight:900;font-size:clamp(15px,3.6vw,20px);">はじめての方へ</span>
+    </div>
+    <div style="margin-top:clamp(22px,4vw,36px);">
+      <details class="faq-item"><summary>まったくの初心者でも大丈夫ですか？</summary><p>大丈夫です。クセがつく前に、体の仕組みと理屈から学べるのが理想です。小学生からベテランまで対応しています。</p></details>
+      <details class="faq-item"><summary>対面レッスンはどこで受けられますか？</summary><p>ご希望のコートに伺います。申込フォームで希望コートを入力するか、コート予約の代行を選べます。コート代と移動費は実費で別です。</p></details>
+      <details class="faq-item"><summary>オンライン動画添削は、どんな動画を送ればいいですか？</summary><p>打っている様子を横から、できれば後ろからも撮ってください。スマホで十分です。ボールが見えなくても、体全体が映っていれば大丈夫です。</p></details>
+      <details class="faq-item"><summary>申込しただけで予約は確定しますか？</summary><p>確定しません。申込は仮予約です。InstagramのDMで日程とお支払いが決まった時点で、予約が確定します。</p></details>
+      <details class="faq-item"><summary>キャンセルはできますか？</summary><p>対面レッスンは実施日の3日前まで無料、前日まで50%、当日は100%のキャンセル料がかかります。オンラインのチケットは原則返金できません。詳しくは<a href="terms.html">利用規約</a>をご覧ください。</p></details>
+    </div>
+    <p style="margin:16px 0 0;"><a href="guide.html#faq" style="font-weight:900;font-size:14px;color:#111111;display:inline-block;padding:10px 0;">ほかの質問を見る →</a></p>
+  </div>
+</section>
+
 <section id="cta" data-screen-label="CTA" style="padding:clamp(32px,5vw,60px) clamp(16px,4vw,56px) clamp(50px,8vw,100px);position:relative;overflow:hidden;">
   <div style="max-width:1100px;margin:0 auto;">
     <a href="apply.html" data-appear="0,70,0" style="display:block;background:#E9FF00;border:4px solid #111111;box-shadow:14px 14px 0 #111111;padding:clamp(26px,6vw,60px);text-decoration:none;color:#111111;transform:rotate(-0.8deg);transition:box-shadow 0.15s ease, transform 0.15s ease;" style-hover="box-shadow:5px 5px 0 #111111;transform:rotate(-0.8deg) translate(8px,8px);">
@@ -528,6 +587,7 @@ html { scroll-padding-top: 64px; }
     <div style="margin-top:12px;font-size:11px;color:rgba(255,255,255,0.6);font-weight:500;">© 2026 ダッフィーテニス / MatchUp TENNIS LESSON</div>
   </div>
 </footer>
+<a class="sticky-apply" href="apply.html">申込フォームへ →</a>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{
   &quot;motion&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;スクロール演出&quot; },
@@ -537,9 +597,9 @@ html { scroll-padding-top: 64px; }
 // メニュー（PC・スマホ共通、右上の三本線）の項目。ここに足すだけで増える。
 // target / rel は外部リンクのときだけ指定する。
 const MENU_ITEMS = [
-  { label: 'ダッフィー先生の想い', en: 'MESSAGE', href: 'message.html' },
-  { label: '料金と申込方法', en: 'GUIDE', href: 'guide.html' },
   { label: 'レッスン申し込み', en: 'APPLY', href: 'apply.html' },
+  { label: '料金と申込方法', en: 'GUIDE', href: 'guide.html' },
+  { label: 'ダッフィー先生の想い', en: 'MESSAGE', href: 'message.html' },
   { label: 'FormLab（近日公開）', en: 'COMING SOON', href: 'saas.html' },
   { label: 'Instagram @duffy_tennis', en: 'INSTAGRAM', href: 'https://www.instagram.com/duffy_tennis', target: '_blank', rel: 'noopener' }
 ];
@@ -555,6 +615,7 @@ class Component extends DCLogic {
       if (!this._reduced && this.props.motion !== false) setTimeout(() => this.setupAppear(), 40);
     });
     this.applyMarquee();
+    this.setupSticky();
     if (this._reduced || this.props.motion === false) {
       this.revealAll();
       return;
@@ -619,6 +680,23 @@ class Component extends DCLogic {
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     this._onScroll = onScroll;
+  }
+
+  /** スマホ下の固定「申込」バー。ファーストビューを過ぎたら出し、申込セクション・フッターでは隠す */
+  setupSticky() {
+    const bar = document.querySelector('.sticky-apply');
+    if (!bar) return;
+    const upd = () => {
+      const vh = window.innerHeight;
+      const cta = document.getElementById('cta');
+      const ft = document.querySelector('footer[data-screen-label="Footer"]');
+      const hit = (el) => { if (!el) return false; const r = el.getBoundingClientRect(); return r.top < vh && r.bottom > 0; };
+      bar.classList.toggle('show', window.scrollY > vh * 0.8 && !hit(cta) && !hit(ft));
+    };
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    upd();
+    this._stickyUpd = upd;
   }
 
   revealAll() {
@@ -719,6 +797,7 @@ class Component extends DCLogic {
     if (this._appearTimer) clearTimeout(this._appearTimer);
     if (this._io) this._io.disconnect();
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._stickyUpd) { window.removeEventListener('scroll', this._stickyUpd); window.removeEventListener('resize', this._stickyUpd); }
   }
 
   renderVals() {
