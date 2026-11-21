@@ -612,14 +612,25 @@ test('トップのヘッダー（MatchUp＋三本線）は固定で追従し、�
 // 2026-11-12：オンラインの申込は、送信するとそのまま Stripe の支払い画面へ移動する
 // ---------------------------------------------------------------------------
 
-test('オンライン送信後は自動で支払い画面へ移動（カウントダウン付き・中止できる）', () => {
-  assert.ok(html.includes('if (this.payUrl()) this.startPayRedirect();'), '送信成功後に自動遷移を開始');
-  assert.ok(html.includes('this.PAY_REDIRECT_SECONDS = 4;'), '4秒');
-  assert.ok(/window\.location\.href = url;/.test(html), '支払いURLへ移動');
-  assert.ok(html.includes('あと {{ redirectIn }} 秒で、お支払い画面（Stripe）に移動します') && html.includes('onCancelRedirect'), 'カウントダウン表示と中止');
-  assert.ok(html.includes('href="{{ payUrl }}" onClick="{{ onPayNow }}"') && !/href="\{\{ payUrl \}\}" target="_blank"/.test(html), '同じタブで移動（ボタンでも即移動）');
+test('オンライン送信後は即、支払い画面へ移動（カウントダウンなし・タイマーなし）。大きな支払いボタンは常に出す', () => {
+  assert.ok(html.includes('if (payable) this.goPay(lineMessage, doneSummary);'), '送信成功後に即遷移');
+  assert.ok(html.includes('window.location.assign(url)'), '支払いURLへ移動');
+  assert.ok(html.includes('this.PAY_WAIT_MS = 5000;') && html.includes('Promise.race('), '保存・メールの待ちに上限');
+  assert.ok(!html.includes('setInterval') && !html.includes('redirectIn') && !html.includes('移動しない') && !html.includes('PAY_REDIRECT'), 'カウントダウン・中止ボタンは廃止');
+  assert.ok(html.includes('支払い画面へ移動します'), '移動直前の一行');
+  assert.ok(html.includes('href="{{ payUrl }}" onClick="{{ onPayNow }}"') && !/href="\{\{ payUrl \}\}" target="_blank"/.test(html), '同じタブ。ボタンは常に出す（保険）');
+  assert.ok(html.includes('min-height:72px'), '支払いボタンは大きい');
   // 満席・対面は自動遷移しない（payUrl が空）
   assert.ok(/if \(d\.menu !== 'online' \|\| !d\.plan \|\| this\.isWaitlist\(\)\) return '';/.test(html), '満席・対面は支払いURLなし');
+});
+
+test('未払いで戻ったとき：先頭に「先に支払いを」と大きなボタン。DM文面・DMボタンは支払い後（/thanks）にだけ出す', () => {
+  assert.ok(html.includes('先に支払いをお願いします。<br>お支払いが済むと、そのまま DM の案内に進めます。'), '文言');
+  assert.ok(html.indexOf('STEP 1 — PAYMENT') < html.indexOf('REQUEST RECEIVED'), '支払いブロックが完了画面の先頭');
+  assert.ok(html.includes("showDm: !(st.done && d.menu === 'online' && !!this.payUrl())"), '支払いが要る申込はDMを隠す');
+  assert.ok(html.includes('<sc-if value="{{ showDm }}"'), 'DMブロックは showDm のときだけ');
+  assert.ok(html.indexOf('<sc-if value="{{ showDm }}"') < html.indexOf('{{ lineMessage }}') && html.indexOf('<sc-if value="{{ showDm }}"') < html.indexOf('{{ dmUrl }}'), '文面もDMボタンも showDm の中');
+  assert.ok(html.includes("e.persisted") && html.includes("'pageshow'"), '戻る（画面復元）で移動中の表示を消す');
 });
 
 test('支払い画面から戻っても続きから再開できる（?pending=1 と一時保存）', () => {
