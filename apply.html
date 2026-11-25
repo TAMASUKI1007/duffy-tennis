@@ -5,20 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="google-site-verification" content="CLn8V8nJSkbhD5CLAOo23kaq9ifl_8CuQOeOItDi7f8">
 <title>レッスン申し込み | ダッフィーテニス</title>
-<meta name="description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
+<meta name="description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（90分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <link rel="canonical" href="https://duffy-tennis.pages.dev/apply">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ダッフィーテニス">
 <meta property="og:locale" content="ja_JP">
 <meta property="og:title" content="レッスン申し込み | ダッフィーテニス">
-<meta property="og:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
+<meta property="og:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（90分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <meta property="og:url" content="https://duffy-tennis.pages.dev/apply">
 <meta property="og:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="レッスン申し込み | ダッフィーテニス">
-<meta name="twitter:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（120分）を約2分で仮予約できます。確定はInstagramのDMで。">
+<meta name="twitter:description" content="ダッフィーテニスのレッスン申込フォーム。オンライン動画添削（チケット制）と対面レッスン（90分）を約2分で仮予約できます。確定はInstagramのDMで。">
 <meta name="twitter:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <link rel="icon" href="/assets/icon-512.png" type="image/png">
 <link rel="apple-touch-icon" href="/assets/icon-512.png">
@@ -120,6 +120,34 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
 
         <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
           <div style="display:grid;gap:28px;">
+            <sc-if value="{{ showLessonPlan }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <p style="font-weight:900;font-size:14px;margin:0 0 10px;">レッスンの種類 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px;">
+                  <sc-for list="{{ lessonPlanCards }}" as="c" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ c.onPick }}" aria-pressed="{{ c.pressed }}" style="font-family:inherit;color:#111111;cursor:pointer;border:3px solid #111111;background:{{ c.bg }};padding:18px 16px;display:grid;gap:4px;justify-items:start;text-align:left;box-shadow:{{ c.shadow }};">
+                      <span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span style="font-weight:900;font-size:16px;">{{ c.title }}</span>
+                        <sc-if value="{{ c.hasBadge }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-weight:900;font-size:11px;background:#111111;color:#E9FF00;border:2px solid #111111;padding:0 8px;">{{ c.badge }}</span>
+                        </sc-if>
+                      </span>
+                      <span style="font-weight:700;font-size:12px;">{{ c.sub }}</span>
+                      <sc-if value="{{ c.hasNormal }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-weight:700;font-size:12px;margin-top:4px;">通常 <s>{{ c.normal }}</s></span>
+                      </sc-if>
+                      <span style="font-family:'Anton',sans-serif;font-size:30px;line-height:1.1;">{{ c.price }}</span>
+                      <span style="font-weight:900;font-size:12.5px;line-height:1.7;">{{ c.per }}</span>
+                      <sc-if value="{{ c.hasNormal }}" hint-placeholder-val="{{ false }}">
+                        <span style="font-weight:900;font-size:12px;background:#111111;color:#E9FF00;padding:0 6px;">{{ c.save }}</span>
+                      </sc-if>
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ showPeople }}" hint-placeholder-val="{{ true }}">
             <div>
               <p style="font-weight:900;font-size:14px;margin:0 0 10px;">参加人数 <span style="font-weight:900;font-size:11px;background:#E9FF00;border:2px solid #111111;padding:0 6px;">必須</span></p>
               <div style="display:flex;flex-wrap:wrap;gap:10px;">
@@ -129,9 +157,10 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
               </div>
               <p style="margin:10px 0 0;font-size:12px;font-weight:700;">{{ peopleNote }}</p>
             </div>
+            </sc-if>
 
             <div>
-              <p style="font-weight:900;font-size:14px;margin:0 0 4px;">希望日程（1レッスン = 2時間）</p>
+              <p style="font-weight:900;font-size:14px;margin:0 0 4px;">{{ dateHeading }}</p>
               <p style="margin:0 0 10px;font-size:12px;font-weight:700;line-height:1.9;color:#444444;">日にちだけ選んでください。時間は、選んだ日の受付区分（終日／午後から）のなかで、申込後のDMで決めます。</p>
               <div style="display:grid;gap:16px;">
                 <sc-for list="{{ pickers }}" as="p" hint-placeholder-count="2">
@@ -389,7 +418,7 @@ body { font-family: 'Noto Sans JP', sans-serif; overflow-x: hidden; -webkit-font
           <span style="font-weight:900;font-size:14px;">規約に同意します</span>
         </button>
         <sc-if value="{{ isOffline }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。日程と金額が決まったら、DMで支払いリンクをお送りします。</p>
+          <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ offlinePayNote }}</p>
         </sc-if>
         <sc-if value="{{ isOnline }}" hint-placeholder-val="{{ false }}">
           <p style="margin:20px 0 0;border:3px solid #111111;background:#F4F4F4;padding:12px 14px;font-size:12.5px;font-weight:700;line-height:1.85;">{{ onlinePayNote }}</p>
@@ -621,7 +650,7 @@ class Component extends DCLogic {
       done: false,
       data: {
         name: '', email: '', sns: '', age: '', guardianConsent: false,
-        menu: '', plan: '', people: 1, court: '', courtReserve: false, rental: '',
+        menu: '', plan: '', lessonPlan: '', people: 1, court: '', courtReserve: false, rental: '',
         // 固定コートの日を選んで court を自動で入れたかどうか
         courtFixedApplied: false,
         // date1/date2 は { key: 'YYYY-MM-DD', start: 開始の分数 }
@@ -658,10 +687,11 @@ class Component extends DCLogic {
     try {
       if (new URLSearchParams(window.location.search).get('pending') === '1') {
         const r = JSON.parse(localStorage.getItem(this.DONE_KEY) || 'null');
-        if (r && r.menu === 'online' && r.plan && Date.now() - r.ts < 3 * 24 * 3600 * 1000) {
+        const okKind = r && ((r.menu === 'online' && r.plan) || (r.menu === 'offline' && r.lessonPlan === 'package3'));
+        if (okKind && Date.now() - r.ts < 3 * 24 * 3600 * 1000) {
           this.state = {
             ...this.state, done: true, goingPay: false,
-            data: { ...this.state.data, name: r.name, email: r.email, menu: 'online', plan: r.plan, payment: this.PAY_LABEL },
+            data: { ...this.state.data, name: r.name, email: r.email, menu: r.menu, plan: r.plan || '', lessonPlan: r.lessonPlan || '', people: 1, payment: this.PAY_LABEL },
             lineMessage: r.lineMessage, doneSummary: r.doneSummary || [], mailWarning: ''
           };
         }
@@ -691,8 +721,8 @@ class Component extends DCLogic {
     const p = this.PLANS.find((x) => x.key === d.plan);
     try {
       localStorage.setItem(this.DONE_KEY, JSON.stringify({
-        ts: Date.now(), name: d.name, email: d.email, menu: d.menu, plan: d.plan,
-        ticket: p ? p.key + '回 ' + this.fmtYen(p.price) : '',
+        ts: Date.now(), name: d.name, email: d.email, menu: d.menu, plan: d.plan, lessonPlan: d.lessonPlan || '',
+        ticket: p ? p.key + '回 ' + this.fmtYen(p.price) : (d.lessonPlan === 'package3' ? '対面 3回パッケージ' : ''),
         lineMessage: o.lineMessage !== undefined ? o.lineMessage : this.state.lineMessage,
         doneSummary: o.doneSummary !== undefined ? o.doneSummary : this.state.doneSummary
       }));
@@ -738,7 +768,7 @@ class Component extends DCLogic {
     lines.push('■Instagram:' + (d.sns || '(未記入)'));
     lines.push('■メール:' + d.email);
     lines.push('■年齢:' + this.ageLabel());
-    lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? '対面レッスン' : '(未選択)'));
+    lines.push('■メニュー:' + (d.menu === 'online' ? 'オンライン動画添削' : d.menu === 'offline' ? this.offlineMenuName() : '(未選択)'));
     if (this.isWaitlist()) lines.push('■受付状況:ウェイティングリスト登録(今月のオンライン枠は満席)');
 
     let total = 0;
@@ -746,12 +776,18 @@ class Component extends DCLogic {
       const p = this.PLANS.find((x) => x.key === d.plan);
       if (p) { lines.push('■チケット:' + p.key + '回 ' + yen(p.price) + '(' + p.per + '円/回)'); total = p.price; }
     } else if (d.menu === 'offline') {
-      lines.push('■参加人数:' + d.people + '人');
-      lines.push('■第1希望:' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
+      if (this.hasLessonPlans()) lines.push('■レッスンの種類:' + this.lessonKindLabel());
+      lines.push('■参加人数:' + (this.isPackage() ? 1 : d.people) + '人');
+      lines.push('■' + (this.isPackage() ? '初回の第1希望:' : '第1希望:') + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
       lines.push('■第2希望:' + (d.date2 ? this.selLine(d.date2) : '(なし)'));
       lines.push('■希望コート:' + (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : ''));
       lines.push('■ボールレンタル:' + (d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし'));
       total = this.lessonFee();
+      if (this.isPackage()) {
+        const PK = window.DUFFY_PRICING.packageLabels(this.PRICING);
+        lines.push('■レッスン料:' + PK.price + '(' + PK.title + '・' + PK.perDiscount + '・通常' + PK.normal + 'から' + PK.save + ')');
+        lines.push('■2回目以降の日程:DMで相談');
+      }
       if (this.isGroup()) lines.push('■レッスン料:' + yen(total) + '(' + d.people + '人・' + this.perPersonLabel() + ')');
       if (d.rental === 'あり') total += 1200;
     }
@@ -762,7 +798,11 @@ class Component extends DCLogic {
     // 仮予約であること、確定はInstagramのDMであることを本文にも入れる
     lines.push('');
     lines.push('--------------------');
-    if (d.menu === 'offline') {
+    if (d.menu === 'offline' && this.isPackage() && this.payUrl()) {
+      lines.push('※こちらは仮予約の受付です。予約はまだ確定していません。');
+      lines.push('※3回パッケージのお支払いはこちらから: ' + this.payUrl());
+      lines.push('※お支払い後、Instagram(' + INSTAGRAM_ID + ')のDMでコート・日時・移動費をご案内し、予約を確定します。');
+    } else if (d.menu === 'offline') {
       lines.push('※こちらは仮予約の受付です。予約はまだ確定していません。');
       lines.push('※Instagram(' + INSTAGRAM_ID + ')のDMでコート・日時・移動費・お支払い方法をご案内し、予約を確定します。');
     } else if (this.isWaitlist()) {
@@ -798,9 +838,9 @@ class Component extends DCLogic {
       category: this.ageLabel(),
       age: this.ageNumber(),
       guardian_consent: !!d.guardianConsent,
-      menu: d.menu === 'online' ? 'オンライン動画添削' : '対面レッスン',
+      menu: d.menu === 'online' ? 'オンライン動画添削' : this.offlineMenuName(),
       plan: d.menu === 'online' ? d.plan : null,
-      people: d.menu === 'offline' ? d.people : null,
+      people: d.menu === 'offline' ? (this.isPackage() ? 1 : d.people) : null,
       court: d.menu === 'offline' ? d.court : null,
       court_reserve: d.menu === 'offline' ? !!d.courtReserve : null,
       rental: d.menu === 'offline' ? d.rental : null,
@@ -848,18 +888,44 @@ class Component extends DCLogic {
 
   payUrl() {
     const d = this.state.data;
+    // 対面の3回パッケージは、オンラインと同じく送信後すぐ支払いへ（リンク未設定なら空＝従来どおりDMで案内）
+    if (this.isPackage()) return window.DUFFY_PAYMENTS.packageUrl(d.email, d.name);
     if (d.menu !== 'online' || !d.plan || this.isWaitlist()) return '';
     return window.DUFFY_PAYMENTS.ticketUrl(d.plan, d.email, d.name);
   }
 
-  /** 対面レッスンの料金（人数で決まる）。 */
+  /** 3回パッケージを選んでいるか（対面・1人用）。 */
+  isPackage() {
+    const d = this.state.data;
+    return d.menu === 'offline' && d.lessonPlan === 'package3' && !!this.PRICING.lesson.package;
+  }
+
+  /** 対面の「レッスンの種類」を選ばせるか（料金表に3回パッケージがあるとき）。 */
+  hasLessonPlans() {
+    return !!this.PRICING.lesson.package;
+  }
+
+  /** 対面レッスンの料金。3回パッケージならパッケージ料金、そうでなければ人数で決まる1回分。 */
   lessonFee() {
+    if (this.isPackage()) return this.PRICING.lesson.package.price;
     return window.DUFFY_PRICING.lessonFee(this.PRICING, this.state.data.people);
   }
 
-  /** 2人以上のグループ料金が適用される状態か。 */
+  /** 2人以上のグループ料金が適用される状態か（3回パッケージは1人用なので対象外）。 */
   isGroup() {
-    return !!this.PRICING.lesson.group && Number(this.state.data.people) >= 2;
+    return !this.isPackage() && !!this.PRICING.lesson.group && Number(this.state.data.people) >= 2;
+  }
+
+  /** メール・保存で使うメニュー名。1回レッスンは従来どおり「対面レッスン」。 */
+  offlineMenuName() {
+    return this.isPackage() ? '対面レッスン(' + window.DUFFY_PRICING.packageLabels(this.PRICING).title + ')' : '対面レッスン';
+  }
+
+  /** 「1回レッスン 90分」「3回パッケージ」など、確認・メール用の種類名。 */
+  lessonKindLabel() {
+    const L = this.PRICING.lesson;
+    if (this.isPackage()) return window.DUFFY_PRICING.packageLabels(this.PRICING).title;
+    return (this.hasLessonPlans() ? '1回レッスン ' : '') + L.minutes + '分';
   }
 
   /** 「1人11,000円」の表示。 */
@@ -870,8 +936,10 @@ class Component extends DCLogic {
   /** 料金の説明文（メニュー選択・人数の注記で使う）。 */
   lessonFeeSentence() {
     const L = this.PRICING.lesson;
+    const PK = window.DUFFY_PRICING.packageLabels(this.PRICING);
     if (!L.group) return 'マンツーマン・グループ共通で一律' + this.fmtYen(L.solo) + '。';
-    return '1人' + this.fmtYen(L.solo) + '、2人以上は人数にかかわらず' + this.fmtYen(L.group) + '(2人なら1人' + this.fmtYen(L.group / 2) + ')。';
+    const pk = PK ? PK.title + PK.price + '(' + PK.perDiscount + ')。' : '';
+    return '1回レッスンは1人' + this.fmtYen(L.solo) + '、2人以上は人数にかかわらず' + this.fmtYen(L.group) + '(2人なら1人' + this.fmtYen(L.group / 2) + ')。' + pk;
   }
 
   /** 年齢を数値で返す。未入力や不正なら null。 */
@@ -895,8 +963,8 @@ class Component extends DCLogic {
       const p = this.PLANS.find((x) => x.key === d.plan);
       rows.push('メニュー：オンライン動画添削' + (p ? '（' + p.key + '回チケット）' : ''));
     } else {
-      rows.push('メニュー：対面レッスン');
-      rows.push('第1希望：' + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
+      rows.push('メニュー：' + this.offlineMenuName().replace('(', '（').replace(')', '）') + (this.hasLessonPlans() && !this.isPackage() ? '（1回レッスン）' : ''));
+      rows.push((this.isPackage() ? '初回の第1希望：' : '第1希望：') + (d.date1 ? this.selLine(d.date1) : '(未選択)'));
       if (d.date2) rows.push('第2希望：' + this.selLine(d.date2));
       rows.push('コート：' + (d.court || '(未指定)') + (d.courtReserve ? '(予約代行を希望)' : ''));
       rows.push('ボールレンタル：' + (d.rental || '(未選択)'));
@@ -1151,6 +1219,7 @@ class Component extends DCLogic {
     if (step === 2) {
       if (d.menu === 'online' && !d.plan) return 'チケットプランを選択してください。';
       if (d.menu === 'offline') {
+        if (this.hasLessonPlans() && !d.lessonPlan) return 'レッスンの種類（1回レッスン／3回パッケージ）を選択してください。';
         if (!d.date1) return '第1希望の日程を選択してください。';
         if (d.date2 && d.date1 && d.date2.key === d.date1.key) {
           return '第1希望と第2希望が同じ日です。';
@@ -1216,9 +1285,30 @@ class Component extends DCLogic {
     const needsGuardian = ageNum !== null && ageNum < 18;
 
 
+    const PKL = window.DUFFY_PRICING.packageLabels(this.PRICING);
+    const lessonPlanCards = !PKL ? [] : [
+      {
+        key: 'single', title: '1回レッスン', sub: this.PRICING.lesson.minutes + '分', badge: '', hasBadge: false,
+        normal: '', hasNormal: false, price: this.fmtYen(this.PRICING.lesson.solo), per: PKL.single, save: ''
+      },
+      {
+        key: 'package3', title: PKL.title, sub: '1人用・' + this.PRICING.lesson.minutes + '分 × ' + this.PRICING.lesson.package.count + '回', badge: 'おすすめ', hasBadge: true,
+        normal: PKL.normal, hasNormal: true, price: PKL.price, per: PKL.perDiscount, save: PKL.save
+      }
+    ].map((c) => {
+      const pressed = d.lessonPlan === c.key;
+      return {
+        ...c, pressed,
+        bg: pressed ? '#E9FF00' : '#FFFFFF',
+        shadow: pressed ? '8px 8px 0 #111111' : 'none',
+        // 3回パッケージは1人用。選ぶと人数は1人に戻す
+        onPick: () => this.setData(c.key === 'package3' ? { lessonPlan: c.key, people: 1 } : { lessonPlan: c.key })
+      };
+    });
+
     const menuDefs = [
       { key: 'online', en: 'ONLINE', title: 'オンライン動画添削', desc: 'スイング動画を送ると添削が返ってくるチケット制。1往復 = 1pt/有効期限5ヶ月。全国どこからでもOK。' },
-      { key: 'offline', en: 'IN-PERSON', title: '対面レッスン', desc: 'コートで受ける120分レッスン。' + this.lessonFeeSentence() + 'レッスン動画は後日無料で共有。' }
+      { key: 'offline', en: 'IN-PERSON', title: '対面レッスン', desc: 'コートで受ける' + this.PRICING.lesson.minutes + '分レッスン。' + this.lessonFeeSentence() + 'レッスン動画は後日無料で共有。' }
     ];
     const menuCards = menuDefs.map((c) => {
       const pressed = d.menu === c.key;
@@ -1293,18 +1383,26 @@ class Component extends DCLogic {
       }
       estNote = '※ 1往復 = 1pt 消費/有効期限5ヶ月。お支払い方法は申込後、InstagramのDMにてご案内します。';
     } else if (d.menu === 'offline') {
-      confirmRows.push({ k: '参加人数', v: d.people + '人' });
-      confirmRows.push({ k: '第1希望', v: d.date1 ? this.selLine(d.date1) : '(未選択)' });
+      if (this.hasLessonPlans()) confirmRows.push({ k: 'レッスンの種類', v: this.lessonKindLabel() });
+      confirmRows.push({ k: '参加人数', v: (this.isPackage() ? 1 : d.people) + '人' });
+      confirmRows.push({ k: this.isPackage() ? '初回の第1希望' : '第1希望', v: d.date1 ? this.selLine(d.date1) : '(未選択)' });
       confirmRows.push({ k: '第2希望', v: d.date2 ? this.selLine(d.date2) : '(なし)' });
       confirmRows.push({ k: '希望コート', v: (d.court || '(未指定)') + (d.courtReserve ? '(コート予約も依頼)' : '') });
       confirmRows.push({ k: 'ボールレンタル', v: d.rental === 'あり' ? 'あり(1カゴ 1,200円)' : 'なし' });
-      estRows.push({ k: '対面レッスン 120分' + (this.isGroup() ? '(' + d.people + '人)' : '(1人)'), v: this.fmtYen(this.lessonFee()) });
+      if (this.isPackage()) {
+        estRows.push({ k: '対面レッスン ' + PKL.title + '(1人)', v: PKL.price });
+        estRows.push({ k: '1回あたり', v: PKL.perDiscount.replace('1回あたり', '') });
+        estRows.push({ k: '通常' + PKL.normal + 'との差', v: PKL.save });
+      } else {
+        estRows.push({ k: '対面レッスン ' + this.lessonKindLabel() + (this.isGroup() ? '(' + d.people + '人)' : '(1人)'), v: this.fmtYen(this.lessonFee()) });
+      }
       if (this.isGroup()) estRows.push({ k: '1人あたり', v: this.perPersonLabel() });
       total = this.lessonFee();
       if (d.rental === 'あり') { estRows.push({ k: '練習ボールレンタル 1カゴ', v: this.fmtYen(1200) }); total += 1200; }
       // 移動費は金額を算出・表示しない（第6-2節）。行としては必ず見せる。
       estRows.push({ k: '移動費(お1人分)', v: '別途' });
-      estNote = '※ 移動費は内容を確認のうえ、InstagramのDMでご案内します。日程・コート・お支払い方法もDMで確定します。';
+      estNote = '※ 移動費は内容を確認のうえ、InstagramのDMでご案内します。日程・コート・お支払い方法もDMで確定します。' + (this.isPackage() ? '2回目以降の日程もDMで相談します。' : '');
+      if (this.isPackage() && this.payUrl()) estNote = '※ 送信すると、すぐにお支払い画面(Stripe)に移動します。日程・コート・移動費は、お支払い後にInstagramのDMで決めます。2回目以降の日程もDMで相談します。';
     }
     confirmRows.push({ k: 'お支払い方法', v: d.payment || '(未選択)' });
     confirmRows.push({ k: '質問・ご要望', v: d.question || '(なし)' });
@@ -1323,10 +1421,17 @@ class Component extends DCLogic {
       steps, fields1, menuCards, planCards, peopleOpts, rentalOpts, pickers,
       age: d.age,
       onAge: (e) => this.setData({ age: e.target.value }),
-      peopleNote: '※ 120分 ' + this.lessonFeeSentence(),
-      termsFee1: this.PRICING.lesson.group
-        ? '対面レッスンの料金は、120分あたり1名の場合' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)、2名以上の場合は参加人数にかかわらず合計' + this.fmtYen(this.PRICING.lesson.group) + '(税込)とします。'
-        : '対面レッスンの料金は、120分あたり一律' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)とし、マンツーマン・グループを問わず同額とします。',
+      lessonPlanCards,
+      showLessonPlan: lessonPlanCards.length > 0,
+      showPeople: !this.isPackage(),
+      dateHeading: this.isPackage()
+        ? '初回の希望日程（2回目以降は申込後のDMで相談）'
+        : '希望日程（1レッスン = ' + this.PRICING.lesson.minutes + '分）',
+      peopleNote: '※ ' + this.PRICING.lesson.minutes + '分 ' + this.lessonFeeSentence(),
+      termsFee1: (this.PRICING.lesson.group
+        ? '対面レッスンの料金は、' + this.PRICING.lesson.minutes + '分あたり1名の場合' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)、2名以上の場合は参加人数にかかわらず合計' + this.fmtYen(this.PRICING.lesson.group) + '(税込)とします。'
+        : '対面レッスンの料金は、' + this.PRICING.lesson.minutes + '分あたり一律' + this.fmtYen(this.PRICING.lesson.solo) + '(税込)とし、マンツーマン・グループを問わず同額とします。')
+        + (PKL ? '3回パッケージ(1名・' + this.PRICING.lesson.minutes + '分 × ' + this.PRICING.lesson.package.count + '回分)の料金は' + PKL.price + '(税込)とします。' : ''),
       termsFee2: this.PRICING.lesson.group
         ? '前項の料金は申込時の参加人数で確定します。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。'
         : '前項の料金は、参加人数の多寡にかかわらず変動しないものとします。お申込み後に参加人数が減少した場合であっても、料金は申込時の金額から変更されません。',
@@ -1343,24 +1448,29 @@ class Component extends DCLogic {
       courtInputShown: d.menu === 'offline' && !fixedCourtName,
       lineMessage: st.lineMessage,
       dmUrl: INSTAGRAM_DM_URL,
-      dmHeading: (d.menu === 'online' && !!this.payUrl()) ? 'お支払いのあと、InstagramのDMで「支払い完了」と申込内容を送ってください' : 'InstagramのDMで「申込完了」と申込内容を送ってください',
+      dmHeading: !!this.payUrl() ? 'お支払いのあと、InstagramのDMで「支払い完了」と申込内容を送ってください' : 'InstagramのDMで「申込完了」と申込内容を送ってください',
       dmNextText: this.isWaitlist()
         ? '今月のオンライン枠に空きが出たら、そのDMで順番にご案内します。'
+        : this.isPackage() && !!this.payUrl()
+        ? 'お支払いを確認して、日程・コートを決め、移動費をご案内して予約を確定します。'
         : (d.menu === 'online' && !!this.payUrl())
         ? 'お支払いの確認と動画の送り方をご案内して添削を始めます。'
         : d.menu === 'online'
           ? 'お支払い方法と動画の送り方をご案内します。'
           : '日程・コートを確認して予約を確定し、移動費・お支払い方法をご案内します。',
-      showPay: st.done && d.menu === 'online' && !!this.payUrl(),
+      showPay: st.done && !!this.payUrl(),
       payUrl: this.payUrl(),
       goingPay: !!st.goingPay,
       needPay: !st.goingPay,
       // 支払いが要るオンライン申込は、支払いが済む（/thanks）までDMの案内を出さない
-      showDm: !(st.done && d.menu === 'online' && !!this.payUrl()),
+      showDm: !(st.done && !!this.payUrl()),
+      offlinePayNote: (this.isPackage() && !!this.payUrl())
+        ? 'お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。送信すると、すぐにお支払い画面に移動します。日程・コート・移動費はお支払い後、DMで決めます。'
+        : 'お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。日程と金額が決まったら、DMで支払いリンクをお送りします。',
       onPayNow: () => { this.persistDone(); this.markPending(); },
-      dmStepLabel: (d.menu === 'online' && !!this.payUrl()) ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
+      dmStepLabel: !!this.payUrl() ? 'STEP 2 — INSTAGRAM DM' : 'INSTAGRAM DM',
       payTest: window.DUFFY_PAYMENTS.PAYMENTS.mode !== 'live',
-      payLabel: (() => { const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
+      payLabel: (() => { if (this.isPackage()) return '対面レッスン ' + window.DUFFY_PRICING.packageLabels(this.PRICING).title + ' ' + this.fmtYen(this.PRICING.lesson.package.price); const p = this.PLANS.find((x) => x.key === d.plan); return p ? 'オンライン動画添削 ' + p.key + '回チケット ' + this.fmtYen(p.price) : ''; })(),
       doneSummary: (st.doneSummary || []).map((t) => ({ text: t })),
       mailWarning: st.mailWarning,
       mailSent: st.done && !st.mailWarning,
@@ -1411,7 +1521,7 @@ class Component extends DCLogic {
             // メールテンプレートの {{category}} はそのまま使えるように年齢を入れる
             category: this.ageLabel(),
             age: this.ageLabel(),
-            menu: d.menu === 'online' ? (this.isWaitlist() ? 'オンライン動画添削(ウェイティングリスト)' : 'オンライン動画添削') : '対面レッスン',
+            menu: d.menu === 'online' ? (this.isWaitlist() ? 'オンライン動画添削(ウェイティングリスト)' : 'オンライン動画添削') : this.offlineMenuName(),
             message: summary
           };
 
@@ -1477,7 +1587,7 @@ class Component extends DCLogic {
         this.setState({
           step: 1, done: false, err: '', open1: false, open2: false, temp1: '', temp2: '', cur1: null, cur2: null,
           lineMessage: '', doneSummary: [], mailWarning: '', copied: false, goingPay: false,
-          data: { name: '', email: '', sns: '', age: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', date1: null, date2: null, agree: false, payment: '', question: '' }
+          data: { name: '', email: '', sns: '', age: '', guardianConsent: false, menu: '', plan: '', people: 1, court: '', courtReserve: false, courtFixedApplied: false, rental: '', lessonPlan: '', date1: null, date2: null, agree: false, payment: '', question: '' }
         });
         window.scrollTo(0, 0);
       }

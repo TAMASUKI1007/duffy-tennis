@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="CLn8V8nJSkbhD5CLAOo23kaq9ifl_8CuQOeOItDi7f8">
+<title>料金表 | ダッフィーテニス</title>
+<meta name="description" content="ダッフィーテニスの料金表。オンライン動画添削チケット（3・5・10回）と、対面レッスン（1回90分／3回パッケージ）を1ページで比べられます。">
+<link rel="canonical" href="https://duffy-tennis.pages.dev/pricing">
+<meta property="og:type" content="website">
+<meta property="og:title" content="料金表 | ダッフィーテニス">
+<meta property="og:description" content="オンライン動画添削チケットと、対面レッスン（1回90分／3回パッケージ）の料金を1ページで比較。">
+<meta property="og:url" content="https://duffy-tennis.pages.dev/pricing">
+<meta property="og:image" content="https://duffy-tennis.pages.dev/assets/og.png">
+<link rel="icon" href="/assets/icon-512.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+html, body { margin: 0; padding: 0; background: #FFFFFF; color: #111111; }
+body { font-family: 'Noto Sans JP', sans-serif; -webkit-font-smoothing: antialiased; }
+header { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px clamp(16px,4vw,40px); border-bottom:3px solid #111111; }
+main { max-width:800px; margin:0 auto; padding:clamp(28px,6vw,56px) clamp(16px,4vw,24px) 90px; }
+.eyebrow { font-family:'Bebas Neue',sans-serif; letter-spacing:0.3em; font-size:14px; }
+h1 { margin:8px 0 0; font-weight:900; font-size:clamp(26px,6vw,40px); line-height:1.4; }
+h1 span { background:linear-gradient(transparent 62%, #E9FF00 62%); padding:0 4px; }
+h2 { margin:0; font-weight:900; font-size:clamp(18px,4.6vw,24px); line-height:1.4; }
+.sec { margin-top:clamp(32px,6vw,48px); }
+.sec .en { font-family:'Bebas Neue',sans-serif; letter-spacing:0.28em; font-size:13px; color:#555; }
+.lead { margin:10px 0 0; font-size:14px; font-weight:700; line-height:1.95; }
+.rows { margin-top:16px; display:grid; gap:12px; }
+.row { border:3px solid #111111; background:#FFFFFF; padding:14px 16px; display:grid; grid-template-columns:1fr auto; gap:6px 14px; align-items:center; }
+.row.rec { background:#E9FF00; box-shadow:6px 6px 0 #111111; }
+.name { font-weight:900; font-size:16px; line-height:1.5; }
+.sub { font-weight:700; font-size:12px; line-height:1.7; color:#444; }
+.rec .sub { color:#111111; }
+.badge { display:inline-block; font-size:11px; font-weight:900; background:#E9FF00; border:2px solid #111111; padding:0 6px; margin-left:6px; vertical-align:middle; }
+.badge.dark { background:#111111; color:#E9FF00; }
+.price { text-align:right; line-height:1.2; }
+.price b { font-family:'Anton',sans-serif; font-weight:400; font-size:clamp(30px,8vw,40px); }
+.price small { font-weight:900; font-size:14px; }
+.price s { display:block; font-size:12px; font-weight:700; color:#444; }
+.chip { display:inline-block; margin-top:4px; background:#111111; color:#E9FF00; font-weight:900; font-size:12px; padding:0 6px; }
+.go { grid-column:1 / -1; display:flex; align-items:center; justify-content:center; text-decoration:none; font-weight:900; font-size:15px; min-height:48px; box-sizing:border-box; border:3px solid #111111; background:#111111; color:#E9FF00; margin-top:6px; }
+.go:hover { background:#FFFFFF; color:#111111; }
+.rec .go:hover { background:#FFFFFF; }
+.note { margin-top:12px; font-size:12.5px; font-weight:700; color:#555; line-height:1.85; }
+.back { margin-top:32px; font-size:13px; font-weight:900; }
+.back a { color:#111111; }
+footer { background:#111111; color:#FFFFFF; padding:28px clamp(16px,4vw,56px); font-size:12px; line-height:2; }
+footer a { color:#E9FF00; }
+</style>
+<script src="lib/analytics.js"></script>
+<script src="lib/pricing.js"></script>
+</head>
+<body>
+<header><a href="index.html" aria-label="MatchUp トップへ戻る" style="font-weight:900;font-size:20px;color:#111111;text-decoration:none;">MatchUp</a></header>
+<main>
+  <div class="eyebrow">PRICE LIST</div>
+  <h1><span>料金表</span></h1>
+  <p class="lead">オンライン動画添削と対面レッスンの料金を、1ページで比べられます。金額はすべて税込です。</p>
+
+  <section class="sec" id="online">
+    <div class="en">ONLINE</div>
+    <h2>オンライン動画添削（チケット制）</h2>
+    <p class="note" style="margin-top:8px;">スイング動画を送ると、動画と文章で添削が返ってきます。動画1本の添削（1往復）で1回分。有効期限は購入日から5ヶ月です。</p>
+    <div class="rows" id="online-rows"></div>
+  </section>
+
+  <section class="sec" id="inperson">
+    <div class="en">IN-PERSON</div>
+    <h2>対面レッスン（東京）</h2>
+    <p class="note" style="margin-top:8px;" id="inperson-lead"></p>
+    <div class="rows" id="inperson-rows"></div>
+    <p class="note">別途：コート代・コーチの移動費（お1人分）・ボールレンタル（1カゴ1,200円）。レッスン動画は後日無料で共有します。</p>
+  </section>
+
+  <noscript><p class="note">料金の表示にはJavaScriptが必要です。<a href="guide.html#price">料金と申込方法</a>のページでもご覧いただけます。</p></noscript>
+
+  <p class="note">お支払い：Stripe（カード／Apple Pay／Google Pay／PayPay）。申込の流れは<a href="guide.html" style="color:#111111;font-weight:900;">料金と申込方法</a>をご覧ください。</p>
+  <p class="back"><a href="index.html">← トップへ</a></p>
+</main>
+<footer>© 2026 ダッフィーテニス / MatchUp TENNIS LESSON ｜ <a href="pricing.html">料金表</a> ｜ <a href="guide.html">料金と申込方法</a> ｜ <a href="terms.html">利用規約</a> ｜ <a href="tokushoho.html">特定商取引法に基づく表記</a> ｜ <a href="privacy.html">プライバシーポリシー</a></footer>
+
+<script>
+// 料金はすべて lib/pricing.js（window.DUFFY_PRICING）から読む。ここに金額を書かない。
+(function () {
+  var P = window.DUFFY_PRICING.current();
+  var yen = function (n) { return '¥' + Number(n).toLocaleString('ja-JP'); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  // r: { name, badge, badgeDark, sub, was, price, chip, href, rec }
+  function row(r) {
+    var badge = r.badge ? '<span class="badge' + (r.badgeDark ? ' dark' : '') + '">' + esc(r.badge) + '</span>' : '';
+    var was = r.was ? '<s>通常' + esc(r.was) + '</s>' : '';
+    var chip = r.chip ? '<span class="chip">' + esc(r.chip) + '</span>' : '';
+    return '<div class="row' + (r.rec ? ' rec' : '') + '">' +
+      '<div><div class="name">' + esc(r.name) + badge + '</div><div class="sub">' + esc(r.sub) + '</div>' + chip + '</div>' +
+      '<div class="price">' + was + '<b>' + esc(r.price) + '</b><small>円</small></div>' +
+      '<a class="go" href="' + r.href + '">' + esc(r.cta) + ' →</a></div>';
+  }
+  var num = function (n) { return Number(n).toLocaleString('ja-JP'); };
+
+  // --- オンライン ---
+  var online = P.plans.map(function (p) {
+    return row({
+      name: p.key + '回チケット',
+      badge: p.popular ? '一番人気' : (p.best ? 'いちばんおトク' : ''),
+      badgeDark: !!p.popular,
+      sub: '1回あたり ' + num(p.per) + '円',
+      price: num(p.price),
+      href: 'apply.html?menu=online',
+      cta: 'オンラインを申し込む',
+      rec: !!p.popular
+    });
+  });
+  document.getElementById('online-rows').innerHTML = online.join('');
+
+  // --- 対面 ---
+  var L = P.lesson;
+  var PK = window.DUFFY_PRICING.packageLabels(P);
+  var PI = window.DUFFY_PRICING.packageInfo(P);
+  var rows = [];
+  rows.push(row({
+    name: PK ? '1回レッスン' : '対面レッスン', sub: L.minutes + '分／' + (PK ? PK.single : '1人'),
+    price: num(L.solo), href: 'apply.html?menu=inperson', cta: '対面レッスンを申し込む'
+  }));
+  if (PK) {
+    rows.push(row({
+      name: PK.title, badge: 'おすすめ', badgeDark: true,
+      sub: '1人用・' + L.minutes + '分 × ' + PI.count + '回／' + PK.perDiscount,
+      was: PK.normal, price: num(PI.price), chip: PK.save,
+      href: 'apply.html?menu=inperson', cta: '対面レッスンを申し込む', rec: true
+    }));
+  }
+  if (L.group) {
+    rows.push(row({
+      name: '2人以上で1回レッスン', sub: L.minutes + '分／人数にかかわらず（2人なら1人' + num(L.group / 2) + '円）',
+      price: num(L.group), href: 'apply.html?menu=inperson', cta: '対面レッスンを申し込む'
+    }));
+  }
+  document.getElementById('inperson-rows').innerHTML = rows.join('');
+  document.getElementById('inperson-lead').textContent = 'コートで受ける' + L.minutes + '分のレッスン。その日の課題を、体の仕組みからその場で直します。' +
+    (PK ? '3回まとめて申し込むと、1回あたりが安くなります。' : '');
+})();
+</script>
+</body>
+</html>

@@ -10,6 +10,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -405,7 +406,7 @@ test('支払いURLにメールと氏名が付く', () => {
 test('申込フォームに Stripe の支払いボタンが組み込まれている', () => {
   assert.ok(html.includes('lib/payments.js'));
   assert.ok(html.includes('Stripeで支払う'));
-  assert.ok(html.includes("showPay: st.done && d.menu === 'online'"));
+  assert.ok(html.includes("showPay: st.done && !!this.payUrl()"));
 });
 
 test('金額は「お支払い金額(移動費別)」で、移動費は金額を出さない。「合計」の表記は使わない', () => {
@@ -469,7 +470,7 @@ test('トップのヒーローは申込ボタン2つ（?menu= 付き）。金額
   assert.ok(idx.includes('href="apply.html?menu=online"') && idx.includes('{{ heroOnlineLabel }}'), '主ボタン（オンライン）');
   assert.ok(idx.includes('href="apply.html?menu=inperson"') && idx.includes('{{ heroOfflineLabel }}'), '副ボタン（対面）');
   assert.ok(idx.includes("heroOnlineLabel: 'オンライン動画添削を申し込む（' + P.plans[0].key + '回 ' + yen(P.plans[0].price) + '円〜）'"), 'オンラインの金額は pricing から');
-  assert.ok(idx.includes("heroOfflineLabel: '対面レッスンを申し込む（120分 ' + yen(P.lesson.solo) + '円）'"), '対面の金額は pricing から');
+  assert.ok(idx.includes("heroOfflineLabel: '対面レッスンを申し込む（' + P.lesson.minutes + '分 ' + yen(P.lesson.solo) + '円〜）'"), '対面の金額・分数は pricing から');
   // 2ボタンの下にテキストリンク
   assert.ok(idx.indexOf('{{ heroOfflineLabel }}') < idx.indexOf('料金と申込方法 →'), '料金と申込方法のリンクは2ボタンの下');
   for (const m of ['5ステップ', '5 STEPS', '約3分', 'line.me', '申込はこちら →']) assert.ok(!idx.includes(m), `${m} が残っています`);
@@ -548,7 +549,7 @@ test('満席のとき：ボタンはウェイティングリスト登録、完�
   assert.ok(html.includes("this.isWaitlist() ? 'ウェイティングリストに登録しました。' : '仮予約を受け付けました。'"), '完了画面の見出し');
   assert.ok(html.includes('順番が来るまで、予約もお支払いも確定しません。'), '完了画面の説明');
   assert.ok(/if \(d\.menu !== 'online' \|\| !d\.plan \|\| this\.isWaitlist\(\)\) return '';/.test(html), '満席なら支払いURLを返さない（決済ボタン・メールのリンクが消える）');
-  assert.ok(html.includes("showPay: st.done && d.menu === 'online' && !!this.payUrl()"), '決済ボタンは payUrl があるときだけ');
+  assert.ok(html.includes("showPay: st.done && !!this.payUrl()"), '決済ボタンは payUrl があるときだけ');
   assert.ok(html.includes("'オンライン動画添削(ウェイティングリスト)'"), '通知メールの件名側でも分かる');
   assert.ok(html.includes("question: this.isWaitlist() ? '[ウェイティングリスト登録]' + (d.question ? '\\n' + d.question : '') : d.question"), '保存データにも印を残す');
 });
@@ -627,7 +628,7 @@ test('オンライン送信後は即、支払い画面へ移動（カウント�
 test('未払いで戻ったとき：先頭に「先に支払いを」と大きなボタン。DM文面・DMボタンは支払い後（/thanks）にだけ出す', () => {
   assert.ok(html.includes('先に支払いをお願いします。<br>お支払いが済むと、そのまま DM の案内に進めます。'), '文言');
   assert.ok(html.indexOf('STEP 1 — PAYMENT') < html.indexOf('REQUEST RECEIVED'), '支払いブロックが完了画面の先頭');
-  assert.ok(html.includes("showDm: !(st.done && d.menu === 'online' && !!this.payUrl())"), '支払いが要る申込はDMを隠す');
+  assert.ok(html.includes("showDm: !(st.done && !!this.payUrl())"), '支払いが要る申込はDMを隠す');
   assert.ok(html.includes('<sc-if value="{{ showDm }}"'), 'DMブロックは showDm のときだけ');
   assert.ok(html.indexOf('<sc-if value="{{ showDm }}"') < html.indexOf('{{ lineMessage }}') && html.indexOf('<sc-if value="{{ showDm }}"') < html.indexOf('{{ dmUrl }}'), '文面もDMボタンも showDm の中');
   assert.ok(html.includes("e.persisted") && html.includes("'pageshow'"), '戻る（画面復元）で移動中の表示を消す');
@@ -659,4 +660,131 @@ test('申込フォーム（main）の div の開きと閉じが一致してい�
   const opens = (seg.match(/<div[\s>]/g) || []).length;
   const closes = (seg.match(/<\/div>/g) || []).length;
   assert.equal(opens, closes, `div の数が合っていません（開き ${opens} / 閉じ ${closes}）`);
+});
+
+// ---------------------------------------------------------------------------
+// 2026-11-25：対面は「1回レッスン（90分）」と「3回パッケージ」の2択
+// ---------------------------------------------------------------------------
+
+test('対面：90分。1回 16,500円（据え置き）、3回パッケージ 39,800円。数字は pricing.js の1か所から計算する', () => {
+  const n = PRICING.NEW;
+  assert.equal(n.lesson.minutes, 90);
+  assert.equal(n.lesson.solo, 16500);
+  assert.deepEqual(n.lesson.package, { count: 3, price: 39800 });
+  const i = PRICING.packageInfo(n);
+  assert.equal(i.normal, 49500, '通常価格 = 1回 × 3');
+  assert.equal(i.save, 9700, 'おトク額');
+  assert.equal(i.per, 13267, '1回あたり（切り上げ）');
+  assert.equal(i.percent, 20, '約20%OFF');
+  const L = PRICING.packageLabels(n);
+  assert.equal(L.perDiscount, '1回あたり¥13,267（約20%OFF）');
+  assert.equal(L.was, '通常¥49,500 → ¥39,800（¥9,700おトク）');
+  assert.equal(L.save, '¥9,700おトク');
+  assert.equal(L.single, '1回あたり¥16,500');
+  assert.equal(PRICING.packageInfo(PRICING.OLD), null, '旧料金表にはパッケージがない');
+});
+
+test('対面：2人以上は90分で22,000円（人数にかかわらず一律・決定済み）。グループには3回パッケージを使わない', () => {
+  const n = PRICING.NEW;
+  assert.equal(n.lesson.group, 22000);
+  for (const people of [2, 3, 6]) assert.equal(PRICING.lessonFee(n, people), 22000);
+  assert.ok(html.includes("return !this.isPackage() && !!this.PRICING.lesson.group && Number(this.state.data.people) >= 2;"), 'パッケージは1人用');
+  assert.ok(html.includes("this.setData(c.key === 'package3' ? { lessonPlan: c.key, people: 1 } : { lessonPlan: c.key })"), 'パッケージを選ぶと人数は1人');
+});
+
+test('申込フォーム：レッスンの種類（1回／3回パッケージ）を必須で選ばせ、概算・確認・メール・保存に反映する', () => {
+  assert.ok(html.includes('{{ lessonPlanCards }}') && html.includes('レッスンの種類 '), '選択UI');
+  assert.ok(html.includes("if (this.hasLessonPlans() && !d.lessonPlan) return 'レッスンの種類（1回レッスン／3回パッケージ）を選択してください。';"), '必須');
+  assert.ok(html.includes("window.DUFFY_PRICING.packageLabels(this.PRICING)"), '表示は pricing.js から');
+  assert.ok(html.includes("if (this.isPackage()) return this.PRICING.lesson.package.price;"), 'パッケージの金額');
+  assert.ok(html.includes("menu: d.menu === 'online' ? 'オンライン動画添削' : this.offlineMenuName(),"), '保存のメニュー名');
+  assert.ok(html.includes("this.offlineMenuName(),") && html.includes("lines.push('■レッスンの種類:'"), 'メール本文にも種類');
+  assert.ok(!html.includes('120分') && !html.includes('2時間'), '申込フォームに120分・2時間が残っていない');
+  // 1回レッスンのメニュー名は従来どおり（既存の一覧・集計を壊さない）
+  assert.ok(html.includes("this.isPackage() ? '対面レッスン(' + window.DUFFY_PRICING.packageLabels(this.PRICING).title + ')' : '対面レッスン'"), '1回は従来どおり「対面レッスン」');
+});
+
+test('トップ：90分と、3回パッケージ（打消し線の通常価格・おトク額・おすすめ・1回あたり）。数字は pricing から', () => {
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.ok(!/120分/.test(idx) && idx.includes('"name": "対面レッスン 90分"'), '120分が残っていない');
+  for (const m of ['{{ pkgTitle }}', '{{ pkgNormal }}', '{{ pkgPrice }}', '{{ pkgPerDiscount }}', '{{ pkgSave }}', 'おすすめ', '<s>{{ pkgNormal }}円</s>', '{{ lessonSoloLabel }}']) {
+    assert.ok(idx.includes(m), m + ' がない');
+  }
+  assert.ok(idx.includes('window.DUFFY_PRICING.packageLabels(P)'), 'pricing.js から計算');
+  assert.ok(!idx.includes('39,800') && !idx.includes('49,500'), 'トップに数字の直書きがない');
+});
+
+test('静的ページ（guide・terms・tokushoho）の数字は pricing.js と一致している（90分・39,800円）', () => {
+  const guide = readFileSync(join(ROOT, 'guide.html'), 'utf8');
+  const terms = readFileSync(join(ROOT, 'terms.html'), 'utf8');
+  const toku = readFileSync(join(ROOT, 'tokushoho.html'), 'utf8');
+  const i = PRICING.packageInfo(PRICING.NEW);
+  const f = (n) => n.toLocaleString('ja-JP');
+  for (const [name, src] of [['guide', guide], ['terms', terms], ['tokushoho', toku]]) {
+    assert.ok(!/120分|2時間/.test(src), name + ' に120分・2時間が残っている');
+    assert.ok(src.includes('90分'), name + ' に90分');
+    assert.ok(src.includes(f(i.price) + '円'), name + ' に ' + f(i.price) + '円');
+  }
+  assert.ok(guide.includes(f(i.normal) + '円') && guide.includes(f(i.save) + '円おトク') && guide.includes('1回あたり' + f(i.per) + '円（約' + i.percent + '%OFF）') && guide.includes('おすすめ'), 'guide に通常価格・おトク額・1回あたり・おすすめ');
+  assert.ok(guide.includes('<s ') || guide.includes('<s>'), 'guide の通常価格は打消し線');
+});
+
+test('3回パッケージ（対面）：本番の支払いリンク。送信後すぐ支払いへ、未払いならDMを出さない。1回レッスンは従来どおりDMで案内', () => {
+  const src = readFileSync(join(ROOT, 'lib/payments.js'), 'utf8');
+  const w = {};
+  vm.runInNewContext(src, { window: w });
+  const u = w.DUFFY_PAYMENTS.packageUrl('a@b.c', '山田');
+  assert.ok(u.startsWith('https://buy.stripe.com/eVq3cv9y57zXbx5boqabK05?prefilled_email=a%40b.c'), 'パッケージのリンク（メール入力済み）');
+  assert.ok(u.includes('client_reference_id='), '照合用の氏名');
+  // リンク未設定なら空になる（従来の対面の流れに戻る）
+  const w2 = {};
+  vm.runInNewContext(src.replace("lessonPackage: 'https://buy.stripe.com/eVq3cv9y57zXbx5boqabK05'", "lessonPackage: ''"), { window: w2 });
+  assert.equal(w2.DUFFY_PAYMENTS.packageUrl('a@b.c', '山田'), '', '未設定は空');
+  // 申込フォーム：パッケージ選択時だけ payUrl が出る。1回レッスンは出ない
+  assert.ok(html.includes('if (this.isPackage()) return window.DUFFY_PAYMENTS.packageUrl(d.email, d.name);'), 'パッケージは packageUrl');
+  assert.ok(html.includes("(r.menu === 'offline' && r.lessonPlan === 'package3')"), '戻ってきたとき（?pending=1）もパッケージを復元');
+  assert.ok(html.includes('お支払いを確認して、日程・コートを決め、移動費をご案内して予約を確定します。'), 'DMの案内文（対面）');
+  assert.ok(html.includes("lines.push('※3回パッケージのお支払いはこちらから: ' + this.payUrl());"), 'メールに支払いリンク');
+  assert.ok(html.includes('{{ offlinePayNote }}'), '確認画面の注記（パッケージ／1回で出し分け）');
+  const th = readFileSync(join(ROOT, 'thanks.html'), 'utf8');
+  assert.ok(th.includes("対面レッスン(3回パッケージ)") && th.includes("r.menu === 'offline'"), 'thanks は対面パッケージ用の文面に切り替わる');
+  // オンラインの支払いは変わらない
+  assert.ok(w.DUFFY_PAYMENTS.ticketUrl('5', 'a@b.c', '山田').startsWith('https://buy.stripe.com/'), 'オンラインは従来どおり');
+});
+
+// ---------------------------------------------------------------------------
+// 料金表ページ（pricing.html）：オンライン3/5/10回と対面を1ページで比較。数字は lib/pricing.js から
+// ---------------------------------------------------------------------------
+
+test('pricing.html：金額は lib/pricing.js から描画（直書きなし）。各行に申込ボタン。公開リスト・サイトマップ・メニュー・フッターに入っている', () => {
+  const pg = readFileSync(join(ROOT, 'pricing.html'), 'utf8');
+  assert.ok(pg.includes('<script src="lib/pricing.js"></script>') && pg.includes('window.DUFFY_PRICING.current()'), 'pricing.js を読む');
+  assert.ok(pg.includes('packageLabels(P)') && pg.includes('packageInfo(P)'), '3回パッケージは計算値');
+  const body = pg.slice(pg.indexOf('<body>'));
+  for (const n of ['16,500', '16500', '39,800', '49,500', '13,267', '9,700', '3,300', '4,900', '8,900', '22,000']) {
+    assert.ok(!body.includes(n), `pricing.html に ${n} の直書きがある`);
+  }
+  assert.ok(pg.includes("href: 'apply.html?menu=online'") && pg.includes("href: 'apply.html?menu=inperson'"), '申込ボタン（?menu=）');
+  assert.ok(pg.includes('<s>通常') && pg.includes('PK.perDiscount') && pg.includes('PK.save') && pg.includes("badge: 'おすすめ'"), '打消し線の通常価格・1回あたり（約20%OFF）・おトク額・おすすめ');
+  assert.ok(/<a href="index\.html"[^>]*>MatchUp<\/a>/.test(pg.slice(pg.indexOf('<header'), pg.indexOf('</header>'))), 'ヘッダーは MatchUp だけ');
+  assert.ok(readFileSync(join(ROOT, 'scripts/build.mjs'), 'utf8').includes("'pricing.html'"), 'build の公開リスト');
+  assert.ok(readFileSync(join(ROOT, 'sitemap.xml'), 'utf8').includes('/pricing<'), 'sitemap');
+  const idx = readFileSync(join(ROOT, 'index.html'), 'utf8');
+  assert.ok(idx.includes("href: 'pricing.html'") && idx.includes('href="pricing.html"'), 'トップのメニューとフッター');
+  for (const f of ['guide.html', 'thanks.html']) assert.ok(readFileSync(join(ROOT, f), 'utf8').includes('href="pricing.html"'), f + ' のフッター');
+});
+
+test('pricing.html を実際に描画：行の数字が pricing.js と一致（オンライン3行・対面3行）', () => {
+  const pg = readFileSync(join(ROOT, 'pricing.html'), 'utf8');
+  const script = pg.slice(pg.lastIndexOf('<script>') + 8, pg.lastIndexOf('</script>'));
+  const els = {};
+  const document = { getElementById: (id) => (els[id] = els[id] || { innerHTML: '', textContent: '' }) };
+  const w = { document };
+  vm.runInNewContext(readFileSync(join(ROOT, 'lib/pricing.js'), 'utf8'), { window: w });
+  vm.runInNewContext(script, { window: w, document });
+  const on = els['online-rows'].innerHTML, off = els['inperson-rows'].innerHTML;
+  assert.equal((on.match(/class="row/g) || []).length, 3);
+  for (const m of ['3回チケット', '5回チケット', '10回チケット', '3,300', '4,900', '8,900', '一番人気', 'apply.html?menu=online']) assert.ok(on.includes(m), m);
+  assert.equal((off.match(/class="row/g) || []).length, 3);
+  for (const m of ['1回レッスン', '16,500', '3回パッケージ', '39,800', '通常¥49,500', '1回あたり¥13,267（約20%OFF）', '¥9,700おトク', 'おすすめ', '22,000', 'apply.html?menu=inperson']) assert.ok(off.includes(m), m);
 });

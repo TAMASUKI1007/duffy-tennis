@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FormLab（近日公開）| ダッフィーテニス</title>
-<meta name="description" content="ダッフィー先生が株式会社ワタコンと共同で開発している、フォーム解析アプリ「FormLab」の近日公開のお知らせです。">
+<title>FormLab | ダッフィーテニス</title>
+<meta name="description" content="ダッフィー先生が株式会社ワタコンと共同で開発している、スマホで撮った動画からフォームを解析するアプリ「FormLab」の紹介ページです。">
 <link rel="canonical" href="https://duffy-tennis.pages.dev/saas">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ダッフィーテニス">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="FormLab（近日公開）| ダッフィーテニス">
-<meta property="og:description" content="ワタコンと共同開発中のフォーム解析アプリ「FormLab」を準備中です。">
+<meta property="og:title" content="FormLab | ダッフィーテニス">
+<meta property="og:description" content="ワタコンと共同開発したフォーム解析アプリ「FormLab」。スマホの動画に体の骨組みと角度を重ねます。">
 <meta property="og:url" content="https://duffy-tennis.pages.dev/saas">
 <meta property="og:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <link rel="icon" href="/assets/icon-512.png" type="image/png">
@@ -37,13 +37,32 @@ p{font-size:14.5px;font-weight:500;line-height:2;color:rgba(255,255,255,0.88);ma
 .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px;}
 .links a{font-weight:900;font-size:14px;padding:10px 18px;text-decoration:none;border:2px solid #FFFFFF;color:#FFFFFF;}
 .links a.main{background:#E9FF00;border-color:#E9FF00;color:#111111;}
+.sec{margin-top:56px;}
+h2{margin:0;font-weight:900;font-size:clamp(20px,5.4vw,26px);letter-spacing:-0.01em;padding-left:12px;border-left:6px solid #E9FF00;}
+.steps{margin:18px 0 0;padding:0;list-style:none;counter-reset:s;}
+.steps li{counter-increment:s;position:relative;border:2px solid #FFFFFF;box-shadow:4px 4px 0 #E9FF00;padding:14px 14px 14px 56px;margin-top:16px;font-size:14px;line-height:1.8;color:rgba(255,255,255,0.9);}
+.steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:30px;height:30px;background:#E9FF00;color:#111111;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.steps b{display:block;font-size:15px;color:#FFFFFF;}
+.plans{display:grid;gap:16px;margin-top:18px;}
+.plan{border:2px solid #FFFFFF;box-shadow:4px 4px 0 #E9FF00;padding:16px;}
+.plan h3{margin:0;font-size:16px;font-weight:900;}
+.plan .price{margin:8px 0 0;font-size:22px;font-weight:900;color:#E9FF00;line-height:1.5;}
+.plan .price small{font-size:12px;font-weight:700;color:rgba(255,255,255,0.8);}
+.plan ul{margin:10px 0 0;padding:0;list-style:none;font-size:13.5px;line-height:1.8;color:rgba(255,255,255,0.88);}
+.plan li{position:relative;padding-left:1.1em;}
+.plan li::before{content:"";position:absolute;left:0;top:0.8em;width:5px;height:5px;background:#E9FF00;}
+.faq{margin:18px 0 0;}
+.faq details{border-bottom:1px solid rgba(255,255,255,0.25);padding:12px 0;}
+.faq summary{cursor:pointer;font-weight:900;font-size:14.5px;line-height:1.7;}
+.faq summary:focus-visible{outline:3px solid #E9FF00;outline-offset:3px;}
+.faq p{margin:8px 0 0;font-size:13.5px;line-height:1.9;}
 footer{padding:0 16px 32px;text-align:center;font-size:11px;color:rgba(255,255,255,0.55);}
 </style>
 </head>
 <body>
 <header><a href="index.html" aria-label="MatchUp トップへ戻る">MatchUp</a></header>
 <main>
-  <span class="soon">COMING SOON</span>
+  <span class="soon">NOW OPEN</span>
   <div class="brand">
     <img src="assets/formlab-icon-192.png" alt="" width="44" height="44">
     <h1>FormLab</h1>
@@ -56,11 +75,59 @@ footer{padding:0 16px 32px;text-align:center;font-size:11px;color:rgba(255,255,2
   </ul>
   <figure class="shot">
     <img src="assets/formlab-app-swing.jpg" alt="FormLab の実際の画面。スマホで撮った縦長のスイング動画の上に、体の骨組みの線と角度が重なって表示される" width="1400" height="613" loading="lazy">
-    <figcaption>実際のアプリ画面（開発中のものです）</figcaption>
+    <figcaption>実際のアプリ画面</figcaption>
   </figure>
-  <p class="note">公開に向けて準備中です。公開日が決まったら、このサイトとInstagramでお知らせします。</p>
+  <p class="note">スマホのブラウザからそのまま使えます。登録なしでも、サンプル動画で画面を試せます。</p>
   <div class="links">
-    <a class="main" href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener">Instagram @duffy_tennis</a>
+    <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">FormLabを開く →</a>
+  </div>
+  <section class="sec">
+    <h2>使い方は3ステップ</h2>
+    <ol class="steps">
+      <li><b>動画を選ぶ</b>スマホで撮った自分のスイングやフォームの動画を選びます。</li>
+      <li><b>自動で骨組みを重ねる</b>体の骨組みが線になり、ひじ・ひざなどの角度が映像の上に出ます。</li>
+      <li><b>スローとコマ送りで確認</b>インパクトの瞬間をじっくり見たり、お手本の動画と見比べたりできます。</li>
+    </ol>
+  </section>
+  <section class="sec">
+    <h2>料金</h2>
+    <p class="note" style="margin-top:12px">金額はすべて税込です。</p>
+    <div class="plans">
+      <div class="plan">
+        <h3>無料プラン</h3>
+        <p class="price">0円</p>
+        <ul>
+          <li>解析は月3本まで</li>
+          <li>1本あたり15秒まで（長い動画は範囲を選べます）</li>
+          <li>保存した動画・画像には透かしが入ります</li>
+        </ul>
+      </div>
+      <div class="plan">
+        <h3>Pro</h3>
+        <p class="price">月額980円 <small>／ 年額8,000円</small></p>
+        <ul>
+          <li>解析の本数に制限なし</li>
+          <li>1本あたり30秒まで</li>
+          <li>2画面での比較、保存時の透かしなし</li>
+          <li>初めての方は7日間無料で試せます</li>
+        </ul>
+        <p class="note" style="margin-top:12px">スタート価格：2027年1月31日までに月額プランへ申し込むと、解約するまで月額550円のままです（年額は対象外）。</p>
+      </div>
+    </div>
+  </section>
+  <section class="sec">
+    <h2>よくある質問</h2>
+    <div class="faq">
+      <details><summary>無料体験のあと、自動で課金されますか？</summary><p>体験の終わりまでに解約しなければ、8日目から自動で課金が始まります。体験はおひとり1回までで、お申し込み時にカードの登録が必要です。</p></details>
+      <details><summary>解約はどうすればいいですか？</summary><p>アプリの「設定」→「プランとお支払い」から、いつでもできます。手数料や違約金はありません。解約後も、支払い済みの期間の終わりまでは使えます。</p></details>
+      <details><summary>お支払いは安全ですか？</summary><p>決済サービス Stripe を使っています。カード番号は運営には届きません。</p></details>
+      <details><summary>月額と年額は切り替えられますか？</summary><p>「設定」→「プランとお支払い」から切り替えられます。</p></details>
+      <details><summary>返金はできますか？</summary><p>デジタルサービスのため、お支払い後の返金・日割りの返金はしていません。くわしくは<a href="terms.html" style="color:#E9FF00">利用規約</a>をご覧ください。</p></details>
+    </div>
+  </section>
+  <div class="links" style="margin-top:48px">
+    <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">FormLabを開く →</a>
+    <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener">Instagram @duffy_tennis</a>
     <a href="index.html">トップへ戻る</a>
   </div>
 </main>
