@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FormLab | ダッフィーテニス</title>
-<meta name="description" content="ダッフィー先生が株式会社ワタコンと共同で開発している、スマホで撮った動画からフォームを解析するアプリ「FormLab」の紹介ページです。">
+<title>FormLab｜スマホの動画に骨組みと角度を重ねるフォーム解析アプリ | ダッフィーテニス</title>
+<meta name="description" content="自分のフォームは自分では見えない。FormLabは、スマホで撮ったテニス・ゴルフなどの動画に体の骨組みと角度を重ねて見せるアプリです。Proは7日間無料で試せます。">
 <link rel="canonical" href="https://duffy-tennis.pages.dev/saas">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ダッフィーテニス">
 <meta property="og:locale" content="ja_JP">
-<meta property="og:title" content="FormLab | ダッフィーテニス">
-<meta property="og:description" content="ワタコンと共同開発したフォーム解析アプリ「FormLab」。スマホの動画に体の骨組みと角度を重ねます。">
+<meta property="og:title" content="FormLab｜スマホの動画に骨組みと角度を重ねるフォーム解析アプリ">
+<meta property="og:description" content="ワタコンと共同開発したフォーム解析アプリ「FormLab」。スマホの動画に体の骨組みと角度を重ねます。Proは7日間無料。">
 <meta property="og:url" content="https://duffy-tennis.pages.dev/saas">
 <meta property="og:image" content="https://duffy-tennis.pages.dev/assets/og.png">
 <link rel="icon" href="/assets/icon-512.png" type="image/png">
@@ -18,119 +18,186 @@
 <style>
 html,body{margin:0;padding:0;background:#111111;color:#FFFFFF;}
 body{font-family:'Noto Sans JP',-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;-webkit-font-smoothing:antialiased;}
-a:focus-visible{outline:3px solid #E9FF00;outline-offset:3px;}
+a:focus-visible,summary:focus-visible{outline:3px solid #E9FF00;outline-offset:3px;}
 header{display:flex;align-items:center;height:64px;padding:0 clamp(16px,4vw,56px);box-sizing:border-box;border-bottom:1px solid rgba(255,255,255,0.18);}
 header a{font-weight:900;font-size:20px;letter-spacing:-0.01em;color:#FFFFFF;text-decoration:none;}
-main{max-width:640px;margin:0 auto;padding:clamp(48px,10vw,96px) 16px clamp(56px,10vw,100px);box-sizing:border-box;}
-.soon{display:inline-block;background:#E9FF00;color:#111111;font-weight:900;font-size:12px;letter-spacing:0.12em;padding:4px 12px;}
-.brand{display:flex;align-items:center;gap:14px;margin-top:22px;}
-.brand img{width:44px;height:44px;border-radius:10px;display:block;}
-h1{margin:0;font-weight:900;font-size:clamp(26px,7vw,40px);letter-spacing:-0.01em;}
-p{font-size:14.5px;font-weight:500;line-height:2;color:rgba(255,255,255,0.88);margin:22px 0 0;word-break:auto-phrase;line-break:strict;text-wrap:pretty;}
-.feat{margin:18px 0 0;padding:0;list-style:none;font-size:14px;line-height:1.9;color:rgba(255,255,255,0.88);}
-.feat li{position:relative;padding-left:1.2em;margin-top:6px;}
-.feat li::before{content:"";position:absolute;left:0;top:0.85em;width:6px;height:6px;background:#E9FF00;}
-.shot{margin:28px 0 0;}
+main{max-width:640px;margin:0 auto;padding:clamp(40px,8vw,72px) 16px clamp(56px,10vw,100px);box-sizing:border-box;}
+.tag{display:inline-block;background:#E9FF00;color:#111111;font-weight:900;font-size:12px;letter-spacing:0.1em;padding:4px 12px;}
+.brand{display:flex;align-items:center;gap:10px;margin-top:20px;font-weight:900;font-size:15px;color:rgba(255,255,255,0.85);}
+.brand img{width:32px;height:32px;border-radius:8px;display:block;}
+h1{margin:14px 0 0;font-weight:900;font-size:clamp(25px,7vw,38px);line-height:1.45;letter-spacing:-0.01em;word-break:auto-phrase;text-wrap:balance;}
+h1 em{font-style:normal;color:#E9FF00;display:block;}
+p{font-size:14.5px;font-weight:500;line-height:2;color:rgba(255,255,255,0.88);margin:18px 0 0;word-break:auto-phrase;line-break:strict;text-wrap:pretty;}
+.note{font-size:12px;color:rgba(255,255,255,0.62);margin-top:12px;line-height:1.9;}
+.note b{color:#FFFFFF;}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+.links a{font-weight:900;font-size:14px;padding:12px 18px;text-decoration:none;border:2px solid #FFFFFF;color:#FFFFFF;}
+.links a.main{background:#E9FF00;border-color:#E9FF00;color:#111111;font-size:15px;}
+.sec{margin-top:60px;}
+h2{margin:0;font-weight:900;font-size:clamp(20px,5.4vw,26px);line-height:1.5;letter-spacing:-0.01em;padding-left:12px;border-left:6px solid #E9FF00;word-break:auto-phrase;text-wrap:balance;}
+h3{margin:0;font-size:16px;font-weight:900;line-height:1.6;}
+.card{border:2px solid #FFFFFF;box-shadow:4px 4px 0 #E9FF00;padding:16px;margin-top:22px;}
+.card p{margin:8px 0 0;font-size:14px;line-height:1.9;}
+.card .n{display:inline-block;background:#E9FF00;color:#111111;font-weight:900;font-size:12px;padding:2px 8px;margin-bottom:6px;}
+.pro{font-size:12px;font-weight:900;color:#111111;background:#E9FF00;padding:1px 6px;margin-left:6px;vertical-align:2px;}
+.shot{margin:14px 0 0;}
 .shot img{display:block;width:100%;height:auto;border:1px solid rgba(255,255,255,0.2);}
-.shot figcaption{margin-top:8px;font-size:11px;color:rgba(255,255,255,0.55);}
-.note{font-size:12px;color:rgba(255,255,255,0.6);margin-top:18px;line-height:1.9;}
-.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px;}
-.links a{font-weight:900;font-size:14px;padding:10px 18px;text-decoration:none;border:2px solid #FFFFFF;color:#FFFFFF;}
-.links a.main{background:#E9FF00;border-color:#E9FF00;color:#111111;}
-.sec{margin-top:56px;}
-h2{margin:0;font-weight:900;font-size:clamp(20px,5.4vw,26px);letter-spacing:-0.01em;padding-left:12px;border-left:6px solid #E9FF00;}
+.shot figcaption{margin-top:6px;font-size:11px;color:rgba(255,255,255,0.55);}
 .steps{margin:18px 0 0;padding:0;list-style:none;counter-reset:s;}
 .steps li{counter-increment:s;position:relative;border:2px solid #FFFFFF;box-shadow:4px 4px 0 #E9FF00;padding:14px 14px 14px 56px;margin-top:16px;font-size:14px;line-height:1.8;color:rgba(255,255,255,0.9);}
 .steps li::before{content:counter(s);position:absolute;left:14px;top:12px;width:30px;height:30px;background:#E9FF00;color:#111111;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
 .steps b{display:block;font-size:15px;color:#FFFFFF;}
-.plans{display:grid;gap:16px;margin-top:18px;}
-.plan{border:2px solid #FFFFFF;box-shadow:4px 4px 0 #E9FF00;padding:16px;}
-.plan h3{margin:0;font-size:16px;font-weight:900;}
-.plan .price{margin:8px 0 0;font-size:22px;font-weight:900;color:#E9FF00;line-height:1.5;}
-.plan .price small{font-size:12px;font-weight:700;color:rgba(255,255,255,0.8);}
-.plan ul{margin:10px 0 0;padding:0;list-style:none;font-size:13.5px;line-height:1.8;color:rgba(255,255,255,0.88);}
-.plan li{position:relative;padding-left:1.1em;}
-.plan li::before{content:"";position:absolute;left:0;top:0.8em;width:5px;height:5px;background:#E9FF00;}
+.plans{display:grid;gap:22px;margin-top:24px;}
+.plan{border:2px solid #FFFFFF;padding:16px;position:relative;}
+.plan.best{border-color:#E9FF00;box-shadow:4px 4px 0 #E9FF00;}
+.plan .badge{position:absolute;top:-13px;left:12px;background:#E9FF00;color:#111111;font-weight:900;font-size:12px;padding:3px 10px;}
+.price small{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);}
+.price s{font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);margin-left:6px;}
+.plan p{margin:6px 0 0;font-size:13px;line-height:1.8;}
+.plan p.price{margin-top:8px;font-size:26px;font-weight:900;color:#E9FF00;line-height:1.4;}
+.tbl{margin-top:24px;border:2px solid #FFFFFF;}
+.tbl table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12.5px;line-height:1.6;}
+.tbl th,.tbl td{padding:9px 7px;border-bottom:1px solid rgba(255,255,255,0.22);text-align:left;vertical-align:top;word-break:auto-phrase;}
+.tbl th:first-child,.tbl td:first-child{width:36%;font-weight:700;}
+.tbl thead th{background:#E9FF00;color:#111111;font-weight:900;}
+.tbl tr:last-child td{border-bottom:0;}
+.tbl .no{color:rgba(255,255,255,0.5);}
+.tbl .yes{color:#E9FF00;font-weight:700;}
 .faq{margin:18px 0 0;}
 .faq details{border-bottom:1px solid rgba(255,255,255,0.25);padding:12px 0;}
 .faq summary{cursor:pointer;font-weight:900;font-size:14.5px;line-height:1.7;}
-.faq summary:focus-visible{outline:3px solid #E9FF00;outline-offset:3px;}
 .faq p{margin:8px 0 0;font-size:13.5px;line-height:1.9;}
+.faq a{color:#E9FF00;}
+.after .camp{display:none;}
+body:not(.after) .nocamp{display:none;}
 footer{padding:0 16px 32px;text-align:center;font-size:11px;color:rgba(255,255,255,0.55);}
 </style>
 </head>
 <body>
 <header><a href="index.html" aria-label="MatchUp トップへ戻る">MatchUp</a></header>
 <main>
-  <span class="soon">NOW OPEN</span>
-  <div class="brand">
-    <img src="assets/formlab-icon-192.png" alt="" width="44" height="44">
-    <h1>FormLab</h1>
-  </div>
-  <p>ダッフィー先生が株式会社ワタコンと共同で開発している、フォーム解析アプリです。スマホで撮った動画を入れるだけで、体の骨組みを自動で線にして重ねます。</p>
-  <ul class="feat">
-    <li>ひじ・ひざなどの角度や、足幅を映像の上にそのまま表示</li>
-    <li>スロー再生・コマ送りで、インパクトの瞬間をじっくり確認</li>
-    <li>お手本の動画と並べて、自分のフォームと見比べられる</li>
-  </ul>
-  <figure class="shot">
-    <img src="assets/formlab-app-swing.jpg" alt="FormLab の実際の画面。スマホで撮った縦長のスイング動画の上に、体の骨組みの線と角度が重なって表示される" width="1400" height="613" loading="lazy">
-    <figcaption>実際のアプリ画面</figcaption>
-  </figure>
-  <p class="note">スマホのブラウザからそのまま使えます。登録なしでも、サンプル動画で画面を試せます。</p>
+  <span class="tag">NOW OPEN</span>
+  <div class="brand"><img src="assets/formlab-icon-192.png" alt="" width="32" height="32">FormLab（フォームラボ）</div>
+  <h1>自分のフォームは、自分では見えない。<em>スマホの動画に、骨組みと角度を重ねます。</em></h1>
+  <p>スイングを撮って見返しても、「どこがどう違うのか」は目では分かりにくいもの。FormLab は、撮った動画に体の骨組みを線で重ね、ひじやひざの角度、足幅を数字で見せるアプリです。テニス・ゴルフなどのフォーム確認に使えます。ダッフィー先生が株式会社ワタコンと共同で開発しました。</p>
   <div class="links">
-    <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">FormLabを開く →</a>
+    <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">7日間無料で試す →</a>
   </div>
+  <p class="note">Pro は最初の7日間が無料。体験中に解約すれば料金はかかりません。無料プラン（月3本まで）だけでも使えます。</p>
+
+  <section class="sec">
+    <h2>使うと、見えるようになること</h2>
+    <div class="card">
+      <span class="n">1</span>
+      <h3>動きが「線」と「数字」で見える</h3>
+      <p>人物を自動で見つけて骨組みを重ねます。ひじ・わき・股関節・ひざの角度、体幹の前傾、足幅（身長から cm に換算）が映像の上に出るので、「なんとなく違う」を数字で確かめられます。</p>
+      <figure class="shot">
+        <img src="assets/formlab-app-swing.jpg" alt="FormLab の実際の画面。縦長のスイング動画の上に、体の骨組みの線と角度が重なって表示される" width="1400" height="613" loading="lazy">
+        <figcaption>実際のアプリ画面</figcaption>
+      </figure>
+    </div>
+    <div class="card">
+      <span class="n">2</span>
+      <h3>インパクトの瞬間を、止めて確かめられる</h3>
+      <p>0.1倍〜1倍のスロー再生と、1コマずつの送りに対応。インパクトの位置は自動で推定して、再生バーに印を付けます。一瞬で終わる動きを、気になる場面で止めて見られます。</p>
+    </div>
+    <div class="card">
+      <span class="n">3</span>
+      <h3>お手本や過去の自分と並べて、違いを見つける<span class="pro">Pro</span></h3>
+      <p>2画面比較では、打点（インパクト）をそろえて左右を同時に再生。相手の骨格を自分の体格に合わせて重ねる「ゴースト」で、ズレがひと目で分かります。</p>
+    </div>
+    <p class="note">ほかにも、動きの速さを色で見せる表示、直線・角度・円の書き込み、残したい範囲だけの動画保存などがあります。</p>
+  </section>
+
   <section class="sec">
     <h2>使い方は3ステップ</h2>
     <ol class="steps">
-      <li><b>動画を選ぶ</b>スマホで撮った自分のスイングやフォームの動画を選びます。</li>
-      <li><b>自動で骨組みを重ねる</b>体の骨組みが線になり、ひじ・ひざなどの角度が映像の上に出ます。</li>
-      <li><b>スローとコマ送りで確認</b>インパクトの瞬間をじっくり見たり、お手本の動画と見比べたりできます。</li>
+      <li><b>動画を選ぶ</b>スマホで撮ったスイングやフォームの動画を選びます。長い動画は、解析する範囲を選びます。</li>
+      <li><b>骨組みと角度が重なる</b>体の骨組みが自動で線になり、角度や足幅が映像の上に出ます。</li>
+      <li><b>止めて、比べて、見直す</b>スローやコマ送りで確かめ、お手本や前の自分と並べて違いを見つけます。</li>
     </ol>
+    <p class="note">利用にはアカウント登録（無料）が必要です。スマホのブラウザからそのまま使えます。</p>
   </section>
+
   <section class="sec">
     <h2>料金</h2>
-    <p class="note" style="margin-top:12px">金額はすべて税込です。</p>
+    <p class="note" style="margin-top:12px">金額はすべて税込です。まずは無料で始めて、足りなくなったら Pro、という使い方ができます。</p>
     <div class="plans">
+      <div class="plan best camp">
+        <span class="badge">おすすめ・2027年1月31日まで</span>
+        <h3>Pro 月額（スタート価格）</h3>
+        <p class="price">月550円 <s>通常980円</s></p>
+        <p>2027年1月31日までに申し込むと、<b>解約するまで月550円のまま</b>続きます（年額は対象外）。通常の月額より、1年で5,160円安くなります。</p>
+      </div>
+      <div class="plan best nocamp">
+        <span class="badge">おすすめ</span>
+        <h3>Pro 年額</h3>
+        <p class="price">月あたり約667円 <small>（年8,000円）</small></p>
+        <p>月額980円を12か月払うと11,760円。年額なら3,760円（約32%）安く、1日あたり約22円です。</p>
+      </div>
+      <div class="plan camp">
+        <h3>Pro 年額</h3>
+        <p class="price">年8,000円 <small>月あたり約667円</small></p>
+        <p>通常の月額（980円×12か月＝11,760円）より年3,760円（約32%）安く、1日あたり約22円です。ただし、スタート価格の月額（550円×12か月＝6,600円）のほうが安いので、2027年1月31日までは月額がおすすめです。</p>
+      </div>
+      <div class="plan nocamp">
+        <h3>Pro 月額</h3>
+        <p class="price">月980円</p>
+        <p>毎月払い。いつでも解約できます。</p>
+      </div>
       <div class="plan">
         <h3>無料プラン</h3>
         <p class="price">0円</p>
-        <ul>
-          <li>解析は月3本まで</li>
-          <li>1本あたり15秒まで（長い動画は範囲を選べます）</li>
-          <li>保存した動画・画像には透かしが入ります</li>
-        </ul>
-      </div>
-      <div class="plan">
-        <h3>Pro</h3>
-        <p class="price">月額980円 <small>／ 年額8,000円</small></p>
-        <ul>
-          <li>解析の本数に制限なし</li>
-          <li>1本あたり30秒まで</li>
-          <li>2画面での比較、保存時の透かしなし</li>
-          <li>初めての方は7日間無料で試せます</li>
-        </ul>
-        <p class="note" style="margin-top:12px">スタート価格：2027年1月31日までに月額プランへ申し込むと、解約するまで月額550円のままです（年額は対象外）。</p>
+        <p>解析は月3本まで、1本15秒まで。まずは1本、自分のフォームを解析してみる、という使い方ができます。</p>
       </div>
     </div>
+    <p class="note"><b>Pro は、どのプランも最初の7日間が無料</b>です（体験はおひとり1回）。カードの登録が先に必要で、体験中に解約すれば課金されません。解約しないと、8日目に選んだ料金が自動で課金されます。</p>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th scope="col">できること</th><th scope="col">無料</th><th scope="col">Pro</th></tr></thead>
+        <tbody>
+          <tr><td>解析できる本数</td><td>月3本</td><td class="yes">制限なし</td></tr>
+          <tr><td>1本の長さ</td><td>15秒まで</td><td class="yes">30秒まで</td></tr>
+          <tr><td>角度・足幅の表示</td><td>3か所まで</td><td class="yes">何か所でも</td></tr>
+          <tr><td>2画面比較・マッチ度</td><td class="no">×</td><td class="yes">○</td></tr>
+          <tr><td>ボールの軌道</td><td class="no">×</td><td class="yes">○</td></tr>
+          <tr><td>動画・画像の保存</td><td>透かし入り</td><td class="yes">透かしなし</td></tr>
+          <tr><td>解析した動画の保存</td><td>前回の1本だけ</td><td class="yes">履歴に10本まで</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">無料枠の「3本」に数えるのは、人物が見つかった解析だけです。失敗した解析やサンプル動画は数えません。使い切っても、翌月1日にまた3本使えます。</p>
   </section>
+
   <section class="sec">
     <h2>よくある質問</h2>
     <div class="faq">
-      <details><summary>無料体験のあと、自動で課金されますか？</summary><p>体験の終わりまでに解約しなければ、8日目から自動で課金が始まります。体験はおひとり1回までで、お申し込み時にカードの登録が必要です。</p></details>
-      <details><summary>解約はどうすればいいですか？</summary><p>アプリの「設定」→「プランとお支払い」から、いつでもできます。手数料や違約金はありません。解約後も、支払い済みの期間の終わりまでは使えます。</p></details>
-      <details><summary>お支払いは安全ですか？</summary><p>決済サービス Stripe を使っています。カード番号は運営には届きません。</p></details>
-      <details><summary>月額と年額は切り替えられますか？</summary><p>「設定」→「プランとお支払い」から切り替えられます。</p></details>
-      <details><summary>返金はできますか？</summary><p>デジタルサービスのため、お支払い後の返金・日割りの返金はしていません。くわしくは<a href="terms.html" style="color:#E9FF00">利用規約</a>をご覧ください。</p></details>
+      <details><summary>どんな動画でも解析できますか？</summary><p>人物が映っているスマホ動画で、テニス・ゴルフなどのフォームを解析できます。同じ角度から撮った動画どうしのほうが、比べやすくなります。</p></details>
+      <details><summary>無料体験のあと、自動で課金されますか？</summary><p>体験の終わりまでに解約しなければ、8日目に選んだ料金が自動で課金されます。体験中に解約すれば、課金はされません。体験はおひとり1回までで、カードの登録が先に必要です。</p></details>
+      <details><summary>解約はどうすればいいですか？</summary><p>アプリの「設定」→「プランとお支払い」→「Proを解約する」から、いつでもできます。手数料や違約金はありません。解約後も、支払い済みの期間の終わり（体験中は体験の終わり）までは Pro を使えます。</p></details>
+      <details><summary>スタート価格はいつまでですか？</summary><p>2027年1月31日までに月額プランへ申し込んだ方が対象で、解約するまで月550円のまま続きます。年額は対象外です。2027年2月1日以降の月額は980円です。</p></details>
+      <details><summary>月額と年額は切り替えられますか？</summary><p>アプリの「設定」→「プランとお支払い」から、いつでも切り替えられます。</p></details>
+      <details><summary>お支払い方法と安全性は？</summary><p>クレジットカードで、決済サービス Stripe を使います。カード番号は運営には届きません。</p></details>
+      <details><summary>返金はできますか？</summary><p>デジタルサービスのため、お支払い後の返金・日割りの返金はしていません。そのぶん、7日間の無料体験でじっくり試せます。くわしくは<a href="terms.html">利用規約</a>・<a href="tokushoho.html">特定商取引法に基づく表記</a>をご覧ください。</p></details>
+      <details><summary>どの端末で使えますか？</summary><p>最新版の Chrome・Safari・Edge など（スマートフォン・パソコン）で使えます。iPhone アプリ版もありますが、申し込み・プラン変更・解約はアプリの中ではできず、Web 版から行います。</p></details>
     </div>
   </section>
-  <div class="links" style="margin-top:48px">
-    <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">FormLabを開く →</a>
-    <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener">Instagram @duffy_tennis</a>
-    <a href="index.html">トップへ戻る</a>
-  </div>
+
+  <section class="sec">
+    <h2>まずは1本、撮った動画を入れてみる</h2>
+    <p>自分のフォームを「見える」状態にするのに、特別な機材は要りません。スマホで撮った動画が1本あれば始められます。</p>
+    <div class="links">
+      <a class="main" href="https://formlab.match-up.workers.dev" target="_blank" rel="noopener">7日間無料で試す →</a>
+      <a href="https://www.instagram.com/duffy_tennis" target="_blank" rel="noopener">Instagram @duffy_tennis</a>
+      <a href="index.html">トップへ戻る</a>
+    </div>
+  </section>
 </main>
 <footer>© 2026 ダッフィーテニス / MatchUp TENNIS LESSON</footer>
+<script>
+// スタート価格（〜2027-01-31）の期限を過ぎたら、期限つきの案内を自動で引っ込める
+if(Date.now()>=Date.parse('2027-02-01T00:00:00+09:00'))document.body.classList.add('after');
+</script>
 </body>
 </html>
